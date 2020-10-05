@@ -1,5 +1,6 @@
 package com.example.fitnessMarathonBot.botapi.admin.menu.openCustomerInfo;
 
+import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
@@ -8,6 +9,7 @@ import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -17,6 +19,7 @@ import java.util.List;
 @Component
 public class OpenCustomerInfo implements InputMessageHandler {
     private UserDataCache userDataCache;
+    private Bot myBot;
 
     @Autowired
     private ReplyMessagesService messagesService;
@@ -24,8 +27,9 @@ public class OpenCustomerInfo implements InputMessageHandler {
     @Autowired
     private UserProfileImpl userProfile;
 
-    public OpenCustomerInfo(UserDataCache userDataCache) {
+    public OpenCustomerInfo(UserDataCache userDataCache, @Lazy Bot muBot) {
         this.userDataCache = userDataCache;
+        this.myBot = muBot;
     }
 
     @SneakyThrows
@@ -65,6 +69,8 @@ public class OpenCustomerInfo implements InputMessageHandler {
                             userProfile.getPk().getBodyParam().getWaist(), userProfile.getPk().getBodyParam().getShin(),
                             userProfile.getPk().getBodyParam().getDate()).replaceAll("null", "0");
                     replyToUser = new SendMessage(chatId, profileInfo);
+                    sendCustomerPhoto(chatId, userProfile, myBot);
+
                 } else {
                     replyToUser = new SendMessage(chatId, "Клиента нет под таким номером: ");
                 }
@@ -73,6 +79,18 @@ public class OpenCustomerInfo implements InputMessageHandler {
             replyToUser = new SendMessage(chatId, "Введите порядковый номер клиента в списке(только цифра): ");
         }
         return replyToUser;
+    }
+
+    public static void sendCustomerPhoto(long chatId, UserProfile userProfile, Bot myBot) {
+        if (userProfile.getPhotoId_1() != null) {
+            myBot.sendPhoto(chatId, userProfile.getPhotoId_1());
+        }
+        if (userProfile.getPhotoId_2() != null) {
+            myBot.sendPhoto(chatId, userProfile.getPhotoId_2());
+        }
+        if (userProfile.getPhotoId_3() != null) {
+            myBot.sendPhoto(chatId, userProfile.getPhotoId_3());
+        }
     }
 
     private boolean checkUserAnswerOnDigit(String userAnswer) {

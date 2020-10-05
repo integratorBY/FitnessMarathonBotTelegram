@@ -145,6 +145,7 @@ public class FillingProfileHandler implements InputMessageHandler {
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_WEIGHT);
             }
         }
+
         if (botState.equals(BotState.PROFILE_FILLED)) {
             Date date = new Date();
             SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");

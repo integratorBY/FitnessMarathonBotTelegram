@@ -101,6 +101,14 @@ public class Bot extends TelegramWebhookBot {
     }
 
     @SneakyThrows
+    public void sendPhoto(long chatId, String photoId) {
+        SendPhoto send = new SendPhoto();
+        send.setChatId(chatId);
+        send.setPhoto(photoId);
+        execute(send);
+    }
+
+    @SneakyThrows
     public void sendListMessages(List<SendMessage> sendMessageList) {
         SendPhoto sendPhoto = new SendPhoto();
         URL url = null;

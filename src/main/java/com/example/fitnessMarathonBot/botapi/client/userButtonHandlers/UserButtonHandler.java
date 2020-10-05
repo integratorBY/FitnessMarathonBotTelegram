@@ -35,20 +35,17 @@ public class UserButtonHandler {
             String message = String.format(replyMessagesService.getReplyText("reply.goalsForTodayReport"),
                     listGoals.getTaskOne(), listGoals.getTaskTwo(), listGoals.getTaskThree(),
                     listGoals.getTaskFour(), listGoals.getTaskFive(), listGoals.getTaskSix());
-            return new SendMessage(chatId, message).setReplyMarkup(getGoalsButton(chatId));
+            return new SendMessage(chatId, message).setReplyMarkup(getGoalsButton());
         }
         return new SendMessage(chatId, "Список целей пуст, сегодня выходной!");
     }
 
-    private InlineKeyboardMarkup getGoalsButton(long chatId) {
+    private InlineKeyboardMarkup getGoalsButton() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         Date date = new Date();
         SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
         String currentDate = formatForDateNow.format(date);
-//
-//        if (listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(, currentDate)) {
-//
-//        }
+
         InlineKeyboardButton buttonTaskOne = new InlineKeyboardButton().setText("1");
         InlineKeyboardButton buttonTaskTwo = new InlineKeyboardButton().setText("2");
         InlineKeyboardButton buttonTaskThree = new InlineKeyboardButton().setText("3");

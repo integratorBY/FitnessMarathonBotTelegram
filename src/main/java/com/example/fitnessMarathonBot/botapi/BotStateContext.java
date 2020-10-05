@@ -99,6 +99,7 @@ public class BotStateContext {
             case ASK_SHIN:
             case ASK_DATE:
             case ASK_WAIST:
+            case ASK_START_PHOTO:
             case PERSONAL_INFO_FILLED:
             case ASK_SUPPLEMENT_PERSONAL_INFO:
                 return true;
@@ -127,7 +128,6 @@ public class BotStateContext {
         switch (currentState) {
             case INPUT_MESSAGE_OT_ALL:
             case MESSAGE_SENT:
-//            case ASK_MESSAGE_FOR_USER:
                 return true;
             default:
                 return false;
