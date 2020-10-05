@@ -1,6 +1,7 @@
 package com.example.fitnessMarathonBot.botapi;
 
-/**Возможные состояния бота
+/**
+ * Возможные состояния бота
  */
 
 public enum BotState {
@@ -54,6 +55,10 @@ public enum BotState {
     ASK_ADMIN_TASK_FOUR,
     ASK_ADMIN_TASK_FIVE,
     ASK_ADMIN_TASK_SIX,
+
+    OPEN_CUSTOMER_INFO,
+    ASK_NUMBER_CLIENT,
+    VIEW_PROFILE,
 
     ASK_DATE_START_MARATHON,
     ASK_DATE_FINISH_MARATHON,

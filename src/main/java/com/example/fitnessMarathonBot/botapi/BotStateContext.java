@@ -38,6 +38,8 @@ public class BotStateContext {
             return messageHandlers.get(BotState.START_NEW_MARATHON);
         } else if (isSendMessageAllState(currentState)) {
             return messageHandlers.get(BotState.ASK_MESSAGE_FOR_USER);
+        } else if (isOpenCustomerInfoState(currentState)) {
+            return messageHandlers.get(BotState.OPEN_CUSTOMER_INFO);
         }
         return messageHandlers.get(currentState);
     }
@@ -126,6 +128,16 @@ public class BotStateContext {
             case INPUT_MESSAGE_OT_ALL:
             case MESSAGE_SENT:
 //            case ASK_MESSAGE_FOR_USER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean isOpenCustomerInfoState(BotState currentState) {
+        switch (currentState) {
+            case ASK_NUMBER_CLIENT:
+            case VIEW_PROFILE:
                 return true;
             default:
                 return false;
