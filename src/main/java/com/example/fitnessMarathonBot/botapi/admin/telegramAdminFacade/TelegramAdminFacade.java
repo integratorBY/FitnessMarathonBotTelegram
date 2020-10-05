@@ -1,7 +1,6 @@
 package com.example.fitnessMarathonBot.botapi.admin.telegramAdminFacade;
 
 import com.example.fitnessMarathonBot.bean.Bot;
-import com.example.fitnessMarathonBot.bean.UserProfileData;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.BotStateContext;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
@@ -10,21 +9,15 @@ import com.example.fitnessMarathonBot.service.LocaleMessageService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 
 @Component
 @Slf4j
@@ -94,7 +87,7 @@ public class TelegramAdminFacade {
                 botState = BotState.WEEKLY_REPORT;
                 break;
             case "Отправить сообщение всем":
-                botState = BotState.ANSWER_THE_QUESTIONS;
+                botState = BotState.SEND_MESSAGE_ALL;
                 break;
             default:
                 botState = userDataCache.getUsersCurrentBotState(userId);

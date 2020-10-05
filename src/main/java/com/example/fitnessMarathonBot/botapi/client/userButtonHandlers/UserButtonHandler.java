@@ -32,7 +32,7 @@ public class UserButtonHandler {
         SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
         if (listGoalsRepository.findListGoalsByTimeStamp(formatForDateNow.format(date)) != null) {
             ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(formatForDateNow.format(date));
-            String message = String.format(replyMessagesService.getReplyText("reply.goalsForToday"),
+            String message = String.format(replyMessagesService.getReplyText("reply.goalsForTodayReport"),
                     listGoals.getTaskOne(), listGoals.getTaskTwo(), listGoals.getTaskThree(),
                     listGoals.getTaskFour(), listGoals.getTaskFive(), listGoals.getTaskSix());
             return new SendMessage(chatId, message).setReplyMarkup(getGoalsButton(chatId));

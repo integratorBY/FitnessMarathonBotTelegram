@@ -64,7 +64,7 @@ public class StartProfileHandler implements InputMessageHandler {
         long chatId = inputMsg.getChatId();
         SendMessage replyToUser = null;
 
-        if (userId == 764602851) {
+        if (userId == 1331718111) {
             replyToUser = adminMainMenuService.getAdminMainMenuMessage(chatId, "Тут какое то приветствие админа");
         } else {
             User user = User.builder()

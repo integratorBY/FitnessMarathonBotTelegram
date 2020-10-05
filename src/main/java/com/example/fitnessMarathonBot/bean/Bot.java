@@ -43,7 +43,7 @@ public class Bot extends TelegramWebhookBot {
             userId = update.getCallbackQuery().getFrom().getId();
         }
 
-        if (userId == 764602851) {
+        if (userId == 1331718111) {
             return telegramAdminFacade.handleUpdate(update);
         }
         return telegramUserFacade.handleUpdate(update);

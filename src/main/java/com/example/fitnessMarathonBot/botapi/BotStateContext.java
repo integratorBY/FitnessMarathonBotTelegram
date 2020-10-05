@@ -36,6 +36,8 @@ public class BotStateContext {
             return messageHandlers.get(BotState.ASK_ADMIN_GOALS);
         } else if (isFillingMarathonState(currentState)) {
             return messageHandlers.get(BotState.START_NEW_MARATHON);
+        } else if (isSendMessageAllState(currentState)) {
+            return messageHandlers.get(BotState.ASK_MESSAGE_FOR_USER);
         }
         return messageHandlers.get(currentState);
     }
@@ -119,5 +121,14 @@ public class BotStateContext {
         }
     }
 
-
+    private boolean isSendMessageAllState(BotState currentState) {
+        switch (currentState) {
+            case INPUT_MESSAGE_OT_ALL:
+            case MESSAGE_SENT:
+//            case ASK_MESSAGE_FOR_USER:
+                return true;
+            default:
+                return false;
+        }
+    }
 }
