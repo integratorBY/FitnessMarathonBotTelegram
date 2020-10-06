@@ -117,6 +117,7 @@ public class BotStateContext {
             case ASK_ADMIN_TASK_THREE:
             case ASK_ADMIN_TASK_TWO:
             case ASK_ADMIN_TASK_SIX:
+            case ASK_ADMIN_NUMBER_GOAL:
             case GOALS_FILLED:
                 return true;
             default:

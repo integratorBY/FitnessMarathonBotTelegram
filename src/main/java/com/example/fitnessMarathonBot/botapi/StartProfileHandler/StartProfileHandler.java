@@ -20,6 +20,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +67,8 @@ public class StartProfileHandler implements InputMessageHandler {
         SendMessage replyToUser = null;
 
         if (userId == 1331718111) {
+            final LocalDateTime localNow = LocalDateTime.now(Clock.systemUTC());
+            System.out.println(localNow);
             replyToUser = adminMainMenuService.getAdminMainMenuMessage(chatId, "Тут какое то приветствие админа");
         } else {
             User user = User.builder()

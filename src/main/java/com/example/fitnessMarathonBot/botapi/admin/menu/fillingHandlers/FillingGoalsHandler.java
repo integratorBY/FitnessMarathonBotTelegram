@@ -5,14 +5,19 @@ import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.fitnessDB.bean.ListGoals;
 import com.example.fitnessMarathonBot.fitnessDB.repository.ListGoalsRepository;
+import com.example.fitnessMarathonBot.regex.RegexHandler;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class FillingGoalsHandler implements InputMessageHandler {
@@ -57,7 +62,7 @@ public class FillingGoalsHandler implements InputMessageHandler {
         BotState botState = userDataCache.getUsersCurrentBotState(userId);
 
         if (botState.equals(BotState.ASK_ADMIN_TASK_ONE)) {
-            if (checkDate(usersAnswer)) {
+            if (RegexHandler.checkDate(usersAnswer)) {
                 date = usersAnswer;
                 if (listGoalsRepository.findListGoalsByTimeStamp(usersAnswer) != null) {
                     return new SendMessage(chatId, "Задания на эту дату уже записаны");
@@ -118,10 +123,73 @@ public class FillingGoalsHandler implements InputMessageHandler {
             replyToUser = new SendMessage(chatId, "Задания на дату: " + date + " успешно записаны!");
             userDataCache.setUsersCurrentBotState(userId, BotState.ADMIN_MAIN_MENU);
         }
+        /** Edit tasks */
+
+        if (botState.equals(BotState.ASK_ADMIN_NUMBER_GOAL)) {
+            if (RegexHandler.checkUserAnswerOnDigit(usersAnswer)) {
+                List<ListGoals> goals = listGoalsRepository.findAll();
+                int number = Integer.parseInt(usersAnswer);
+                if (goals.size() >= number) {
+                    ListGoals goal = goals.get(number - 1);
+                    String selectedGoal = String.format(messagesService.getReplyText("reply.selectedListGoals"),
+                            goal.getTimeStamp(), goal.getTaskOne(), goal.getTaskTwo(), goal.getTaskThree(), goal.getTaskFour(),
+                            goal.getTaskFive(), goal.getTaskSix());
+                    replyToUser = new SendMessage(chatId, selectedGoal).setReplyMarkup(getEditGoalsButton());
+                } else {
+                    replyToUser = new SendMessage(chatId, "Нет списка заданий с таким номером!");
+                }
+            } else {
+                replyToUser = new SendMessage(chatId, "Введите порядковый номер в списке заданий(только цифра):");
+            }
+        }
+
+        /**-----------------*/
         return replyToUser;
     }
 
-    private boolean checkDate(String date) {
-        return date.matches("^(?:(?:31(\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$");
+    private InlineKeyboardMarkup getEditGoalsButton() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonEditTimeStamp = new InlineKeyboardButton().setText("Дата");
+        InlineKeyboardButton buttonEditTaskOne = new InlineKeyboardButton().setText("Задание 1");
+        InlineKeyboardButton buttonEditTaskTwo = new InlineKeyboardButton().setText("Задание 2");
+        InlineKeyboardButton buttonEditTaskThree = new InlineKeyboardButton().setText("Задание 3");
+        InlineKeyboardButton buttonEditTaskFour = new InlineKeyboardButton().setText("Задание 4");
+        InlineKeyboardButton buttonEditTaskFive = new InlineKeyboardButton().setText("Задание 5");
+        InlineKeyboardButton buttonEditTaskSix = new InlineKeyboardButton().setText("Задание 6");
+
+
+        //Every button must have callBackData, or else not work !
+        buttonEditTimeStamp.setCallbackData("buttonEditTimeStamp");
+        buttonEditTaskOne.setCallbackData("buttonEditTaskOne");
+        buttonEditTaskTwo.setCallbackData("buttonEditTaskTwo");
+        buttonEditTaskThree.setCallbackData("buttonEditTaskThree");
+        buttonEditTaskFour.setCallbackData("buttonEditTaskFour");
+        buttonEditTaskFive.setCallbackData("buttonEditTaskFive");
+        buttonEditTaskSix.setCallbackData("buttonEditTaskSix");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        keyboardButtonsRow1.add(buttonEditTimeStamp);
+
+        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
+        keyboardButtonsRow2.add(buttonEditTaskOne);
+        keyboardButtonsRow2.add(buttonEditTaskTwo);
+        keyboardButtonsRow2.add(buttonEditTaskThree);
+
+        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
+        keyboardButtonsRow3.add(buttonEditTaskFour);
+        keyboardButtonsRow3.add(buttonEditTaskFive);
+        keyboardButtonsRow3.add(buttonEditTaskSix);
+
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+        rowList.add(keyboardButtonsRow2);
+        rowList.add(keyboardButtonsRow3);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        return inlineKeyboardMarkup;
     }
+
 }

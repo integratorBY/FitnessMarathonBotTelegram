@@ -7,7 +7,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -48,4 +50,11 @@ public class AdminButtonHandler {
 
         return inlineKeyboardMarkup;
     }
+
+//    public SendMessage getMessageAndGoalsButton(long chatId) {
+//        String message = messagesService.getReplyText("reply.selectNumberGoalButton");
+//        return new SendMessage(chatId, message).setReplyMarkup(getEditGoalsButton());
+//    }
+
+
 }

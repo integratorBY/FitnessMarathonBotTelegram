@@ -6,6 +6,7 @@ import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
+import com.example.fitnessMarathonBot.regex.RegexHandler;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class OpenCustomerInfo implements InputMessageHandler {
         long chatId = inputMsg.getChatId();
         String profileInfo = "";
         SendMessage replyToUser = null;
-        if (checkUserAnswerOnDigit(usersAnswer)) {
+        if (RegexHandler.checkUserAnswerOnDigit(usersAnswer)) {
             int number = Integer.parseInt(usersAnswer);
             if (userProfile.findAll().size() != 0) {
                 List<UserProfile> userList = userProfile.findAll();
@@ -93,7 +94,4 @@ public class OpenCustomerInfo implements InputMessageHandler {
         }
     }
 
-    private boolean checkUserAnswerOnDigit(String userAnswer) {
-        return userAnswer.matches("[0-9]");
-    }
 }

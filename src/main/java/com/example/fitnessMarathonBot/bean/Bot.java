@@ -2,9 +2,12 @@ package com.example.fitnessMarathonBot.bean;
 
 import com.example.fitnessMarathonBot.botapi.admin.telegramAdminFacade.TelegramAdminFacade;
 import com.example.fitnessMarathonBot.botapi.client.teleframUserFacade.TelegramUserFacade;
+import com.example.fitnessMarathonBot.service.BroadcastService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -25,6 +28,9 @@ public class Bot extends TelegramWebhookBot {
     private String webHookPath;
     private String botUserName;
     private String botToken;
+
+    @Autowired
+    BroadcastService broadcastService;
 
     private TelegramUserFacade telegramUserFacade;
     private TelegramAdminFacade telegramAdminFacade;

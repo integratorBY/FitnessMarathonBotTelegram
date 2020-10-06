@@ -44,7 +44,7 @@ public class ParticipantsAndResultHandler implements InputMessageHandler {
 
         }
         userDataCache.setUsersCurrentBotState(userId, BotState.OPEN_CUSTOMER_INFO);
-        return new SendMessage(message.getChatId(), users + "\n\nВведите норме клиента чтобы открыть профиль: ");
+        return new SendMessage(message.getChatId(), users + "\n\nВведите номер клиента чтобы открыть профиль: ");
     }
 
     @Override

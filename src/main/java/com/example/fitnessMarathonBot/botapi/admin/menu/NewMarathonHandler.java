@@ -5,7 +5,9 @@ import com.example.fitnessMarathonBot.bean.UserProfileData;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
+import com.example.fitnessMarathonBot.service.BroadcastService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -24,6 +26,9 @@ public class NewMarathonHandler implements InputMessageHandler {
     private Bot myBot;
     private ReplyMessagesService messagesService;
 
+    @Autowired
+    private BroadcastService broadcastService;
+
     public NewMarathonHandler(UserDataCache userDataCache, @Lazy Bot myBot, ReplyMessagesService messagesService) {
         this.userDataCache = userDataCache;
         this.myBot = myBot;
@@ -33,29 +38,29 @@ public class NewMarathonHandler implements InputMessageHandler {
     @Override
     public SendMessage handle(Message inputMsg) {
         final int userId = inputMsg.getFrom().getId();
-        final UserProfileData profileData = userDataCache.getUserProfileData(userId);
+//        final UserProfileData profileData = userDataCache.getUserProfileData(userId);
         long chatId = inputMsg.getChatId();
-//        Date date = new Date();
-//        SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
-//        formatForDateNow.format(date);
-
-        BotState botState = userDataCache.getUsersCurrentBotState(userId);
-
+////        Date date = new Date();
+////        SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
+////        formatForDateNow.format(date);
+//
+//        BotState botState = userDataCache.getUsersCurrentBotState(userId);
+//
         SendMessage replyToUser = null;
+//
+//        String messageSetDateToStartMarathon = messagesService.getReplyText("reply.SetDateToStartMarathon");
+//        String messageSetDateToFinishMarathon = messagesService.getReplyText("reply.SetDateToFinishMarathon");
+//        if (botState.equals(BotState.START_NEW_MARATHON)) {
+//
+//            replyToUser = messagesService.getReplyMessage(chatId, "reply.askMarathonStart");
+//            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE_START_MARATHON);
+//        } else if (botState.equals(BotState.ASK_DATE_START_MARATHON)) {
+//            System.out.println(inputMsg);
+//            replyToUser = messagesService.getReplyMessage(chatId, "reply.SetDateToFinishMarathon");
+//            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE_FINISH_MARATHON);
+//        }
 
-        String messageSetDateToStartMarathon = messagesService.getReplyText("reply.SetDateToStartMarathon");
-        String messageSetDateToFinishMarathon = messagesService.getReplyText("reply.SetDateToFinishMarathon");
-        if (botState.equals(BotState.START_NEW_MARATHON)) {
-
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.askMarathonStart");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE_START_MARATHON);
-        } else if (botState.equals(BotState.ASK_DATE_START_MARATHON)) {
-            System.out.println(inputMsg);
-            replyToUser = messagesService.getReplyMessage(chatId, "reply.SetDateToFinishMarathon");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE_FINISH_MARATHON);
-        }
-
-
+        replyToUser = new SendMessage(chatId, "Начинаем марафон");
         userDataCache.setUsersCurrentBotState(userId, BotState.START_NEW_MARATHON);
         return replyToUser;
     }

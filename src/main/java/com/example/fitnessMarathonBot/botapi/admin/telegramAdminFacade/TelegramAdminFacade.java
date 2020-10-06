@@ -114,7 +114,7 @@ public class TelegramAdminFacade {
 
         } else if (buttonQuery.getData().equals("buttonEditGoal")) {
             callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminEditTask"));
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
 
         } else if (buttonQuery.getData().equals("buttonDelGoal")) {
             callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminDeleteTask"));
