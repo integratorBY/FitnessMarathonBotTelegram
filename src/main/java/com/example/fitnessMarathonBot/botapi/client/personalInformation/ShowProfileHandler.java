@@ -8,6 +8,7 @@ import com.example.fitnessMarathonBot.fitnessDB.bean.User;
 import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
+import com.example.fitnessMarathonBot.service.MessageService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class ShowProfileHandler implements InputMessageHandler {
     private Bot myBot;
 
     @Autowired
+    private MessageService service;
+
+    @Autowired
     private UserProfileImpl userProfileRepo;
 
     @Autowired
@@ -46,6 +50,7 @@ public class ShowProfileHandler implements InputMessageHandler {
     @SneakyThrows
     @Override
     public SendMessage handle(Message message) {
+        service.updateDateInDB();
         SendMessage sendMessage = null;
         long chatId = message.getChatId();
         User user = userRepository.findUserByChatId(chatId);

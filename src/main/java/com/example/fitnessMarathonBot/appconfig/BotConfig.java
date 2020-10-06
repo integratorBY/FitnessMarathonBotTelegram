@@ -3,8 +3,10 @@ package com.example.fitnessMarathonBot.appconfig;
 import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.admin.telegramAdminFacade.TelegramAdminFacade;
 import com.example.fitnessMarathonBot.botapi.client.teleframUserFacade.TelegramUserFacade;
+import com.example.fitnessMarathonBot.service.BroadcastService;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -22,12 +24,16 @@ public class BotConfig {
     private String botUserName;
     private String botToken;
 
+    @Autowired
+    BroadcastService broadcastService;
+
     @Bean
     public Bot myBot(TelegramUserFacade telegramUserFacade, TelegramAdminFacade telegramAdminFacade) throws TelegramApiRequestException {
         Bot myBot = new Bot(telegramUserFacade, telegramAdminFacade);
         myBot.setBotUserName(botUserName);
         myBot.setBotToken(botToken);
         myBot.setWebHookPath(webHookPath);
+        new Thread(broadcastService::startBroadcasting).start();
         return myBot;
     }
 
