@@ -39,11 +39,17 @@ public class MessageService {
         SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
         String currentDate = formatter.format(date);
         List<ListGoals> goals = listGoalsRepo.findAll();
-        ListGoals listGoals = goals.get(0);
-        Date date2 = formatter.parse(listGoals.getTimeStamp());
-        if (date.compareTo(date2) > 0) {
-            listGoals.setTimeStamp(currentDate);
+        ListGoals listGoals = listGoalsRepo.findListGoalsByTimeStamp(currentDate);
+        if (listGoals != null && goals.size() > 1) {
+            listGoalsRepo.deleteAll();
             listGoalsRepo.save(listGoals);
+        } else {
+            listGoals = goals.get(0);
+            Date date2 = formatter.parse(listGoals.getTimeStamp());
+            if (date.compareTo(date2) > 0) {
+                listGoals.setTimeStamp(currentDate);
+                listGoalsRepo.save(listGoals);
+            }
         }
     }
 

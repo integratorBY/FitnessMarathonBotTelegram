@@ -19,17 +19,21 @@ public class ListUserGoalsService {
     @Autowired
     private UserRepositoryImpl userRepository;
 
-    public void markTargetOne(long chatId) {
+    public boolean markTargetOne(long chatId) {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         String currentDate = dateFormat.format(date);
         if (userRepository.findUserByChatId(chatId) != null) {
             User user = userRepository.findUserByChatId(chatId);
-            if(listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
+            if (listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
                 ListUserGoals listUserGoals = listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate);
-                listUserGoals.setTaskOne(true);
-                listUserGoals.setTimeStamp(currentDate);
-                listUserGoalsRepository.save(listUserGoals);
+                if (listUserGoals.isTaskOne()) {
+                    return true;
+                } else {
+                    listUserGoals.setTaskOne(true);
+                    listUserGoals.setTimeStamp(currentDate);
+                    listUserGoalsRepository.save(listUserGoals);
+                }
             } else {
                 ListUserGoals listUserGoals = ListUserGoals.builder()
                         .user(user)
@@ -39,19 +43,24 @@ public class ListUserGoalsService {
                 listUserGoalsRepository.save(listUserGoals);
             }
         }
+        return false;
     }
 
-    public void markTargetTwo(long chatId) {
+    public boolean markTargetTwo(long chatId) {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         String currentDate = dateFormat.format(date);
         if (userRepository.findUserByChatId(chatId) != null) {
             User user = userRepository.findUserByChatId(chatId);
-            if(listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
+            if (listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
                 ListUserGoals listUserGoals = listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate);
-                listUserGoals.setTaskTwo(true);
-                listUserGoals.setTimeStamp(currentDate);
-                listUserGoalsRepository.save(listUserGoals);
+                if (listUserGoals.isTaskTwo()) {
+                    return true;
+                } else {
+                    listUserGoals.setTaskTwo(true);
+                    listUserGoals.setTimeStamp(currentDate);
+                    listUserGoalsRepository.save(listUserGoals);
+                }
             } else {
                 ListUserGoals listUserGoals = ListUserGoals.builder()
                         .user(user)
@@ -61,19 +70,24 @@ public class ListUserGoalsService {
                 listUserGoalsRepository.save(listUserGoals);
             }
         }
+        return false;
     }
 
-    public void markTargetThree(long chatId) {
+    public boolean markTargetThree(long chatId) {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         String currentDate = dateFormat.format(date);
         if (userRepository.findUserByChatId(chatId) != null) {
             User user = userRepository.findUserByChatId(chatId);
-            if(listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
+            if (listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
                 ListUserGoals listUserGoals = listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate);
-                listUserGoals.setTaskThree(true);
-                listUserGoals.setTimeStamp(currentDate);
-                listUserGoalsRepository.save(listUserGoals);
+                if (listUserGoals.isTaskThree()) {
+                    return true;
+                } else {
+                    listUserGoals.setTaskThree(true);
+                    listUserGoals.setTimeStamp(currentDate);
+                    listUserGoalsRepository.save(listUserGoals);
+                }
             } else {
                 ListUserGoals listUserGoals = ListUserGoals.builder()
                         .user(user)
@@ -83,19 +97,24 @@ public class ListUserGoalsService {
                 listUserGoalsRepository.save(listUserGoals);
             }
         }
+        return false;
     }
 
-    public void markTargetFour(long chatId) {
+    public boolean markTargetFour(long chatId) {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         String currentDate = dateFormat.format(date);
         if (userRepository.findUserByChatId(chatId) != null) {
             User user = userRepository.findUserByChatId(chatId);
-            if(listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
+            if (listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
                 ListUserGoals listUserGoals = listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate);
-                listUserGoals.setTaskFour(true);
-                listUserGoals.setTimeStamp(currentDate);
-                listUserGoalsRepository.save(listUserGoals);
+                if (listUserGoals.isTaskFour()) {
+                    return true;
+                } else {
+                    listUserGoals.setTaskFour(true);
+                    listUserGoals.setTimeStamp(currentDate);
+                    listUserGoalsRepository.save(listUserGoals);
+                }
             } else {
                 ListUserGoals listUserGoals = ListUserGoals.builder()
                         .user(user)
@@ -105,19 +124,24 @@ public class ListUserGoalsService {
                 listUserGoalsRepository.save(listUserGoals);
             }
         }
+        return false;
     }
 
-    public void markTargetFive(long chatId) {
+    public boolean markTargetFive(long chatId) {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         String currentDate = dateFormat.format(date);
         if (userRepository.findUserByChatId(chatId) != null) {
             User user = userRepository.findUserByChatId(chatId);
-            if(listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
+            if (listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
                 ListUserGoals listUserGoals = listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate);
-                listUserGoals.setTaskFive(true);
-                listUserGoals.setTimeStamp(currentDate);
-                listUserGoalsRepository.save(listUserGoals);
+                if (listUserGoals.isTaskFive()) {
+                    return true;
+                } else {
+                    listUserGoals.setTaskFive(true);
+                    listUserGoals.setTimeStamp(currentDate);
+                    listUserGoalsRepository.save(listUserGoals);
+                }
             } else {
                 ListUserGoals listUserGoals = ListUserGoals.builder()
                         .user(user)
@@ -127,19 +151,24 @@ public class ListUserGoalsService {
                 listUserGoalsRepository.save(listUserGoals);
             }
         }
+        return false;
     }
 
-    public void markTargetSix(long chatId) {
+    public boolean markTargetSix(long chatId) {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         String currentDate = dateFormat.format(date);
         if (userRepository.findUserByChatId(chatId) != null) {
             User user = userRepository.findUserByChatId(chatId);
-            if(listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
+            if (listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) != null) {
                 ListUserGoals listUserGoals = listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate);
-                listUserGoals.setTaskSix(true);
-                listUserGoals.setTimeStamp(currentDate);
-                listUserGoalsRepository.save(listUserGoals);
+                if (listUserGoals.isTaskSix()) {
+                    return true;
+                } else {
+                    listUserGoals.setTaskSix(true);
+                    listUserGoals.setTimeStamp(currentDate);
+                    listUserGoalsRepository.save(listUserGoals);
+                }
             } else {
                 ListUserGoals listUserGoals = ListUserGoals.builder()
                         .user(user)
@@ -149,5 +178,6 @@ public class ListUserGoalsService {
                 listUserGoalsRepository.save(listUserGoals);
             }
         }
+        return false;
     }
 }
