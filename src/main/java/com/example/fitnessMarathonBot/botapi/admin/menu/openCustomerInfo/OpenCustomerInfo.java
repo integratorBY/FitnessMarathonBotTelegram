@@ -92,6 +92,12 @@ public class OpenCustomerInfo implements InputMessageHandler {
         if (userProfile.getPhotoId_3() != null) {
             myBot.sendPhoto(chatId, userProfile.getPhotoId_3());
         }
+        if (userProfile.getPhotoId_4() != null) {
+            myBot.sendPhoto(chatId, userProfile.getPhotoId_4());
+        }
+        if (userProfile.getPhotoId_5() != null) {
+            myBot.sendPhoto(chatId, userProfile.getPhotoId_5());
+        }
     }
 
 }

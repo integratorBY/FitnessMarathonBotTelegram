@@ -3,6 +3,7 @@ package com.example.fitnessMarathonBot.botapi.admin.telegramAdminFacade;
 import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.BotStateContext;
+import com.example.fitnessMarathonBot.botapi.admin.adminButtonHandler.AdminButtonHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.service.AdminMainMenuService;
 import com.example.fitnessMarathonBot.service.LocaleMessageService;
@@ -10,6 +11,7 @@ import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
@@ -30,6 +32,8 @@ public class TelegramAdminFacade {
     private Bot myBot;
     private ReplyMessagesService messagesService;
 
+    @Autowired
+    private AdminButtonHandler adminButtonHandler;
 
     public TelegramAdminFacade(BotStateContext botStateContext, UserDataCache userDataCache, AdminMainMenuService adminMainMenuService,
                                @Lazy Bot myBot, ReplyMessagesService messagesService) {
@@ -113,13 +117,38 @@ public class TelegramAdminFacade {
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_TASK_ONE);
 
         } else if (buttonQuery.getData().equals("buttonEditGoal")) {
-            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminEditTask"));
+            callBackAnswer = adminButtonHandler.getMessageAndEditGoalButtons(chatId);
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
 
         } else if (buttonQuery.getData().equals("buttonDelGoal")) {
             callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminDeleteTask"));
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
 
+        } else if (buttonQuery.getData().equals("buttonEditTimeStamp")) {
+            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTimeStampForTask"));
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_EDIT_TIMESTAMP);
+        } else if (buttonQuery.getData().equals("buttonEditTaskOne")) {
+            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskOne"));
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_EDIT_TASK_ONE);
+        } else if (buttonQuery.getData().equals("buttonEditTaskTwo")) {
+            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskTwo"));
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_EDIT_TASK_TWO);
+        } else if (buttonQuery.getData().equals("buttonEditTaskThree")) {
+            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskThree"));
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_EDIT_TASK_THREE);
+        } else if (buttonQuery.getData().equals("buttonEditTaskFour")) {
+            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskFour"));
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_EDIT_TASK_FOUR);
+        } else if (buttonQuery.getData().equals("buttonEditTaskFive")) {
+            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskFive"));
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_EDIT_TASK_FIVE);
+        } else if (buttonQuery.getData().equals("buttonEditTaskSix")) {
+            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskSix"));
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_EDIT_TASK_SIX);
+
+        } else if (buttonQuery.getData().equals("buttonAddMealPlan")) {
+            callBackAnswer = adminButtonHandler.getUserProfileListAndMessage(chatId);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_USER_PLAN);
         }
 
         return callBackAnswer;

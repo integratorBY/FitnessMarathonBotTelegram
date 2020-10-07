@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -58,7 +57,8 @@ public class ShowProfileHandler implements InputMessageHandler {
             sendMessage = new SendMessage(chatId, "Данные отсутствуют");
         } else {
             UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
-            boolean isPhoto = checkUserProfilePhoto(userProfile);
+            boolean isPhotoBody = checkUserProfilePhotoBody(userProfile);
+            boolean isPhotoWeigher = checkUserProfilePhotoWeigher(userProfile);
             String profileInfo = messagesService.getReplyText("reply.profileInfo");
             profileInfo = String.format(profileInfo, userProfile.getFullName(), userProfile.getUserAge(),
                     userProfile.getPk().getBodyParam().getHeight(), userProfile.getPk().getBodyParam().getWeight(),
@@ -69,12 +69,10 @@ public class ShowProfileHandler implements InputMessageHandler {
                     userProfile.getPk().getBodyParam().getDate());
             if (profileInfo.contains("null")) {
                 profileInfo = profileInfo.replaceAll("null", "0");
-                sendMessage = new SendMessage(chatId, profileInfo).setReplyMarkup(getInlineMessageButtons(isPhoto));
+                sendMessage = new SendMessage(chatId, profileInfo).setReplyMarkup(getInlineMessageButtons(isPhotoBody, isPhotoWeigher));
             } else {
-                sendMessage = new SendMessage(chatId, profileInfo).setReplyMarkup(getButtonEditPersonalInfo(isPhoto));
+                sendMessage = new SendMessage(chatId, profileInfo).setReplyMarkup(getButtonEditPersonalInfo(isPhotoBody, isPhotoWeigher));
             }
-
-            OpenCustomerInfo.sendCustomerPhoto(chatId, userProfile, myBot);
         }
         return sendMessage;
     }
@@ -84,64 +82,78 @@ public class ShowProfileHandler implements InputMessageHandler {
         return BotState.MY_INFORMATION;
     }
 
-    private boolean checkUserProfilePhoto(UserProfile userProfile) {
+    private boolean checkUserProfilePhotoBody(UserProfile userProfile) {
         return userProfile.getPhotoId_1() != null && userProfile.getPhotoId_2() != null &&
                 userProfile.getPhotoId_3() != null;
     }
 
-    private InlineKeyboardMarkup getInlineMessageButtons(boolean isPhoto) {
+    private boolean checkUserProfilePhotoWeigher(UserProfile userProfile) {
+        return userProfile.getPhotoId_4() != null && userProfile.getPhotoId_5() != null;
+    }
+
+    private InlineKeyboardMarkup getInlineMessageButtons(boolean isPhotoBody, boolean isPhotoWeigher) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton buttonPersonalInfo = new InlineKeyboardButton().setText("Заполнить остальные данные");
-        InlineKeyboardButton buttonLoadPhoto = new InlineKeyboardButton().setText("Отправить фото(тело)");
+        InlineKeyboardButton buttonLoadPhotoBody = new InlineKeyboardButton().setText("Отправить фото(тело)");
+        InlineKeyboardButton buttonLoadWeigher = new InlineKeyboardButton().setText("Отправить фото(весы)");
 
-        buttonLoadPhoto.setCallbackData("buttonLoadPhoto");
+        buttonLoadPhotoBody.setCallbackData("buttonLoadPhotoBody");
         buttonPersonalInfo.setCallbackData("buttonPersonalInfo");
+        buttonLoadWeigher.setCallbackData("buttonLoadWeigher");
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        keyboardButtonsRow1.add(buttonPersonalInfo);
 
-        if (!isPhoto) {
-            keyboardButtonsRow1.add(buttonPersonalInfo);
-            List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-            keyboardButtonsRow2.add(buttonLoadPhoto);
-            List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-            rowList.add(keyboardButtonsRow1);
+        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
+        keyboardButtonsRow2.add(buttonLoadPhotoBody);
+
+        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
+        keyboardButtonsRow3.add(buttonLoadWeigher);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+
+        if (!isPhotoBody) {
             rowList.add(keyboardButtonsRow2);
-
-            inlineKeyboardMarkup.setKeyboard(rowList);
-        } else {
-            keyboardButtonsRow1.add(buttonPersonalInfo);
-
-            List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-            rowList.add(keyboardButtonsRow1);
-
-            inlineKeyboardMarkup.setKeyboard(rowList);
+        }
+        if (!isPhotoWeigher) {
+            rowList.add(keyboardButtonsRow3);
         }
 
-
+        inlineKeyboardMarkup.setKeyboard(rowList);
 
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getButtonEditPersonalInfo(boolean isPhoto) {
+    private InlineKeyboardMarkup getButtonEditPersonalInfo(boolean isPhotoBody, boolean isPhotoWeigher) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton buttonEditPersonalInfo = new InlineKeyboardButton().setText("Изменить данные");
-        InlineKeyboardButton buttonLoadPhoto = new InlineKeyboardButton().setText("Отправить фото(тело)");
+        InlineKeyboardButton buttonLoadPhotoBody = new InlineKeyboardButton().setText("Отправить фото(тело)");
+        InlineKeyboardButton buttonLoadWeigher = new InlineKeyboardButton().setText("Отправить фото(весы)");
 
-        buttonLoadPhoto.setCallbackData("buttonLoadPhoto");
+        buttonLoadPhotoBody.setCallbackData("buttonLoadPhotoBody");
         buttonEditPersonalInfo.setCallbackData("buttonEditPersonalInfo");
-
-        System.out.println(isPhoto);
+        buttonLoadWeigher.setCallbackData("buttonLoadWeigher");
 
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(buttonEditPersonalInfo);
 
-        if (!isPhoto) {
-            keyboardButtonsRow1.add(buttonLoadPhoto);
-        }
+        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
+        keyboardButtonsRow2.add(buttonLoadPhotoBody);
+
+        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
+        keyboardButtonsRow3.add(buttonLoadWeigher);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
+
+        if (!isPhotoBody) {
+            rowList.add(keyboardButtonsRow2);
+        }
+        if (!isPhotoWeigher) {
+            rowList.add(keyboardButtonsRow3);
+        }
 
         inlineKeyboardMarkup.setKeyboard(rowList);
 

@@ -18,6 +18,7 @@ import java.util.List;
 @Component
 public class MessageService {
 
+    static int count = 0;
     @Autowired
     private ListGoalsRepository listGoalsRepo;
 

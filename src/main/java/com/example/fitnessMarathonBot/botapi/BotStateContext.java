@@ -30,9 +30,9 @@ public class BotStateContext {
         } else if (isSupplementProfileState(currentState)) {
             return messageHandlers.get(BotState.ASK_SUPPLEMENT_PERSONAL_INFO);
 
-        } else if(isFillingReport(currentState)) {
+        } else if (isFillingReport(currentState)) {
             return messageHandlers.get(BotState.ASK_REPORT);
-        } else if(isFillingGoals(currentState)) {
+        } else if (isFillingGoals(currentState)) {
             return messageHandlers.get(BotState.ASK_ADMIN_GOALS);
         } else if (isFillingMarathonState(currentState)) {
             return messageHandlers.get(BotState.START_NEW_MARATHON);
@@ -40,22 +40,35 @@ public class BotStateContext {
             return messageHandlers.get(BotState.ASK_MESSAGE_FOR_USER);
         } else if (isOpenCustomerInfoState(currentState)) {
             return messageHandlers.get(BotState.OPEN_CUSTOMER_INFO);
+        } else if (isFillingMealPlanState(currentState)) {
+            return messageHandlers.get(BotState.ASK_ADMIN_MEAL_PLAN);
         }
         return messageHandlers.get(currentState);
     }
 
-        private boolean isFillingMarathonState(BotState currentState) {
-            switch (currentState) {
-                case START_NEW_MARATHON:
-                case ASK_DATE_START_MARATHON:
-                case ASK_DATE_FINISH_MARATHON:
-                    return true;
-                default:
-                    return false;
-            }
+    private boolean isFillingMealPlanState(BotState currentState) {
+        switch (currentState) {
+            case ASK_ADMIN_NUMBER_USER_PLAN:
+            case ASK_ADMIN_PLAN:
+            case MEAL_PLAN_FILLED:
+                return true;
+            default:
+                return false;
         }
+    }
 
-        private boolean isFillingProfileState(BotState currentState) {
+    private boolean isFillingMarathonState(BotState currentState) {
+        switch (currentState) {
+            case START_NEW_MARATHON:
+            case ASK_DATE_START_MARATHON:
+            case ASK_DATE_FINISH_MARATHON:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean isFillingProfileState(BotState currentState) {
         switch (currentState) {
             case ASK_NAME:
             case ASK_HEIGHT:
@@ -69,7 +82,7 @@ public class BotStateContext {
         }
     }
 
-    private boolean isFillingReport(BotState currentState){
+    private boolean isFillingReport(BotState currentState) {
 
         switch (currentState) {
             case ASK_REPORT:
@@ -100,6 +113,7 @@ public class BotStateContext {
             case ASK_DATE:
             case ASK_WAIST:
             case ASK_START_PHOTO:
+            case ASK_START_PHOTO_WEIGHER:
             case PERSONAL_INFO_FILLED:
             case ASK_SUPPLEMENT_PERSONAL_INFO:
                 return true;
@@ -117,6 +131,13 @@ public class BotStateContext {
             case ASK_ADMIN_TASK_THREE:
             case ASK_ADMIN_TASK_TWO:
             case ASK_ADMIN_TASK_SIX:
+            case ASK_ADMIN_EDIT_TASK_SIX:
+            case ASK_ADMIN_EDIT_TASK_FIVE:
+            case ASK_ADMIN_EDIT_TASK_FOUR:
+            case ASK_ADMIN_EDIT_TASK_THREE:
+            case ASK_ADMIN_EDIT_TASK_TWO:
+            case ASK_ADMIN_EDIT_TASK_ONE:
+            case ASK_ADMIN_EDIT_TIMESTAMP:
             case ASK_ADMIN_NUMBER_GOAL:
             case GOALS_FILLED:
                 return true;

@@ -6,9 +6,6 @@ import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.BotStateContext;
 import com.example.fitnessMarathonBot.botapi.client.userButtonHandlers.UserButtonHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
-import com.example.fitnessMarathonBot.fitnessDB.bean.User;
-import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
-import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.service.ListUserGoalsService;
 import com.example.fitnessMarathonBot.fitnessDB.service.UserPhotoService;
 import com.example.fitnessMarathonBot.fitnessDB.service.UserProfileService;
@@ -94,7 +91,9 @@ public class TelegramUserFacade {
             log.info("New photo from User:{}, userId: {}, chatId: {},  photo_id: {}",
                     message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), photo_id);
             if (userDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.ASK_START_PHOTO)) {
-                replyMessage = counterOfSendStartPhotos(message);
+                replyMessage = counterOfSendStartPhotosBody(message);
+            } else if (userDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.ASK_START_PHOTO_WEIGHER)) {
+                replyMessage = counterOfSendStartPhotosWeigher(message);
             } else {
                 replyMessage = counterOfSentPhotos(message);
 //                    counterOfSentPhotos(message);
@@ -105,10 +104,17 @@ public class TelegramUserFacade {
         return replyMessage;
     }
 
-    private SendMessage counterOfSendStartPhotos(Message message) {
+    private SendMessage counterOfSendStartPhotosBody(Message message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(message.getChatId());
-        userProfileService.saveUserProfile(message);
+        userProfileService.saveUserProfilesStartPhotoBody(message);
+        return new SendMessage(message.getChatId(), "Фото принято");
+    }
+
+    private SendMessage counterOfSendStartPhotosWeigher(Message message) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(message.getChatId());
+        userProfileService.saveUserProfilesStartPhotoWeigher(message);
         return new SendMessage(message.getChatId(), "Фото принято");
     }
 
@@ -194,9 +200,13 @@ public class TelegramUserFacade {
             callBackAnswer = userButtonHandler.getMessageAndGoalsButton(chatId);
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_GOALS);
 
-        } else if (buttonQuery.getData().equals("buttonLoadPhoto")) {
-            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askStartPhoto"));
+        } else if (buttonQuery.getData().equals("buttonLoadPhotoBody")) {
+            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askStartPhotoBody"));
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_START_PHOTO);
+
+        } else if (buttonQuery.getData().equals("buttonLoadWeigher")) {
+            callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askStartPhotoWeigher"));
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_START_PHOTO_WEIGHER);
 
         } else if (buttonQuery.getData().equals("buttonTaskOne")) {
             listUserGoalsService.markTargetOne(chatId);

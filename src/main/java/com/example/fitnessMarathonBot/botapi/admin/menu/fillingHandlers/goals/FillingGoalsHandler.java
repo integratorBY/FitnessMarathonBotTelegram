@@ -1,7 +1,8 @@
-package com.example.fitnessMarathonBot.botapi.admin.menu.fillingHandlers;
+package com.example.fitnessMarathonBot.botapi.admin.menu.fillingHandlers.goals;
 
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
+import com.example.fitnessMarathonBot.botapi.admin.adminButtonHandler.AdminButtonHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.fitnessDB.bean.ListGoals;
 import com.example.fitnessMarathonBot.fitnessDB.repository.ListGoalsRepository;
@@ -28,6 +29,11 @@ public class FillingGoalsHandler implements InputMessageHandler {
 
     @Autowired
     private ReplyMessagesService messagesService;
+
+    @Autowired
+    private AdminButtonHandler adminButtonHandler;
+
+    List<ListGoals> listGoalsList = new ArrayList<>();
 
     private static String date = "";
 
@@ -124,23 +130,72 @@ public class FillingGoalsHandler implements InputMessageHandler {
             userDataCache.setUsersCurrentBotState(userId, BotState.ADMIN_MAIN_MENU);
         }
         /** Edit tasks */
-
-        if (botState.equals(BotState.ASK_ADMIN_NUMBER_GOAL)) {
-            if (RegexHandler.checkUserAnswerOnDigit(usersAnswer)) {
-                List<ListGoals> goals = listGoalsRepository.findAll();
-                int number = Integer.parseInt(usersAnswer);
-                if (goals.size() >= number) {
-                    ListGoals goal = goals.get(number - 1);
-                    String selectedGoal = String.format(messagesService.getReplyText("reply.selectedListGoals"),
-                            goal.getTimeStamp(), goal.getTaskOne(), goal.getTaskTwo(), goal.getTaskThree(), goal.getTaskFour(),
-                            goal.getTaskFive(), goal.getTaskSix());
-                    replyToUser = new SendMessage(chatId, selectedGoal).setReplyMarkup(getEditGoalsButton());
+        if (botState.equals(BotState.ASK_ADMIN_EDIT_TIMESTAMP)) {
+            if (RegexHandler.checkDate(usersAnswer)) {
+                if (listGoalsRepository.findListGoalsByTimeStamp(usersAnswer) != null) {
+                    return new SendMessage(chatId, "Задания на эту дату уже записаны");
                 } else {
-                    replyToUser = new SendMessage(chatId, "Нет списка заданий с таким номером!");
+                    listGoalsList = listGoalsRepository.findAll();
+                    ListGoals listGoals = listGoalsList.get(0);
+                    listGoals.setTimeStamp(usersAnswer);
+                    listGoalsRepository.save(listGoals);
+                    replyToUser = adminButtonHandler.getMessageAndEditGoalButtons(chatId);
+                    userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
                 }
             } else {
-                replyToUser = new SendMessage(chatId, "Введите порядковый номер в списке заданий(только цифра):");
+                replyToUser = new SendMessage(chatId, "Не верный формат даты!");
+                userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_EDIT_TIMESTAMP);
             }
+        }
+
+        if (botState.equals(BotState.ASK_ADMIN_EDIT_TASK_ONE)) {
+            listGoalsList = listGoalsRepository.findAll();
+            ListGoals listGoals = listGoalsList.get(0);
+            listGoals.setTaskOne(usersAnswer);
+            listGoalsRepository.save(listGoals);
+            replyToUser = adminButtonHandler.getMessageAndEditGoalButtons(chatId);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
+        }
+
+        if (botState.equals(BotState.ASK_ADMIN_EDIT_TASK_TWO)) {
+            listGoalsList = listGoalsRepository.findAll();
+            ListGoals listGoals = listGoalsList.get(0);
+            listGoals.setTaskTwo(usersAnswer);
+            listGoalsRepository.save(listGoals);
+            replyToUser = adminButtonHandler.getMessageAndEditGoalButtons(chatId);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
+        }
+        if (botState.equals(BotState.ASK_ADMIN_EDIT_TASK_THREE)) {
+            listGoalsList = listGoalsRepository.findAll();
+            ListGoals listGoals = listGoalsList.get(0);
+            listGoals.setTaskThree(usersAnswer);
+            listGoalsRepository.save(listGoals);
+            replyToUser = adminButtonHandler.getMessageAndEditGoalButtons(chatId);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
+        }
+        if (botState.equals(BotState.ASK_ADMIN_EDIT_TASK_FOUR)) {
+            listGoalsList = listGoalsRepository.findAll();
+            ListGoals listGoals = listGoalsList.get(0);
+            listGoals.setTaskFour(usersAnswer);
+            listGoalsRepository.save(listGoals);
+            replyToUser = adminButtonHandler.getMessageAndEditGoalButtons(chatId);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
+        }
+        if (botState.equals(BotState.ASK_ADMIN_EDIT_TASK_FIVE)) {
+            listGoalsList = listGoalsRepository.findAll();
+            ListGoals listGoals = listGoalsList.get(0);
+            listGoals.setTaskFive(usersAnswer);
+            listGoalsRepository.save(listGoals);
+            replyToUser = adminButtonHandler.getMessageAndEditGoalButtons(chatId);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
+        }
+        if (botState.equals(BotState.ASK_ADMIN_EDIT_TASK_SIX)) {
+            listGoalsList = listGoalsRepository.findAll();
+            ListGoals listGoals = listGoalsList.get(0);
+            listGoals.setTaskSix(usersAnswer);
+            listGoalsRepository.save(listGoals);
+            replyToUser = adminButtonHandler.getMessageAndEditGoalButtons(chatId);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
         }
 
         /**-----------------*/

@@ -37,5 +37,11 @@ public class UserProfile implements Serializable {
 
     @Column(name = "photo_3")
     private String photoId_3;
+
+    @Column(name = "photo_4")
+    private String photoId_4;
+
+    @Column(name = "photo_5")
+    private String photoId_5;
 }
 

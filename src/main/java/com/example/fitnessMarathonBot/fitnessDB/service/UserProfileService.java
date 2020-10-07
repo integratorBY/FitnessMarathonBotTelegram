@@ -22,7 +22,7 @@ public class UserProfileService {
     @Autowired
     private UserRepositoryImpl userRepository;
 
-    public void saveUserProfile(Message message) {
+    public void saveUserProfilesStartPhotoBody(Message message) {
         User user = userRepository.findUserByChatId(message.getChatId());
         UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
         List<PhotoSize> photos = message.getPhoto();
@@ -41,6 +41,24 @@ public class UserProfileService {
         if (userProfile.getPhotoId_3() == null) {
             userProfile.setPhotoId_3(photo_id);
             userProfileRepo.save(userProfile);
+        }
+    }
+
+    public void saveUserProfilesStartPhotoWeigher(Message message) {
+        User user = userRepository.findUserByChatId(message.getChatId());
+        UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
+        List<PhotoSize> photos = message.getPhoto();
+        String photo_id = Objects.requireNonNull(photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
+                .orElse(null)).getFileId();
+        if (userProfile.getPhotoId_4() == null) {
+            userProfile.setPhotoId_4(photo_id);
+            userProfileRepo.save(userProfile);
+            return;
+        }
+        if (userProfile.getPhotoId_5() == null) {
+            userProfile.setPhotoId_5(photo_id);
+            userProfileRepo.save(userProfile);
+            return;
         }
     }
 }

@@ -3,7 +3,9 @@ package com.example.fitnessMarathonBot.botapi.admin.menu;
 import com.example.fitnessMarathonBot.bean.UserProfileData;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
+import com.example.fitnessMarathonBot.botapi.admin.adminButtonHandler.AdminButtonHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -12,6 +14,9 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class MealPlanHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
 
+    @Autowired
+    private AdminButtonHandler adminButtonHandler;
+
     public MealPlanHandler(UserDataCache userDataCache) {
         this.userDataCache = userDataCache;
     }
@@ -19,10 +24,9 @@ public class MealPlanHandler implements InputMessageHandler {
     @Override
     public SendMessage handle(Message message) {
         final int userId = message.getFrom().getId();
-        final UserProfileData profileData = userDataCache.getUserProfileData(userId);
 
         userDataCache.setUsersCurrentBotState(userId, BotState.MEAL_PLAN);
-        return new SendMessage(message.getChatId(), "Здесь будут составляться планы питания");
+        return adminButtonHandler.getMessageAndMealPlanButtons(message.getChatId());
     }
 
     @Override

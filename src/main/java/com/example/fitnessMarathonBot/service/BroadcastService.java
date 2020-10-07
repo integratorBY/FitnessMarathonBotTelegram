@@ -21,8 +21,8 @@ public class BroadcastService {
                 messageService.updateDateInDB();
 
             }try {
-                System.out.println("\"broadcast is sleeping\" = " + "broadcast is sleeping");
-                Thread.sleep(288000000 / 2);
+//                System.out.println("\"broadcast is sleeping\" = " + "broadcast is sleeping");
+                Thread.sleep(28800000 / 8);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
