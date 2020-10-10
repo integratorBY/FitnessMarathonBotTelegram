@@ -26,7 +26,6 @@ public class BodyParam implements Serializable {
     private String height;
     private String weight;
     private String chest;
-    private String leg;
     private String neck;
     private String arm;
     private String hips;

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MealPlanRepository extends JpaRepository<MealPlan, Long> {
+    MealPlan findMealPlanByCategoryAndDayNumber(String category, String dayNumber);
+    MealPlan findMealPlanByCategory(String category);
 }

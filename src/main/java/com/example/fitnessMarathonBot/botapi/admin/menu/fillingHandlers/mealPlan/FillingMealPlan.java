@@ -11,6 +11,7 @@ import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
 import com.example.fitnessMarathonBot.fitnessDB.repository.MealPlanRepository;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
+import com.example.fitnessMarathonBot.fitnessDB.service.MealPlanService;
 import com.example.fitnessMarathonBot.regex.RegexHandler;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,23 +30,14 @@ public class FillingMealPlan implements InputMessageHandler {
     private UserDataCache userDataCache;
     private Bot myBot;
     @Autowired
-    private UserRepositoryImpl userRepository;
-
-    @Autowired
-    private UserProfileImpl userProfileRepo;
+    private MealPlanService mealPlanService;
 
     @Autowired
     private ReplyMessagesService messagesService;
 
-    @Autowired
-    private MealPlanRepository mealPlanRepository;
-
-    @Autowired
-    private AdminButtonHandler adminButtonHandler;
-
     private static UserProfile userProfile;
 
-    public FillingMealPlan(UserDataCache userDataCache, ReplyMessagesService messagesService,
+    public FillingMealPlan(UserDataCache userDataCache,
                            @Lazy Bot myBot) {
         this.userDataCache = userDataCache;
         this.messagesService = messagesService;
@@ -55,7 +47,7 @@ public class FillingMealPlan implements InputMessageHandler {
     @Override
     public SendMessage handle(Message message) {
         if (userDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.ASK_ADMIN_MEAL_PLAN)) {
-            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_ADMIN_NUMBER_USER_PLAN);
+            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_ADMIN_NUMBER_FOR_PLAN1);
         }
         return processUsersInput(message);
     }
@@ -77,43 +69,40 @@ public class FillingMealPlan implements InputMessageHandler {
         SendMessage replyToUser = null;
         BotState botState = userDataCache.getUsersCurrentBotState(userId);
 
-        if (botState.equals(BotState.ASK_ADMIN_NUMBER_USER_PLAN)) {
+        if (botState.equals(BotState.ASK_ADMIN_NUMBER_FOR_PLAN1)) {
             if (RegexHandler.checkUserAnswerOnDigit(usersAnswer)) {
-                List<UserProfile> userProfileList = userProfileRepo.findAll();
-                int number = Integer.parseInt(usersAnswer);
-                if (userProfileList.size() >= number) {
-                    userProfile = userProfileList.get(number - 1);
-                    String profile = "Вы выбрали клиента: ";
-                    profile = profile.concat(userProfile.getFullName() + ".\n");
-                    profile = profile.concat("  - Возраст: " + userProfile.getUserAge() + "\n");
-                    profile = profile.concat("  - Рост: " + userProfile.getPk().getBodyParam().getHeight() + "\n");
-                    profile = profile.concat("  - Вес: " + userProfile.getPk().getBodyParam().getWeight() + "\n\n");
-                    profile = profile.concat("Напишите план питания для клиента: ");
-                    userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_PLAN);
-                    replyToUser = new SendMessage(chatId, profile);
-                } else {
-                    replyToUser = new SendMessage(chatId, "Клиента нет под таким номером!");
+                if (Integer.parseInt(usersAnswer) <= 31){
+                    mealPlanService.setCountDayCategoryOne(Integer.parseInt(usersAnswer));
+                    replyToUser = new SendMessage(chatId, "Загрузите план");
+                    userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_LOAD_MEAL_PLAN1);
                 }
             } else {
-                replyToUser = new SendMessage(chatId, "Введите порядковый номер клиента в списке(только цифра):");
+                replyToUser = new SendMessage(chatId, "Введите номер дня, на который хотите загрузить план!");
             }
         }
-        if (botState.equals(BotState.ASK_ADMIN_PLAN)) {
-            User user = userProfile.getPk().getUser();
-            MealPlan mealPlan = MealPlan.builder()
-                    .plan(usersAnswer)
-                    .user(user)
-                    .build();
-            mealPlanRepository.save(mealPlan);
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_USER_PLAN);
-            try {
-                myBot.execute(new SendMessage(chatId, "План питания для клиента " +
-                        userProfile.getFullName() + " успешно добавлен!"));
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
+        if (botState.equals(BotState.ASK_ADMIN_NUMBER_FOR_PLAN2)) {
+            if (RegexHandler.checkUserAnswerOnDigit(usersAnswer)) {
+                if (Integer.parseInt(usersAnswer) <= 31){
+                    mealPlanService.setCountDayCategoryTwo(Integer.parseInt(usersAnswer));
+                    replyToUser = new SendMessage(chatId, "Загрузите план");
+                    userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_LOAD_MEAL_PLAN2);
+                }
+            } else {
+                replyToUser = new SendMessage(chatId, "Введите номер дня, на который хотите загрузить план!");
             }
-            replyToUser = adminButtonHandler.getMessageAndMealPlanButtons(chatId);
         }
+        if (botState.equals(BotState.ASK_ADMIN_NUMBER_FOR_PLAN3)) {
+            if (RegexHandler.checkUserAnswerOnDigit(usersAnswer)) {
+                if (Integer.parseInt(usersAnswer) <= 31){
+                    mealPlanService.setCountDayCategoryThree(Integer.parseInt(usersAnswer));
+                    replyToUser = new SendMessage(chatId, "Загрузите план");
+                    userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_LOAD_MEAL_PLAN3);
+                }
+            } else {
+                replyToUser = new SendMessage(chatId, "Введите номер дня, на который хотите загрузить план!");
+            }
+        }
+
         return replyToUser;
     }
 

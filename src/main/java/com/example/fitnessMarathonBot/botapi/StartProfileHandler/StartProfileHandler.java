@@ -75,7 +75,7 @@ public class StartProfileHandler implements InputMessageHandler {
                     .firstName(inputMsg.getFrom().getFirstName())
                     .lastName(inputMsg.getFrom().getLastName())
                     .chatId(inputMsg.getFrom().getId()).build();
-            if (userRepository.findUserByChatId(inputMsg.getChatId()) == null){
+            if (userRepository.findUserByChatId(inputMsg.getChatId()) == null) {
                 userRepository.save(user);
             }
 
@@ -139,9 +139,9 @@ public class StartProfileHandler implements InputMessageHandler {
 //
 //            myBot.execute(new SendMessage(chatId, messageIndividualPlanCaution));
 //            myBot.execute(new SendMessage(chatId, messageDietPlanInstruction));
-            myBot.sendPhoto(chatId, "" + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN +
-                    Emojis.ARROW_DOWN + Emojis.ARROW_DOWN,  "howWeightProducts");
-
+            myBot.sendPhoto(chatId, "", "howWeightProducts");
+            myBot.execute(new SendMessage(chatId, "" + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN +
+                    Emojis.ARROW_DOWN + Emojis.ARROW_DOWN));
 
 
             userDataCache.setUsersCurrentBotState(inputMsg.getFrom().getId(), BotState.ASK_PERSONAL_INFO);

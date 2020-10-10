@@ -23,8 +23,14 @@ public class UserPhoto implements Serializable {
     @Column(name = "time_stamp")
     private String timeStamp;
 
-    @Column(name = "image_id")
-    private String imageId;
+    @Column(name = "photo_one")
+    private String photoOne;
+
+    @Column(name = "photo_two")
+    private String photoTwo;
+
+    @Column(name = "photo_three")
+    private String photoThree;
 
     @Column(name = "image_category")
     private String imageCategory;

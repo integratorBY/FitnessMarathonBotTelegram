@@ -6,6 +6,7 @@ import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.service.BroadcastService;
+import com.example.fitnessMarathonBot.service.MessageService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -27,6 +28,9 @@ public class NewMarathonHandler implements InputMessageHandler {
     private ReplyMessagesService messagesService;
 
     @Autowired
+    private MessageService service;
+
+    @Autowired
     private BroadcastService broadcastService;
 
     public NewMarathonHandler(UserDataCache userDataCache, @Lazy Bot myBot, ReplyMessagesService messagesService) {
@@ -38,6 +42,9 @@ public class NewMarathonHandler implements InputMessageHandler {
     @Override
     public SendMessage handle(Message inputMsg) {
         final int userId = inputMsg.getFrom().getId();
+        service.updateDateInDB();
+        service.newDayNewListUserGoals();
+        service.newDayNewPhotoUserReport();
 //        final UserProfileData profileData = userDataCache.getUserProfileData(userId);
         long chatId = inputMsg.getChatId();
 ////        Date date = new Date();

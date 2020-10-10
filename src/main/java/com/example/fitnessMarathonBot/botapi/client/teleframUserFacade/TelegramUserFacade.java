@@ -141,8 +141,8 @@ public class TelegramUserFacade {
             case "/start":
                 botState = BotState.ASK_START;
                 break;
-            case "Ввод антропометрических данных":
-                botState = BotState.ASK_PERSONAL_INFO;
+            case "План питания":
+                botState = BotState.MEAL_USER_PLAN;
                 break;
             case "Задание":
                 botState = BotState.TASK;
@@ -191,11 +191,11 @@ public class TelegramUserFacade {
 
             if (count == 3) {
                 callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.allPhotoSent"));
-            } else if (count == 0) {
-                callBackAnswer = new SendMessage(chatId, String.format(messagesService.getReplyText("reply.askPhoto"), 3 - count));
+            } else if (count < 3) {
+                callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askPhoto"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHOTO);
             }
-
+//            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_PHOTO);
         } else if (buttonQuery.getData().equals("buttonReportGoals")) {
             callBackAnswer = userButtonHandler.getMessageAndGoalsButton(chatId);
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_GOALS);

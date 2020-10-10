@@ -47,16 +47,39 @@ public class AdminButtonHandler {
     }
 
     public SendMessage getUserProfileListAndMessage(long chatId) {
-        List<UserProfile> profiles = userProfileRepo.findAll();
-        String listProfiles = "Список клиентов: \n\n ";
-        for (int i = 0; i < profiles.size(); i++) {
-            listProfiles = listProfiles.concat(i + 1 + ". ").concat(profiles.get(i).getFullName() + ".\n");
-            listProfiles = listProfiles.concat("  - Возраст: " + profiles.get(i).getUserAge() + "\n");
-            listProfiles = listProfiles.concat("  - Рост: " + profiles.get(i).getPk().getBodyParam().getHeight() + "\n");
-            listProfiles = listProfiles.concat("  - Вес: " + profiles.get(i).getPk().getBodyParam().getWeight() + "\n\n");
-        }
-        listProfiles = listProfiles.concat("\nВведите номер клиента: ");
-        return new SendMessage(chatId, listProfiles);
+
+        return new SendMessage(chatId, "Выберите категорию добавляемого плана").setReplyMarkup(getCategoryMealPlanButtons());
+    }
+
+    private InlineKeyboardMarkup getCategoryMealPlanButtons() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonFoodBasket = new InlineKeyboardButton().setText("Добавить продуктовую корзину");
+        InlineKeyboardButton buttonOneCategory = new InlineKeyboardButton().setText("0-63 кг.");
+        InlineKeyboardButton buttonTwoCategory = new InlineKeyboardButton().setText("63-73 кг.");
+        InlineKeyboardButton buttonThreeCategory = new InlineKeyboardButton().setText("73+ кг.");
+
+        //Every button must have callBackData, or else not work !
+        buttonFoodBasket.setCallbackData("buttonFoodBasket");
+        buttonOneCategory.setCallbackData("buttonOneCategory");
+        buttonTwoCategory.setCallbackData("buttonTwoCategory");
+        buttonThreeCategory.setCallbackData("buttonThreeCategory");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        keyboardButtonsRow1.add(buttonFoodBasket);
+
+        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
+        keyboardButtonsRow2.add(buttonOneCategory);
+        keyboardButtonsRow2.add(buttonTwoCategory);
+        keyboardButtonsRow2.add(buttonThreeCategory);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+        rowList.add(keyboardButtonsRow2);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        return inlineKeyboardMarkup;
     }
 
     private InlineKeyboardMarkup getEditGoalsButton() {

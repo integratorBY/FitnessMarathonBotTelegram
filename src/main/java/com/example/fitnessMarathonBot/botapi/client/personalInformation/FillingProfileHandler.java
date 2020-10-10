@@ -113,6 +113,7 @@ public class FillingProfileHandler implements InputMessageHandler {
                 if (userProfileImpl.findUserProfileByPkUser(user) != null) {
                     userProfile = userProfileImpl.findUserProfileByPkUser(user);
                     userProfile.setUserAge(usersAnswer);
+                    userProfile.setDaysOfTheMarathon(1);
                     userProfileImpl.save(userProfile);
                 } else {
                     userProfile = new UserProfile();

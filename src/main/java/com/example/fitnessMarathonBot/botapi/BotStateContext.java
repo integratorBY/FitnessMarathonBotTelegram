@@ -48,8 +48,15 @@ public class BotStateContext {
 
     private boolean isFillingMealPlanState(BotState currentState) {
         switch (currentState) {
-            case ASK_ADMIN_NUMBER_USER_PLAN:
+            case ASK_ADMIN_LOAD_MEAL_PLAN1:
+            case ASK_ADMIN_LOAD_MEAL_PLAN2:
+            case ASK_ADMIN_LOAD_MEAL_PLAN3:
+            case ASK_ADMIN_NUMBER_FOR_PLAN3:
+            case ASK_ADMIN_NUMBER_FOR_PLAN2:
+            case ASK_ADMIN_NUMBER_FOR_PLAN1:
+            case ASK_ADMIN_LOAD_MEAL_PLAN_BASKET:
             case ASK_ADMIN_PLAN:
+            case ASK_ADMIN_ADD_MEAL_PLAN:
             case MEAL_PLAN_FILLED:
                 return true;
             default:

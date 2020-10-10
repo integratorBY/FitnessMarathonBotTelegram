@@ -5,6 +5,7 @@ import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.BotStateContext;
 import com.example.fitnessMarathonBot.botapi.admin.adminButtonHandler.AdminButtonHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
+import com.example.fitnessMarathonBot.fitnessDB.service.MealPlanService;
 import com.example.fitnessMarathonBot.service.AdminMainMenuService;
 import com.example.fitnessMarathonBot.service.LocaleMessageService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
@@ -33,6 +34,9 @@ public class TelegramAdminFacade {
     private ReplyMessagesService messagesService;
 
     @Autowired
+    private MealPlanService mealPlanService;
+
+    @Autowired
     private AdminButtonHandler adminButtonHandler;
 
     public TelegramAdminFacade(BotStateContext botStateContext, UserDataCache userDataCache, AdminMainMenuService adminMainMenuService,
@@ -59,6 +63,18 @@ public class TelegramAdminFacade {
             log.info("New message from User:{}, userId: {}, chatId: {},  with text: {}",
                     message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
             replyMessage = handleInputMessage(message);
+        } else if (message != null && message.hasPhoto() && userDataCache.getUsersCurrentBotState(
+                message.getFrom().getId()).equals(BotState.ASK_ADMIN_LOAD_MEAL_PLAN1)) {
+            replyMessage = saveMealPlanOne(message);
+        } else if (message != null && message.hasPhoto() && userDataCache.getUsersCurrentBotState(
+                message.getFrom().getId()).equals(BotState.ASK_ADMIN_LOAD_MEAL_PLAN2)) {
+            replyMessage = saveMealPlanTwo(message);
+        } else if (message != null && message.hasPhoto() && userDataCache.getUsersCurrentBotState(
+                message.getFrom().getId()).equals(BotState.ASK_ADMIN_LOAD_MEAL_PLAN3)) {
+            replyMessage = saveMealPlanThree(message);
+        } else if (message != null && message.hasPhoto() && userDataCache.getUsersCurrentBotState(
+                message.getFrom().getId()).equals(BotState.ASK_ADMIN_LOAD_MEAL_PLAN_BASKET)) {
+            replyMessage = saveMealPlanFoodBasket(message);
         }
 
         return replyMessage;
@@ -104,6 +120,25 @@ public class TelegramAdminFacade {
         return replyMessage;
     }
 
+    private SendMessage saveMealPlanOne(Message message) {
+        mealPlanService.saveMealPlanOneCategory(message);
+        return new SendMessage(message.getChatId(), "План добавлен!");
+    }
+
+    private SendMessage saveMealPlanTwo(Message message) {
+        mealPlanService.saveMealPlanTwoCategory(message);
+        return new SendMessage(message.getChatId(), "План добавлен!");
+    }
+
+    private SendMessage saveMealPlanThree(Message message) {
+        mealPlanService.saveMealPlanThreeCategory(message);
+        return new SendMessage(message.getChatId(), "План добавлен!");
+    }
+
+    private SendMessage saveMealPlanFoodBasket(Message message) {
+        mealPlanService.saveMealPlanFoodBasket(message);
+        return new SendMessage(message.getChatId(), "План добавлен!");
+    }
 
     private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
         final long chatId = buttonQuery.getMessage().getChatId();
@@ -148,7 +183,23 @@ public class TelegramAdminFacade {
 
         } else if (buttonQuery.getData().equals("buttonAddMealPlan")) {
             callBackAnswer = adminButtonHandler.getUserProfileListAndMessage(chatId);
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_USER_PLAN);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_ADD_MEAL_PLAN);
+
+        } else if (buttonQuery.getData().equals("buttonOneCategory")) {
+            callBackAnswer = new SendMessage(chatId, "Введите норме дня: ");
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_FOR_PLAN1);
+
+        }else if (buttonQuery.getData().equals("buttonTwoCategory")) {
+            callBackAnswer = new SendMessage(chatId, "Введите норме дня: ");
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_FOR_PLAN2);
+
+        } else if (buttonQuery.getData().equals("buttonThreeCategory")) {
+            callBackAnswer = new SendMessage(chatId, "Введите норме дня: ");
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_FOR_PLAN3);
+
+        } else if (buttonQuery.getData().equals("buttonFoodBasket")) {
+            callBackAnswer = new SendMessage(chatId, "Загрузите план");
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_LOAD_MEAL_PLAN_BASKET);
         }
 
         return callBackAnswer;

@@ -45,8 +45,8 @@ public class User implements Serializable {
     @EqualsAndHashCode.Exclude
     private Set<ListUserGoals> listUserGoals;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Set<MealPlan> mealPlans;
+//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
+//    @ToString.Exclude
+//    @EqualsAndHashCode.Exclude
+//    private Set<MealPlan> mealPlans;
 }

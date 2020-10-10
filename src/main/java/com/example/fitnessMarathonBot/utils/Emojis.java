@@ -19,7 +19,9 @@ public enum Emojis {
     TADA(EmojiParser.parseToUnicode(":tada:")),
     GRIN(EmojiParser.parseToUnicode(":grin:")),
     BLUSH(EmojiParser.parseToUnicode(":blush:")),
-    SUNNY(EmojiParser.parseToUnicode(":sunny:"));
+    SUNNY(EmojiParser.parseToUnicode(":sunny:")),
+    WHITE_CHECK_MARK(EmojiParser.parseToUnicode(":white_check_mark:")),
+    NEGATIVE_MARK(EmojiParser.parseToUnicode(":negative_squared_cross_mark:"));
 
 
     private String emojiName;

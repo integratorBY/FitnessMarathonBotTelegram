@@ -1,11 +1,9 @@
 package com.example.fitnessMarathonBot.botapi.admin.menu;
 
-import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.bean.UserProfileData;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
-import com.example.fitnessMarathonBot.fitnessDB.bean.User;
 import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;

@@ -24,7 +24,13 @@ public class MealPlan implements Serializable {
     @Lob
     private String plan;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "category")
+    private String category;
+
+    @Column(name = "day_number")
+    private String dayNumber;
+
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private User user;
 }

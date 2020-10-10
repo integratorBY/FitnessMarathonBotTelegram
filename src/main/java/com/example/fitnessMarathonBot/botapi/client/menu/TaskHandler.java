@@ -44,6 +44,7 @@ public class TaskHandler implements InputMessageHandler {
     public SendMessage getMessageAndGoalsButton(long chatId) {
         Date date = new Date();
         SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
+
         if (listGoalsRepository.findListGoalsByTimeStamp(formatForDateNow.format(date)) != null) {
             ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(formatForDateNow.format(date));
             String message = String.format(replyMessagesService.getReplyText("reply.goalsForToday"),
