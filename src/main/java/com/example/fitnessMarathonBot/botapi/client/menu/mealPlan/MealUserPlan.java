@@ -60,7 +60,7 @@ public class MealUserPlan implements InputMessageHandler {
         if (mealPlan != null) {
             myBot.sendPhoto(message.getChatId(), mealPlan.getPlan());
         } else {
-            sendMessage = new SendMessage(message.getChatId(), "Какой план?! Тебе вообще есть нельзя!!!");
+            sendMessage = new SendMessage(message.getChatId(), "План питания отсутствует!");
         }
         userDataCache.setUsersCurrentBotState(userId, BotState.MEAL_USER_PLAN);
         return sendMessage;
