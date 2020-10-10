@@ -184,7 +184,9 @@ public class FillingProfileHandler implements InputMessageHandler {
                 try {
                     myBot.execute(new SendMessage(inputMsg.getChatId(), messagesService.getReplyText("reply.profileFilled"))
                             .setReplyMarkup(userMainMenuService.getUserMainMenuKeyboard()));
-                } catch (TelegramApiException e) {
+                    Thread.sleep(20000);
+                    myBot.execute(new SendMessage(inputMsg.getChatId(), messagesService.getReplyText("reply.remindSendPhoto")));
+                } catch (TelegramApiException | InterruptedException e) {
                     e.printStackTrace();
                 }
 //                myBot.sendClientMealPlan(inputMsg.getChatId());

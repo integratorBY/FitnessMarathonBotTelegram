@@ -40,8 +40,8 @@ public class MessageService {
     }
 
     @SneakyThrows
-    void sendMessageTimer() {
-        myBot.execute(new SendMessage((long) 1331718111, "Таймер сработал на ура!!!!"));
+    public void sendSignOfLife() {
+        myBot.execute(new SendMessage((long) 1331718111, "Я живой!!!!"));
     }
 
     @SneakyThrows

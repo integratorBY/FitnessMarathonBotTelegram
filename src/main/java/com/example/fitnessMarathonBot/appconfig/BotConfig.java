@@ -5,6 +5,7 @@ import com.example.fitnessMarathonBot.botapi.admin.telegramAdminFacade.TelegramA
 import com.example.fitnessMarathonBot.botapi.client.teleframUserFacade.TelegramUserFacade;
 import com.example.fitnessMarathonBot.service.broadcasting.BroadcastService;
 import com.example.fitnessMarathonBot.service.broadcasting.ReminderMonday;
+import com.example.fitnessMarathonBot.service.broadcasting.SignsOfLife;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class BotConfig {
     @Autowired
     private ReminderMonday reminderMonday;
 
+    @Autowired
+    private SignsOfLife signsOfLife;
+
     @Bean
     public Bot myBot(TelegramUserFacade telegramUserFacade, TelegramAdminFacade telegramAdminFacade) throws TelegramApiRequestException {
         Bot myBot = new Bot(telegramUserFacade, telegramAdminFacade);
@@ -39,6 +43,7 @@ public class BotConfig {
         myBot.setWebHookPath(webHookPath);
         new Thread(broadcastService::startBroadcasting).start();
         new Thread(reminderMonday::startReminder).start();
+        new Thread(signsOfLife::startReminder).start();
         return myBot;
     }
 
