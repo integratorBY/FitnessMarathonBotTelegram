@@ -29,5 +29,22 @@ public class UserProfile implements Serializable {
     @Column(name = "user_age")
     private String userAge;
 
+    @Column(name = "days_of_theMarathon")
+    private int daysOfTheMarathon;
+
+    @Column(name = "photo_1")
+    private String photoId_1;
+
+    @Column(name = "photo_2")
+    private String photoId_2;
+
+    @Column(name = "photo_3")
+    private String photoId_3;
+
+    @Column(name = "photo_4")
+    private String photoId_4;
+
+    @Column(name = "photo_5")
+    private String photoId_5;
 }
 

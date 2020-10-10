@@ -3,8 +3,6 @@ package com.example.fitnessMarathonBot.botapi.client.menu.reportHandler;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
-import com.example.fitnessMarathonBot.fitnessDB.repository.UserPhotoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -12,9 +10,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Component
 public class FillingReportHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
-
-    @Autowired
-    private UserPhotoRepository userPhotoRepository;
 
     public FillingReportHandler(UserDataCache userDataCache) {
         this.userDataCache = userDataCache;

@@ -28,22 +28,42 @@ public class UserPhotoService {
             User user = userRepository.findUserByChatId(message.getFrom().getId());
             Date date = new Date();
             SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
-            List<UserPhoto> userPhotos = userPhotoRepository.findUserPhotoByTimeStampAndUser(
-                    formatForDateNow.format(date), user);
-            if (userPhotos != null && userPhotos.size() <= 2) {
-                List<PhotoSize> photos = message.getPhoto();
-                String photo_id = Objects.requireNonNull(photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
-                        .orElse(null)).getFileId();
+            String currentDate = formatForDateNow.format(date);
+            UserPhoto userPhotos = userPhotoRepository.findUserPhotoByTimeStampAndUser(
+                    currentDate, user);
+            List<PhotoSize> photos = message.getPhoto();
+            String photo_id = Objects.requireNonNull(photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
+                    .orElse(null)).getFileId();
+            if (userPhotos != null) {
+
+                if (userPhotos.getPhotoOne() == null) {
+                    userPhotos.setPhotoOne(photo_id);
+                    userPhotos.setTimeStamp(currentDate);
+                    userPhotoRepository.save(userPhotos);
+                    return 0;
+                }
+                if (userPhotos.getPhotoTwo() == null) {
+                    userPhotos.setPhotoTwo(photo_id);
+                    userPhotos.setTimeStamp(currentDate);
+                    userPhotoRepository.save(userPhotos);
+                    return 1;
+                }
+                if (userPhotos.getPhotoThree() == null) {
+                    userPhotos.setPhotoThree(photo_id);
+                    userPhotos.setTimeStamp(currentDate);
+                    userPhotoRepository.save(userPhotos);
+                    return 2;
+                }
+                return 2;
+            } else {
                 UserPhoto userPhoto = UserPhoto.builder()
                         .user(user)
-                        .imageId(photo_id)
-                        .imageCategory("Eat")
-                        .timeStamp(formatForDateNow.format(date))
+                        .imageCategory("eat")
+                        .photoOne(photo_id)
+                        .timeStamp(currentDate)
                         .build();
                 userPhotoRepository.save(userPhoto);
-                return userPhotos.size();
-            } else {
-                return 2;
+                return 0;
             }
         }
         return 2;
@@ -54,10 +74,20 @@ public class UserPhotoService {
             User user = userRepository.findUserByChatId(chatId);
             Date date = new Date();
             SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
-            List<UserPhoto> userPhotos = userPhotoRepository.findUserPhotoByTimeStampAndUser(
+            UserPhoto userPhotos = userPhotoRepository.findUserPhotoByTimeStampAndUser(
                     formatForDateNow.format(date), user);
             if (userPhotos != null) {
-                return userPhotos.size();
+                if (userPhotos.getPhotoOne() == null) {
+                    return 0;
+                }
+                if (userPhotos.getPhotoTwo() == null) {
+                    return 1;
+                }
+                if (userPhotos.getPhotoThree() == null) {
+                    return 2;
+                } else {
+                    return 3;
+                }
             }
         }
         return 0;

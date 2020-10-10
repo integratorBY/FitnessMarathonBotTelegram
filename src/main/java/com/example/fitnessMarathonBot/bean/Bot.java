@@ -2,9 +2,11 @@ package com.example.fitnessMarathonBot.bean;
 
 import com.example.fitnessMarathonBot.botapi.admin.telegramAdminFacade.TelegramAdminFacade;
 import com.example.fitnessMarathonBot.botapi.client.teleframUserFacade.TelegramUserFacade;
+import com.example.fitnessMarathonBot.service.broadcasting.BroadcastService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -26,6 +28,9 @@ public class Bot extends TelegramWebhookBot {
     private String botUserName;
     private String botToken;
 
+    @Autowired
+    BroadcastService broadcastService;
+
     private TelegramUserFacade telegramUserFacade;
     private TelegramAdminFacade telegramAdminFacade;
 
@@ -43,7 +48,7 @@ public class Bot extends TelegramWebhookBot {
             userId = update.getCallbackQuery().getFrom().getId();
         }
 
-        if (userId == 764602851) {
+        if (userId == 1331718111) {
             return telegramAdminFacade.handleUpdate(update);
         }
         return telegramUserFacade.handleUpdate(update);
@@ -98,6 +103,14 @@ public class Bot extends TelegramWebhookBot {
         sendDocument.setCaption(caption);
         sendDocument.setDocument(sendFile);
         execute(sendDocument);
+    }
+
+    @SneakyThrows
+    public void sendPhoto(long chatId, String photoId) {
+        SendPhoto send = new SendPhoto();
+        send.setChatId(chatId);
+        send.setPhoto(photoId);
+        execute(send);
     }
 
     @SneakyThrows

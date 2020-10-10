@@ -40,6 +40,7 @@ public class UserMainMenuService {
         KeyboardRow row3 = new KeyboardRow();
         KeyboardRow row4 = new KeyboardRow();
         row1.add(new KeyboardButton("Задание"));
+        row1.add(new KeyboardButton("План питания"));
         row2.add(new KeyboardButton("Отчёт"));
         row3.add(new KeyboardButton("Моя информация"));
         row4.add(new KeyboardButton("Ссылка на чат"));

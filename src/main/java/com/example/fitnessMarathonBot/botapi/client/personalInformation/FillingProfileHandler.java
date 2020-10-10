@@ -113,6 +113,7 @@ public class FillingProfileHandler implements InputMessageHandler {
                 if (userProfileImpl.findUserProfileByPkUser(user) != null) {
                     userProfile = userProfileImpl.findUserProfileByPkUser(user);
                     userProfile.setUserAge(usersAnswer);
+                    userProfile.setDaysOfTheMarathon(1);
                     userProfileImpl.save(userProfile);
                 } else {
                     userProfile = new UserProfile();
@@ -145,6 +146,7 @@ public class FillingProfileHandler implements InputMessageHandler {
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_WEIGHT);
             }
         }
+
         if (botState.equals(BotState.PROFILE_FILLED)) {
             Date date = new Date();
             SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");

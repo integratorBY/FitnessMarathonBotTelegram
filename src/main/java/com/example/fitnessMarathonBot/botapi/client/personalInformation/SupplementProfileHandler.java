@@ -7,6 +7,7 @@ import com.example.fitnessMarathonBot.fitnessDB.bean.BodyParam;
 import com.example.fitnessMarathonBot.fitnessDB.bean.User;
 import com.example.fitnessMarathonBot.fitnessDB.repository.BodyParamRepositoryImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
+import com.example.fitnessMarathonBot.fitnessDB.service.UserProfileService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ import java.util.Date;
 @Component
 public class SupplementProfileHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
+
+    @Autowired
+    private UserProfileService userProfileService;
 
     @Autowired
     private ReplyMessagesService messagesService;
@@ -52,6 +56,15 @@ public class SupplementProfileHandler implements InputMessageHandler {
         long chatId = inputMsg.getChatId();
         SendMessage replyToUser = null;
         BotState botState = userDataCache.getUsersCurrentBotState(userId);
+
+//        if (botState.equals(BotState.ASK_START_PHOTO)) {
+//            if (inputMsg.hasPhoto()) {
+//                userProfileService.saveUserProfile(inputMsg);
+//                userDataCache.setUsersCurrentBotState(userId, BotState.ASK_START_PHOTO);
+//                replyToUser = new SendMessage(chatId, "Фото принято");
+//            }
+//        }
+
 
         if (botState.equals(BotState.ASK_ARM)) {
             if(userAnswerIsCorrect(usersAnswer)) {

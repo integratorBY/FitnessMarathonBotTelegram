@@ -30,28 +30,53 @@ public class BotStateContext {
         } else if (isSupplementProfileState(currentState)) {
             return messageHandlers.get(BotState.ASK_SUPPLEMENT_PERSONAL_INFO);
 
-        } else if(isFillingReport(currentState)) {
+        } else if (isFillingReport(currentState)) {
             return messageHandlers.get(BotState.ASK_REPORT);
-        } else if(isFillingGoals(currentState)) {
+        } else if (isFillingGoals(currentState)) {
             return messageHandlers.get(BotState.ASK_ADMIN_GOALS);
         } else if (isFillingMarathonState(currentState)) {
             return messageHandlers.get(BotState.START_NEW_MARATHON);
+        } else if (isSendMessageAllState(currentState)) {
+            return messageHandlers.get(BotState.ASK_MESSAGE_FOR_USER);
+        } else if (isOpenCustomerInfoState(currentState)) {
+            return messageHandlers.get(BotState.OPEN_CUSTOMER_INFO);
+        } else if (isFillingMealPlanState(currentState)) {
+            return messageHandlers.get(BotState.ASK_ADMIN_MEAL_PLAN);
         }
         return messageHandlers.get(currentState);
     }
 
-        private boolean isFillingMarathonState(BotState currentState) {
-            switch (currentState) {
-                case START_NEW_MARATHON:
-                case ASK_DATE_START_MARATHON:
-                case ASK_DATE_FINISH_MARATHON:
-                    return true;
-                default:
-                    return false;
-            }
+    private boolean isFillingMealPlanState(BotState currentState) {
+        switch (currentState) {
+            case ASK_ADMIN_LOAD_MEAL_PLAN1:
+            case ASK_ADMIN_LOAD_MEAL_PLAN2:
+            case ASK_ADMIN_LOAD_MEAL_PLAN3:
+            case ASK_ADMIN_NUMBER_FOR_PLAN3:
+            case ASK_ADMIN_NUMBER_FOR_PLAN2:
+            case ASK_ADMIN_NUMBER_FOR_PLAN1:
+            case ASK_ADMIN_LOAD_MEAL_PLAN_BASKET:
+            case ASK_ADMIN_DAYS_FOR_FOOD_BASKET:
+            case ASK_ADMIN_PLAN:
+            case ASK_ADMIN_ADD_MEAL_PLAN:
+            case MEAL_PLAN_FILLED:
+                return true;
+            default:
+                return false;
         }
+    }
 
-        private boolean isFillingProfileState(BotState currentState) {
+    private boolean isFillingMarathonState(BotState currentState) {
+        switch (currentState) {
+            case START_NEW_MARATHON:
+            case ASK_DATE_START_MARATHON:
+            case ASK_DATE_FINISH_MARATHON:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean isFillingProfileState(BotState currentState) {
         switch (currentState) {
             case ASK_NAME:
             case ASK_HEIGHT:
@@ -65,7 +90,7 @@ public class BotStateContext {
         }
     }
 
-    private boolean isFillingReport(BotState currentState){
+    private boolean isFillingReport(BotState currentState) {
 
         switch (currentState) {
             case ASK_REPORT:
@@ -95,6 +120,8 @@ public class BotStateContext {
             case ASK_SHIN:
             case ASK_DATE:
             case ASK_WAIST:
+            case ASK_START_PHOTO:
+            case ASK_START_PHOTO_WEIGHER:
             case PERSONAL_INFO_FILLED:
             case ASK_SUPPLEMENT_PERSONAL_INFO:
                 return true;
@@ -112,6 +139,14 @@ public class BotStateContext {
             case ASK_ADMIN_TASK_THREE:
             case ASK_ADMIN_TASK_TWO:
             case ASK_ADMIN_TASK_SIX:
+            case ASK_ADMIN_EDIT_TASK_SIX:
+            case ASK_ADMIN_EDIT_TASK_FIVE:
+            case ASK_ADMIN_EDIT_TASK_FOUR:
+            case ASK_ADMIN_EDIT_TASK_THREE:
+            case ASK_ADMIN_EDIT_TASK_TWO:
+            case ASK_ADMIN_EDIT_TASK_ONE:
+            case ASK_ADMIN_EDIT_TIMESTAMP:
+            case ASK_ADMIN_NUMBER_GOAL:
             case GOALS_FILLED:
                 return true;
             default:
@@ -119,5 +154,23 @@ public class BotStateContext {
         }
     }
 
+    private boolean isSendMessageAllState(BotState currentState) {
+        switch (currentState) {
+            case INPUT_MESSAGE_OT_ALL:
+            case MESSAGE_SENT:
+                return true;
+            default:
+                return false;
+        }
+    }
 
+    private boolean isOpenCustomerInfoState(BotState currentState) {
+        switch (currentState) {
+            case ASK_NUMBER_CLIENT:
+            case VIEW_PROFILE:
+                return true;
+            default:
+                return false;
+        }
+    }
 }
