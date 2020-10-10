@@ -66,7 +66,7 @@ public class StartProfileHandler implements InputMessageHandler {
         long chatId = inputMsg.getChatId();
         SendMessage replyToUser = null;
 
-        if (userId == 1331718111) {
+        if (userId == 748582406) {
             final LocalDateTime localNow = LocalDateTime.now(Clock.systemUTC());
             System.out.println(localNow);
             replyToUser = adminMainMenuService.getAdminMainMenuMessage(chatId, "Тут какое то приветствие админа");
