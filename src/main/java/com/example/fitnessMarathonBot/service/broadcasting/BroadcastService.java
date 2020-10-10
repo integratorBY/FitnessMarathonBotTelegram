@@ -31,9 +31,8 @@ public class BroadcastService {
                     messageService.updateDateInDB();
                     messageService.newDayNewListUserGoals();
                     messageService.newDayNewPhotoUserReport();
-                    messageService.nexDayMarathon();
                 }
-
+                messageService.nexDayMarathon();
             }try {
                 log.info("broadcast is sleeping");
                 Thread.sleep(28800000 / 8);

@@ -11,6 +11,7 @@ import com.example.fitnessMarathonBot.service.LocaleMessageService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -120,24 +121,32 @@ public class TelegramAdminFacade {
         return replyMessage;
     }
 
+    @SneakyThrows
     private SendMessage saveMealPlanOne(Message message) {
         mealPlanService.saveMealPlanOneCategory(message);
-        return new SendMessage(message.getChatId(), "План добавлен!");
+        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
+        return adminButtonHandler.getButtonsOperationsWithMealPlanAndMessage(message.getChatId());
     }
 
+    @SneakyThrows
     private SendMessage saveMealPlanTwo(Message message) {
         mealPlanService.saveMealPlanTwoCategory(message);
-        return new SendMessage(message.getChatId(), "План добавлен!");
+        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
+        return adminButtonHandler.getButtonsOperationsWithMealPlanAndMessage(message.getChatId());
     }
 
+    @SneakyThrows
     private SendMessage saveMealPlanThree(Message message) {
         mealPlanService.saveMealPlanThreeCategory(message);
-        return new SendMessage(message.getChatId(), "План добавлен!");
+        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
+        return adminButtonHandler.getButtonsOperationsWithMealPlanAndMessage(message.getChatId());
     }
 
+    @SneakyThrows
     private SendMessage saveMealPlanFoodBasket(Message message) {
         mealPlanService.saveMealPlanFoodBasket(message);
-        return new SendMessage(message.getChatId(), "План добавлен!");
+        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
+        return adminButtonHandler.getButtonsOperationsWithMealPlanAndMessage(message.getChatId());
     }
 
     private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
@@ -182,7 +191,7 @@ public class TelegramAdminFacade {
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_EDIT_TASK_SIX);
 
         } else if (buttonQuery.getData().equals("buttonAddMealPlan")) {
-            callBackAnswer = adminButtonHandler.getUserProfileListAndMessage(chatId);
+            callBackAnswer = adminButtonHandler.getButtonsOperationsWithMealPlanAndMessage(chatId);
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_ADD_MEAL_PLAN);
 
         } else if (buttonQuery.getData().equals("buttonOneCategory")) {

@@ -30,7 +30,7 @@ public class ReminderMonday {
             calendar.setTime(date);
             long timeUntilReminder = 0;
             int nowDayWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            if (nowDayWeek != 7) {
+            if (nowDayWeek != 2) {
                 log.info("reminder is sleeping");
                 Thread.sleep(43200000);
             } else {

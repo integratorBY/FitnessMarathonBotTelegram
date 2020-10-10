@@ -46,7 +46,7 @@ public class AdminButtonHandler {
         return new SendMessage(chatId, message).setReplyMarkup(getMealsPlanButtons());
     }
 
-    public SendMessage getUserProfileListAndMessage(long chatId) {
+    public SendMessage getButtonsOperationsWithMealPlanAndMessage(long chatId) {
 
         return new SendMessage(chatId, "Выберите категорию добавляемого плана").setReplyMarkup(getCategoryMealPlanButtons());
     }
