@@ -1,11 +1,10 @@
 package com.example.fitnessMarathonBot.botapi.admin.menu;
 
 import com.example.fitnessMarathonBot.bean.Bot;
-import com.example.fitnessMarathonBot.bean.UserProfileData;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
-import com.example.fitnessMarathonBot.service.BroadcastService;
+import com.example.fitnessMarathonBot.service.broadcasting.BroadcastService;
 import com.example.fitnessMarathonBot.service.MessageService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -45,6 +42,7 @@ public class NewMarathonHandler implements InputMessageHandler {
         service.updateDateInDB();
         service.newDayNewListUserGoals();
         service.newDayNewPhotoUserReport();
+        service.nexDayMarathon();
 //        final UserProfileData profileData = userDataCache.getUserProfileData(userId);
         long chatId = inputMsg.getChatId();
 ////        Date date = new Date();

@@ -10,5 +10,9 @@ public class RegexHandler {
         return userAnswer.matches("[0-9]");
     }
 
+    public static boolean checkUserAnswerOnPeriod(String userAnswer) {
+        return userAnswer.matches("[0-9]-[0-9]");
+    }
+
 
 }

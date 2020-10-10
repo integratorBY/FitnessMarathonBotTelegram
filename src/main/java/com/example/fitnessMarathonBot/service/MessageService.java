@@ -108,4 +108,14 @@ public class MessageService {
         }
     }
 
+    @SneakyThrows
+    public void remindSendPhotoInMonday(){
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            if (user.getChatId() != 748582406) {
+                myBot.execute(new SendMessage(user.getChatId(), "НАПОМИНАНИЕ!!! \n\nВ понедельник(тоесть сейчас) отправить фото весов на тощак!!!"));
+            }
+        }
+    }
+
 }

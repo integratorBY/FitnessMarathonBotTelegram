@@ -102,6 +102,15 @@ public class FillingMealPlan implements InputMessageHandler {
                 replyToUser = new SendMessage(chatId, "Введите номер дня, на который хотите загрузить план!");
             }
         }
+        if (botState.equals(BotState.ASK_ADMIN_DAYS_FOR_FOOD_BASKET)) {
+            if (RegexHandler.checkUserAnswerOnPeriod(usersAnswer)) {
+                    mealPlanService.setDaysFoodBasket(usersAnswer);
+                    replyToUser = new SendMessage(chatId, "Загрузите корзину");
+                    userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_LOAD_MEAL_PLAN_BASKET);
+            } else {
+                replyToUser = new SendMessage(chatId, "Введите период, на который хотите загрузить план (пример, 1-3)");
+            }
+        }
 
         return replyToUser;
     }

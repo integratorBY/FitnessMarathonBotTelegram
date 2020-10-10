@@ -1,5 +1,6 @@
-package com.example.fitnessMarathonBot.service;
+package com.example.fitnessMarathonBot.service.broadcasting;
 
+import com.example.fitnessMarathonBot.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,11 @@ public class BroadcastService {
     private void broadcast() {
         while (true) {
             log.info("while true cycling");
-//            System.out.println("\"while true cycling\" = " + "while true cycling"); // TODO: 14/07/20 replace with logs
             LocalTime now = LocalTime.now();
             Calendar calendar = Calendar.getInstance();
             Date date = new Date();
             calendar.setTime(date);
             int nowDayWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            System.out.println(nowDayWeek);
             if (now.isAfter(LocalTime.of(00, 00)) && now.isBefore(LocalTime.of(04, 00))) {
                 if (nowDayWeek != 6 && nowDayWeek != 1) {
                     messageService.updateDateInDB();
@@ -37,7 +36,6 @@ public class BroadcastService {
 
             }try {
                 log.info("broadcast is sleeping");
-//                System.out.println("\"broadcast is sleeping\" = " + "broadcast is sleeping");
                 Thread.sleep(28800000 / 8);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -50,7 +48,6 @@ public class BroadcastService {
         if (!isBroadcasting) {
             isBroadcasting = true;
             log.info("start broadcasting");
-//            System.out.println("\"start broadcasting\" = " + "start broadcasting");
             broadcast();
         }
     }

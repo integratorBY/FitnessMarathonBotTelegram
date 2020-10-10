@@ -198,8 +198,8 @@ public class TelegramAdminFacade {
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_FOR_PLAN3);
 
         } else if (buttonQuery.getData().equals("buttonFoodBasket")) {
-            callBackAnswer = new SendMessage(chatId, "Загрузите план");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_LOAD_MEAL_PLAN_BASKET);
+            callBackAnswer = new SendMessage(chatId, "Введите дни через тире (Пример 1-3)");
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_DAYS_FOR_FOOD_BASKET);
         }
 
         return callBackAnswer;

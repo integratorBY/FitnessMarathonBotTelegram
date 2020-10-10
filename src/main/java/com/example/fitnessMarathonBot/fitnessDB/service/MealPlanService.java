@@ -23,6 +23,7 @@ public class MealPlanService {
     private int countDayCategoryOne;
     private int countDayCategoryTwo;
     private int countDayCategoryThree;
+    private String daysFoodBasket;
 
     public void saveMealPlanOneCategory(Message message) {
         List<PhotoSize> photos = message.getPhoto();
@@ -67,7 +68,7 @@ public class MealPlanService {
         MealPlan mealPlan = MealPlan.builder()
                 .plan(photo_id)
                 .category("foodBasket")
-                .dayNumber("day_1-3")
+                .dayNumber(daysFoodBasket)
                 .build();
         mealPlanRepository.save(mealPlan);
     }

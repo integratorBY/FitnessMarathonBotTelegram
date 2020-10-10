@@ -55,6 +55,7 @@ public class BotStateContext {
             case ASK_ADMIN_NUMBER_FOR_PLAN2:
             case ASK_ADMIN_NUMBER_FOR_PLAN1:
             case ASK_ADMIN_LOAD_MEAL_PLAN_BASKET:
+            case ASK_ADMIN_DAYS_FOR_FOOD_BASKET:
             case ASK_ADMIN_PLAN:
             case ASK_ADMIN_ADD_MEAL_PLAN:
             case MEAL_PLAN_FILLED:

@@ -3,6 +3,7 @@ package com.example.fitnessMarathonBot.botapi.client.menu.mealPlan;
 import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
+import com.example.fitnessMarathonBot.botapi.constant.NumberConstants;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.fitnessDB.bean.MealPlan;
 import com.example.fitnessMarathonBot.fitnessDB.bean.User;
@@ -49,23 +50,57 @@ public class MealUserPlan implements InputMessageHandler {
         String category = "";
         String day = userProfile.getDaysOfTheMarathon()+"";
         double weight = Double.parseDouble(userProfile.getPk().getBodyParam().getWeight());
-        if (weight < 63) {
-            category = "small";
-        } else if (weight > 63 && weight < 73) {
-            category = "middle";
-        } else {
-            category = "big";
-        }
+        category = getCategoryMealPlan(weight);
         MealPlan mealPlan = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day);
-        MealPlan foodBasket = mealPlanRepository.findMealPlanByCategory("foodBasket");
-        if (mealPlan != null) {
+        String day_number = getFoodBasketByDay(Integer.parseInt(day));
+        MealPlan foodBasket = mealPlanRepository.findMealPlanByCategoryAndDayNumber("foodBasket", day_number);
+        if (foodBasket != null) {
             myBot.sendPhoto(message.getChatId(), foodBasket.getPlan());
+        }
+        if (mealPlan != null) {
             myBot.sendPhoto(message.getChatId(), mealPlan.getPlan());
         } else {
             sendMessage = new SendMessage(message.getChatId(), "Какой план?! Тебе вообще есть нельзя!!!");
         }
         userDataCache.setUsersCurrentBotState(userId, BotState.MEAL_USER_PLAN);
         return sendMessage;
+    }
+
+    private String getFoodBasketByDay(int day) {
+        if (day <= NumberConstants.FOOD_BASKET_ONE) {
+            return "1-3";
+        } else if (day <= NumberConstants.FOOD_BASKET_TWO) {
+            return "4-6";
+        } else if (day <= NumberConstants.FOOD_BASKET_THREE) {
+            return "7-9";
+        } else if (day <= NumberConstants.FOOD_BASKET_FOUR) {
+            return "10-12";
+        } else if (day <= NumberConstants.FOOD_BASKET_FIVE) {
+            return "13-15";
+        } else if (day <= NumberConstants.FOOD_BASKET_SIX) {
+            return "16-18";
+        } else if (day <= NumberConstants.FOOD_BASKET_SEVEN) {
+            return "19-21";
+        } else if (day <= NumberConstants.FOOD_BASKET_EIGHT) {
+            return "22-24";
+        } else if (day <= NumberConstants.FOOD_BASKET_NINE) {
+            return "25-27";
+        } else if (day <= NumberConstants.FOOD_BASKET_TEN) {
+            return "28-30";
+        } else if (day <= NumberConstants.FOOD_BASKET_ELEVEN) {
+            return "31-33";
+        }
+        return null;
+    }
+
+    private String getCategoryMealPlan(double weight) {
+        if (weight < 63) {
+            return "small";
+        } else if (weight > 63 && weight < 73) {
+            return  "middle";
+        } else {
+            return "big";
+        }
     }
 
     @Override
