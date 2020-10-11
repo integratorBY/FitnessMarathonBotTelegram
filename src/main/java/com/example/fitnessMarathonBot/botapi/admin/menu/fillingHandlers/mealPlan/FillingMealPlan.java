@@ -70,34 +70,34 @@ public class FillingMealPlan implements InputMessageHandler {
         BotState botState = userDataCache.getUsersCurrentBotState(userId);
 
         if (botState.equals(BotState.ASK_ADMIN_NUMBER_FOR_PLAN1)) {
-            if (RegexHandler.checkUserAnswerOnDigit(usersAnswer)) {
-                if (Integer.parseInt(usersAnswer) <= 31){
-                    mealPlanService.setCountDayCategoryOne(Integer.parseInt(usersAnswer));
+            if (RegexHandler.checkUserAnswerOnPeriod(usersAnswer)) {
+//                if (Integer.parseInt(usersAnswer) <= 31){
+                    mealPlanService.setCountDayCategoryOne(usersAnswer);
                     replyToUser = new SendMessage(chatId, "Загрузите план");
                     userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_LOAD_MEAL_PLAN1);
-                }
+//                }
             } else {
                 replyToUser = new SendMessage(chatId, "Введите номер дня, на который хотите загрузить план!");
             }
         }
         if (botState.equals(BotState.ASK_ADMIN_NUMBER_FOR_PLAN2)) {
-            if (RegexHandler.checkUserAnswerOnDigit(usersAnswer)) {
-                if (Integer.parseInt(usersAnswer) <= 31){
-                    mealPlanService.setCountDayCategoryTwo(Integer.parseInt(usersAnswer));
+            if (RegexHandler.checkUserAnswerOnPeriod(usersAnswer)) {
+//                if (Integer.parseInt(usersAnswer) <= 31){
+                    mealPlanService.setCountDayCategoryTwo(usersAnswer);
                     replyToUser = new SendMessage(chatId, "Загрузите план");
                     userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_LOAD_MEAL_PLAN2);
-                }
+//                }
             } else {
                 replyToUser = new SendMessage(chatId, "Введите номер дня, на который хотите загрузить план!");
             }
         }
         if (botState.equals(BotState.ASK_ADMIN_NUMBER_FOR_PLAN3)) {
-            if (RegexHandler.checkUserAnswerOnDigit(usersAnswer)) {
-                if (Integer.parseInt(usersAnswer) <= 31){
-                    mealPlanService.setCountDayCategoryThree(Integer.parseInt(usersAnswer));
+            if (RegexHandler.checkUserAnswerOnPeriod(usersAnswer)) {
+//                if (Integer.parseInt(usersAnswer) <= 31){
+                    mealPlanService.setCountDayCategoryThree(usersAnswer);
                     replyToUser = new SendMessage(chatId, "Загрузите план");
                     userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_LOAD_MEAL_PLAN3);
-                }
+//                }
             } else {
                 replyToUser = new SendMessage(chatId, "Введите номер дня, на который хотите загрузить план!");
             }
