@@ -51,14 +51,18 @@ public class MealUserPlan implements InputMessageHandler {
         String day = userProfile.getDaysOfTheMarathon()+"";
         double weight = Double.parseDouble(userProfile.getPk().getBodyParam().getWeight());
         category = getCategoryMealPlan(weight);
-        MealPlan mealPlan = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day);
+        MealPlan mealPlanDayOne = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day);
+        MealPlan mealPlanDayTwo = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day+1);
+        MealPlan mealPlanDayThree = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day+2);
         String day_number = getFoodBasketByDay(Integer.parseInt(day));
         MealPlan foodBasket = mealPlanRepository.findMealPlanByCategoryAndDayNumber("foodBasket", day_number);
         if (foodBasket != null) {
             myBot.sendPhoto(message.getChatId(), foodBasket.getPlan());
         }
-        if (mealPlan != null) {
-            myBot.sendPhoto(message.getChatId(), mealPlan.getPlan());
+        if (mealPlanDayOne != null && mealPlanDayTwo !=null && mealPlanDayThree != null) {
+            myBot.sendPhoto(message.getChatId(), mealPlanDayOne.getPlan());
+            myBot.sendPhoto(message.getChatId(), mealPlanDayTwo.getPlan());
+            myBot.sendPhoto(message.getChatId(), mealPlanDayThree.getPlan());
         } else {
             sendMessage = new SendMessage(message.getChatId(), "План питания отсутствует!");
         }

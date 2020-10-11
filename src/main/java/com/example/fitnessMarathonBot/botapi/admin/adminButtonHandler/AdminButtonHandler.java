@@ -29,11 +29,17 @@ public class AdminButtonHandler {
 
     public SendMessage getMessageAndEditGoalButtons(long chatId) {
         List<ListGoals> goals = listGoalsRepository.findAll();
-        ListGoals goal = goals.get(0);
-        String selectedGoal = String.format(messagesService.getReplyText("reply.selectedListGoals"),
-                goal.getTimeStamp(), goal.getTaskOne(), goal.getTaskTwo(), goal.getTaskThree(), goal.getTaskFour(),
-                goal.getTaskFive(), goal.getTaskSix());
-        return new SendMessage(chatId, selectedGoal).setReplyMarkup(getEditGoalsButton());
+        String selectedGoal = null;
+        if (goals.size() != 0) {
+            ListGoals goal = goals.get(0);
+
+            selectedGoal = String.format(messagesService.getReplyText("reply.selectedListGoals"),
+                    goal.getTimeStamp(), goal.getTaskOne(), goal.getTaskTwo(), goal.getTaskThree(), goal.getTaskFour(),
+                    goal.getTaskFive(), goal.getTaskSix());
+            return new SendMessage(chatId, selectedGoal).setReplyMarkup(getEditGoalsButton());
+        } else {
+            return new SendMessage(chatId, "Нет заданий для редактирования, сначала добавьте задание").setReplyMarkup(getGoalsAdminButtons());
+        }
     }
 
     public SendMessage getMessageAndGoalsAdminButtons(long chatId) {
