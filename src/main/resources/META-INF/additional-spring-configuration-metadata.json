@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "management.server.ssl.enable",
+      "type": "java.lang.String",
+      "description": "Description for management.server.ssl.enable."
+  }
+] }
