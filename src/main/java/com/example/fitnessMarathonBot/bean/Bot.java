@@ -42,13 +42,15 @@ public class Bot extends TelegramWebhookBot {
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
         int userId = 0;
-        if (update.getCallbackQuery() == null) {
+        if((update.getEditedMessage() != null)) {
+            userId = update.getEditedMessage().getFrom().getId();
+        } else if (update.getCallbackQuery() == null) {
             userId = update.getMessage().getFrom().getId();
         } else if (update.getMessage() == null) {
             userId = update.getCallbackQuery().getFrom().getId();
         }
 
-        if (userId == 1331718111) {
+        if (userId == 748582406) {
             return telegramAdminFacade.handleUpdate(update);
         }
         return telegramUserFacade.handleUpdate(update);

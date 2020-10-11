@@ -42,7 +42,7 @@ public class NewMarathonHandler implements InputMessageHandler {
         service.updateDateInDB();
         service.newDayNewListUserGoals();
         service.newDayNewPhotoUserReport();
-        service.nexDayMarathon();
+//        service.nexDayMarathon();
 //        final UserProfileData profileData = userDataCache.getUserProfileData(userId);
         long chatId = inputMsg.getChatId();
 ////        Date date = new Date();

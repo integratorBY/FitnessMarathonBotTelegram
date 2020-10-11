@@ -49,7 +49,7 @@ public class ShowProfileHandler implements InputMessageHandler {
     @SneakyThrows
     @Override
     public SendMessage handle(Message message) {
-        service.updateDateInDB();
+//        service.updateDateInDB();
         SendMessage sendMessage = null;
         long chatId = message.getChatId();
         User user = userRepository.findUserByChatId(chatId);
