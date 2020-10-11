@@ -48,18 +48,23 @@ public class MealUserPlan implements InputMessageHandler {
         User user = userRepository.findUserByChatId(userId);
         UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
         String category = "";
+        MealPlan mealPlanDayOne = null;
+        MealPlan mealPlanDayTwo = null;
+        MealPlan mealPlanDayThree = null;
         String day = userProfile.getDaysOfTheMarathon()+"";
         double weight = Double.parseDouble(userProfile.getPk().getBodyParam().getWeight());
         category = getCategoryMealPlan(weight);
-        MealPlan mealPlanDayOne = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day);
-        MealPlan mealPlanDayTwo = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day+1);
-        MealPlan mealPlanDayThree = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day+2);
+        if (Integer.parseInt(day) <= 3) {
+            mealPlanDayOne = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day);
+            mealPlanDayTwo = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, "2");
+            mealPlanDayThree = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, "3");
+        }
         String day_number = getFoodBasketByDay(Integer.parseInt(day));
         MealPlan foodBasket = mealPlanRepository.findMealPlanByCategoryAndDayNumber("foodBasket", day_number);
         if (foodBasket != null) {
             myBot.sendPhoto(message.getChatId(), foodBasket.getPlan());
         }
-        if (mealPlanDayOne != null && mealPlanDayTwo !=null && mealPlanDayThree != null) {
+        if (mealPlanDayOne != null) {
             myBot.sendPhoto(message.getChatId(), mealPlanDayOne.getPlan());
             myBot.sendPhoto(message.getChatId(), mealPlanDayTwo.getPlan());
             myBot.sendPhoto(message.getChatId(), mealPlanDayThree.getPlan());
