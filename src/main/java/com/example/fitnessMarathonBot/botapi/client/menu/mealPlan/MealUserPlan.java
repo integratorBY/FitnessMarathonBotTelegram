@@ -48,17 +48,10 @@ public class MealUserPlan implements InputMessageHandler {
         User user = userRepository.findUserByChatId(userId);
         UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
         String category = "";
-        MealPlan mealPlanDayOne = null;
-        MealPlan mealPlanDayTwo = null;
-        MealPlan mealPlanDayThree = null;
         String day = userProfile.getDaysOfTheMarathon()+"";
         double weight = Double.parseDouble(userProfile.getPk().getBodyParam().getWeight());
         category = getCategoryMealPlan(weight);
-        if (Integer.parseInt(day) <= 3) {
-            mealPlanDayOne = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day);
-            mealPlanDayTwo = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, "2");
-            mealPlanDayThree = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, "3");
-        }
+        MealPlan mealPlanDayOne = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day);
         String day_number = getFoodBasketByDay(Integer.parseInt(day));
         MealPlan foodBasket = mealPlanRepository.findMealPlanByCategoryAndDayNumber("foodBasket", day_number);
         if (foodBasket != null) {
@@ -66,8 +59,6 @@ public class MealUserPlan implements InputMessageHandler {
         }
         if (mealPlanDayOne != null) {
             myBot.sendPhoto(message.getChatId(), mealPlanDayOne.getPlan());
-            myBot.sendPhoto(message.getChatId(), mealPlanDayTwo.getPlan());
-            myBot.sendPhoto(message.getChatId(), mealPlanDayThree.getPlan());
         } else {
             sendMessage = new SendMessage(message.getChatId(), "План питания отсутствует!");
         }
