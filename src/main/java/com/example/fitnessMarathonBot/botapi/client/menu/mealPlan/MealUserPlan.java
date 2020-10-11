@@ -49,21 +49,33 @@ public class MealUserPlan implements InputMessageHandler {
         UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
         String category = "";
         String day = userProfile.getDaysOfTheMarathon()+"";
-        double weight = Double.parseDouble(userProfile.getPk().getBodyParam().getWeight());
+        double weight = Double.parseDouble((userProfile.getPk().getBodyParam().getWeight()).replace(",", "."));
         category = getCategoryMealPlan(weight);
-        MealPlan mealPlanDayOne = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day);
         String day_number = getFoodBasketByDay(Integer.parseInt(day));
+        MealPlan mealPlan = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day_number);
         MealPlan foodBasket = mealPlanRepository.findMealPlanByCategoryAndDayNumber("foodBasket", day_number);
         if (foodBasket != null) {
-            myBot.sendPhoto(message.getChatId(), foodBasket.getPlan());
+            myBot.sendPhoto(message.getChatId(), foodBasket.getPlanOne());
         }
-        if (mealPlanDayOne != null) {
-            myBot.sendPhoto(message.getChatId(), mealPlanDayOne.getPlan());
+        if (mealPlan != null) {
+            sendMealPlanToUser(message.getChatId(), myBot, mealPlan);
         } else {
             sendMessage = new SendMessage(message.getChatId(), "План питания отсутствует!");
         }
         userDataCache.setUsersCurrentBotState(userId, BotState.MEAL_USER_PLAN);
         return sendMessage;
+    }
+
+    private void sendMealPlanToUser(long chatId, Bot myBot, MealPlan mealPlan) {
+        if (mealPlan.getPlanOne() != null) {
+            myBot.sendPhoto(chatId, mealPlan.getPlanOne());
+        }
+        if (mealPlan.getPlanTwo() != null) {
+            myBot.sendPhoto(chatId, mealPlan.getPlanTwo());
+        }
+        if (mealPlan.getPlanThree() != null) {
+            myBot.sendPhoto(chatId, mealPlan.getPlanThree());
+        }
     }
 
     private String getFoodBasketByDay(int day) {

@@ -20,9 +20,14 @@ public class MealPlan implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "plan")
-    @Lob
-    private String plan;
+    @Column(name = "plan_one")
+    private String planOne;
+
+    @Column(name = "plan_two")
+    private String planTwo;
+
+    @Column(name = "plan_three")
+    private String planThree;
 
     @Column(name = "category")
     private String category;
