@@ -20,56 +20,118 @@ public class MealPlanService {
     @Autowired
     private MealPlanRepository mealPlanRepository;
 
-    private int countDayCategoryOne;
-    private int countDayCategoryTwo;
-    private int countDayCategoryThree;
+    private String countDayCategoryOne;
+    private String countDayCategoryTwo;
+    private String countDayCategoryThree;
     private String daysFoodBasket;
 
     public void saveMealPlanOneCategory(Message message) {
         List<PhotoSize> photos = message.getPhoto();
         String photo_id = Objects.requireNonNull(photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
                 .orElse(null)).getFileId();
-        MealPlan mealPlan = MealPlan.builder()
-                .plan(photo_id)
-                .category("small")
-                .dayNumber(countDayCategoryOne + "")
-                .build();
-        mealPlanRepository.save(mealPlan);
+        if (mealPlanRepository.findMealPlanByCategoryAndDayNumber("small", countDayCategoryOne) != null) {
+            MealPlan mealPlan = mealPlanRepository.findMealPlanByCategoryAndDayNumber("small", countDayCategoryOne);
+            if (mealPlan.getPlanOne() == null) {
+                mealPlan.setPlanOne(photo_id);
+                mealPlanRepository.save(mealPlan);
+                return;
+            }
+            if (mealPlan.getPlanTwo() == null) {
+                mealPlan.setPlanTwo(photo_id);
+                mealPlanRepository.save(mealPlan);
+                return;
+            }
+            if (mealPlan.getPlanThree() == null) {
+                mealPlan.setPlanThree(photo_id);
+                mealPlanRepository.save(mealPlan);
+            }
+        } else {
+            MealPlan mealPlan = MealPlan.builder()
+                    .planOne(photo_id)
+                    .category("small")
+                    .dayNumber(countDayCategoryOne)
+                    .build();
+            mealPlanRepository.save(mealPlan);
+        }
     }
 
     public void saveMealPlanTwoCategory(Message message) {
         List<PhotoSize> photos = message.getPhoto();
         String photo_id = Objects.requireNonNull(photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
                 .orElse(null)).getFileId();
-        MealPlan mealPlan = MealPlan.builder()
-                .plan(photo_id)
-                .category("middle")
-                .dayNumber(countDayCategoryTwo + "")
-                .build();
-        mealPlanRepository.save(mealPlan);
+        if (mealPlanRepository.findMealPlanByCategoryAndDayNumber("middle", countDayCategoryTwo) != null) {
+            MealPlan mealPlan = mealPlanRepository.findMealPlanByCategoryAndDayNumber("middle", countDayCategoryTwo);
+            if (mealPlan.getPlanOne() == null) {
+                mealPlan.setPlanOne(photo_id);
+                mealPlanRepository.save(mealPlan);
+                return;
+            }
+            if (mealPlan.getPlanTwo() == null) {
+                mealPlan.setPlanTwo(photo_id);
+                mealPlanRepository.save(mealPlan);
+                return;
+            }
+            if (mealPlan.getPlanThree() == null) {
+                mealPlan.setPlanThree(photo_id);
+                mealPlanRepository.save(mealPlan);
+            }
+        } else {
+            MealPlan mealPlan = MealPlan.builder()
+                    .planOne(photo_id)
+                    .category("middle")
+                    .dayNumber(countDayCategoryTwo)
+                    .build();
+            mealPlanRepository.save(mealPlan);
+        }
     }
 
     public void saveMealPlanThreeCategory(Message message) {
         List<PhotoSize> photos = message.getPhoto();
         String photo_id = Objects.requireNonNull(photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
                 .orElse(null)).getFileId();
-        MealPlan mealPlan = MealPlan.builder()
-                .plan(photo_id)
-                .category("big")
-                .dayNumber(countDayCategoryThree + "")
-                .build();
-        mealPlanRepository.save(mealPlan);
+        if (mealPlanRepository.findMealPlanByCategoryAndDayNumber("big", countDayCategoryThree) != null) {
+            MealPlan mealPlan = mealPlanRepository.findMealPlanByCategoryAndDayNumber("big", countDayCategoryThree);
+            if (mealPlan.getPlanOne() == null) {
+                mealPlan.setPlanOne(photo_id);
+                mealPlanRepository.save(mealPlan);
+                return;
+            }
+            if (mealPlan.getPlanTwo() == null) {
+                mealPlan.setPlanTwo(photo_id);
+                mealPlanRepository.save(mealPlan);
+                return;
+            }
+            if (mealPlan.getPlanThree() == null) {
+                mealPlan.setPlanThree(photo_id);
+                mealPlanRepository.save(mealPlan);
+            }
+        } else {
+            MealPlan mealPlan = MealPlan.builder()
+                    .planOne(photo_id)
+                    .category("big")
+                    .dayNumber(countDayCategoryThree)
+                    .build();
+            mealPlanRepository.save(mealPlan);
+        }
     }
 
     public void saveMealPlanFoodBasket(Message message) {
         List<PhotoSize> photos = message.getPhoto();
         String photo_id = Objects.requireNonNull(photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
                 .orElse(null)).getFileId();
-        MealPlan mealPlan = MealPlan.builder()
-                .plan(photo_id)
-                .category("foodBasket")
-                .dayNumber(daysFoodBasket)
-                .build();
-        mealPlanRepository.save(mealPlan);
+        if (mealPlanRepository.findMealPlanByCategoryAndDayNumber("foodBasket", daysFoodBasket) != null) {
+            MealPlan mealPlan = mealPlanRepository.findMealPlanByCategoryAndDayNumber("foodBasket", daysFoodBasket);
+            if (mealPlan.getPlanOne() != null) {
+                mealPlan.setPlanOne(photo_id);
+                mealPlanRepository.save(mealPlan);
+            }
+        } else {
+            MealPlan mealPlan = MealPlan.builder()
+                    .planOne(photo_id)
+                    .category("foodBasket")
+                    .dayNumber(daysFoodBasket)
+                    .build();
+            mealPlanRepository.save(mealPlan);
+        }
     }
 }
