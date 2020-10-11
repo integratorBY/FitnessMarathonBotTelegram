@@ -51,6 +51,10 @@ public class MessageService {
         String currentDate = formatter.format(date);
         List<ListGoals> goals = listGoalsRepo.findAll();
         ListGoals listGoals = listGoalsRepo.findListGoalsByTimeStamp(currentDate);
+        if(goals.size() == 0 && listGoals == null) {
+            return;
+        }
+
         if (listGoals != null && goals.size() > 1) {
             listGoalsRepo.deleteAll();
             listGoalsRepo.save(listGoals);
