@@ -5,6 +5,8 @@ import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.fitnessDB.bean.User;
+import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
+import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
 import com.example.fitnessMarathonBot.service.AdminMainMenuService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
@@ -33,6 +35,9 @@ public class StartProfileHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
     private AdminMainMenuService adminMainMenuService;
     private Bot myBot;
+
+    @Autowired
+    private UserProfileImpl userProfileRepository;
 
     @Autowired
     private UserRepositoryImpl userRepository;
@@ -65,8 +70,14 @@ public class StartProfileHandler implements InputMessageHandler {
         int userId = inputMsg.getFrom().getId();
         long chatId = inputMsg.getChatId();
         SendMessage replyToUser = null;
-
-        if (userId == 748582406) {
+        User userExists = userRepository.findUserByChatId(chatId);
+        if (userExists != null) {
+            UserProfile userProfile = userProfileRepository.findUserProfileByPkUser(userExists);
+            if (userProfile != null && userId != 748582406 && userId != 956524755 ) {
+                return new SendMessage(chatId, "Вы уже участник марафона");
+            }
+        }
+        if (userId == 748582406 || userId == 956524755) {
             final LocalDateTime localNow = LocalDateTime.now(Clock.systemUTC());
             System.out.println(localNow);
             replyToUser = adminMainMenuService.getAdminMainMenuMessage(chatId, "Тут какое то приветствие админа");

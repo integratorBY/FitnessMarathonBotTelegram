@@ -62,8 +62,8 @@ public class MealUserPlan implements InputMessageHandler {
         }
 
         if (mealPlanDayOne != null) {
-            myBot.sendPhoto(message.getChatId(), mealPlanDayOne.getPlan());
-
+            myBot.sendPhoto(message.getChatId(), mealPlanDayOne.getPlanOne());
+        }
         if (mealPlan != null) {
             sendMealPlanToUser(message.getChatId(), myBot, mealPlan);
 
