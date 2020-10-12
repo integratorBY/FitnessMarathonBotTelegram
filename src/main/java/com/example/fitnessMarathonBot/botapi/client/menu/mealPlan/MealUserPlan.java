@@ -5,9 +5,11 @@ import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.botapi.constant.NumberConstants;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
+import com.example.fitnessMarathonBot.fitnessDB.bean.BodyParam;
 import com.example.fitnessMarathonBot.fitnessDB.bean.MealPlan;
 import com.example.fitnessMarathonBot.fitnessDB.bean.User;
 import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
+import com.example.fitnessMarathonBot.fitnessDB.repository.BodyParamRepositoryImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.MealPlanRepository;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
@@ -25,7 +27,7 @@ public class MealUserPlan implements InputMessageHandler {
     private Bot myBot;
 
     @Autowired
-    private ReplyMessagesService replyMessagesService;
+    private BodyParamRepositoryImpl bodyParamRepository;
 
     @Autowired
     private UserRepositoryImpl userRepository;
@@ -46,10 +48,11 @@ public class MealUserPlan implements InputMessageHandler {
         final int userId = message.getFrom().getId();
         SendMessage sendMessage = null;
         User user = userRepository.findUserByChatId(userId);
+        BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
         UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
         String category = "";
         String day = userProfile.getDaysOfTheMarathon()+"";
-        double weight = Double.parseDouble((userProfile.getPk().getBodyParam().getWeight()).replace(",", "."));
+        double weight = Double.parseDouble((bodyParam.getWeight()).replace(",", "."));
         category = getCategoryMealPlan(weight);
         String day_number = getFoodBasketByDay(Integer.parseInt(day));
         MealPlan mealPlan = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day_number);
@@ -59,6 +62,7 @@ public class MealUserPlan implements InputMessageHandler {
         }
         if (mealPlan != null) {
             sendMealPlanToUser(message.getChatId(), myBot, mealPlan);
+            sendMessage = new SendMessage(message.getChatId(), " ");
         } else {
             sendMessage = new SendMessage(message.getChatId(), "План питания отсутствует!");
         }

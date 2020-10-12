@@ -68,14 +68,14 @@ public class TelegramUserFacade {
         this.messagesService = messagesService;
     }
 
-    public BotApiMethod<?> handleUpdate(Update update) {
-        SendMessage replyMessage = null;
-
+    @SneakyThrows
+    public void handleUpdate(Update update) {
+        SendMessage sendMessage = new SendMessage();
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
                     callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
-            return processCallbackQuery(callbackQuery);
+            myBot.execute(processCallbackQuery(callbackQuery));
         }
 
 
@@ -83,7 +83,7 @@ public class TelegramUserFacade {
         if (message != null && message.hasText()) {
             log.info("New message from User:{}, userId: {}, chatId: {},  with text: {}",
                     message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
-            replyMessage = handleInputMessage(message);
+            sendMessage = handleInputMessage(message);
         } else if (message != null && message.hasPhoto()) {
             List<PhotoSize> photos = update.getMessage().getPhoto();
             String photo_id = Objects.requireNonNull(photos.stream().max(Comparator.comparing(PhotoSize::getFileSize))
@@ -91,17 +91,17 @@ public class TelegramUserFacade {
             log.info("New photo from User:{}, userId: {}, chatId: {},  photo_id: {}",
                     message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), photo_id);
             if (userDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.ASK_START_PHOTO)) {
-                replyMessage = counterOfSendStartPhotosBody(message);
+                sendMessage = counterOfSendStartPhotosBody(message);
+                myBot.execute(sendMessage);
             } else if (userDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.ASK_START_PHOTO_WEIGHER)) {
-                replyMessage = counterOfSendStartPhotosWeigher(message);
+                sendMessage = counterOfSendStartPhotosWeigher(message);
+                myBot.execute(sendMessage);
             } else {
-                replyMessage = counterOfSentPhotos(message);
-//                    counterOfSentPhotos(message);
+                sendMessage = counterOfSentPhotos(message);
+                myBot.execute(sendMessage);
             }
-
         }
 
-        return replyMessage;
     }
 
     private SendMessage counterOfSendStartPhotosBody(Message message) {

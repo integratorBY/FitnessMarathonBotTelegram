@@ -13,6 +13,7 @@ import com.example.fitnessMarathonBot.fitnessDB.bean.embedded.UserProfilesId;
 import com.example.fitnessMarathonBot.fitnessDB.repository.BodyParamRepositoryImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
+import com.example.fitnessMarathonBot.fitnessDB.service.BodyParamService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import com.example.fitnessMarathonBot.service.UserMainMenuService;
 import lombok.Getter;
@@ -44,14 +45,15 @@ public class FillingProfileHandler implements InputMessageHandler {
     private UserProfileImpl userProfileImpl;
 
     @Autowired
-    private BodyParamRepositoryImpl bodyParamRepository;
+    private BodyParamService bodyParamService;
 
     @Autowired
     private UserRepositoryImpl userRepository;
 
-    UserProfile userProfile = null;
-    BodyParam bodyParam = null;
-    User user = null;
+
+    private UserProfile userProfile = null;
+    private BodyParam bodyParam = null;
+    private User user = null;
 
     public FillingProfileHandler(UserDataCache userDataCache, UserMainMenuService userMainMenuService,
                                  ReplyMessagesService messagesService, @Lazy Bot myBot) {
@@ -97,10 +99,9 @@ public class FillingProfileHandler implements InputMessageHandler {
                 bodyParam = new BodyParam();
                 bodyParam.setUser(user);
                 userProfile = new UserProfile();
-                bodyParamRepository.save(bodyParam);
+                bodyParamService.saveBodyParam(bodyParam);
                 userProfile.setFullName(usersAnswer);
                 userProfilesId.setUser(user);
-                userProfilesId.setBodyParam(bodyParam);
                 userProfile.setPk(userProfilesId);
                 userProfileImpl.save(userProfile);
             }
@@ -130,14 +131,15 @@ public class FillingProfileHandler implements InputMessageHandler {
         if (botState.equals(BotState.ASK_WEIGHT)) {
             if (userAnswerIsCorrect(usersAnswer)) {
                 user = userRepository.findUserByChatId(chatId);
-                if (bodyParamRepository.findBodyParamByUser(user) != null) {
-                    bodyParam = bodyParamRepository.findBodyParamByUser(user);
+                UserProfile userProfile = userProfileImpl.findUserProfileByPkUser(user);
+                if (bodyParamService.findBodyParamByUser(userProfile.getPk().getUser()) != null) {
+                    bodyParam = bodyParamService.findBodyParamByUser(user);
                     bodyParam.setHeight(usersAnswer);
-                    bodyParamRepository.save(bodyParam);
+                    bodyParamService.saveBodyParam(bodyParam);
                 } else {
                     bodyParam = new BodyParam();
                     bodyParam.setHeight(usersAnswer);
-                    bodyParamRepository.save(bodyParam);
+                    bodyParamService.saveBodyParam(bodyParam);
                 }
                 replyToUser = messagesService.getReplyMessage(chatId, "reply.askWeight");
                 userDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FILLED);
@@ -152,14 +154,13 @@ public class FillingProfileHandler implements InputMessageHandler {
             SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
             if (userAnswerIsCorrect(usersAnswer)) {
                 user = userRepository.findUserByChatId(chatId);
-                if (bodyParamRepository.findBodyParamByUser(user) != null) {
-                    bodyParam = bodyParamRepository.findBodyParamByUser(user);
+                UserProfile userProfile = userProfileImpl.findUserProfileByPkUser(user);
+                if (bodyParamService.findBodyParamByUser(userProfile.getPk().getUser()) != null) {
+                    bodyParam = bodyParamService.findBodyParamByUser(user);
                     bodyParam.setWeight(usersAnswer);
-                    bodyParam.setUser(userRepository.findUserByChatId(inputMsg.getChatId()));
                     bodyParam.setDate(formatForDateNow.format(date));
-                    bodyParamRepository.save(bodyParam);
+                    bodyParamService.saveBodyParam(bodyParam);
                     userProfilesId.setUser(user);
-                    userProfilesId.setBodyParam(bodyParam);
                     if (userProfileImpl.findUserProfileByPkUser(user) != null) {
                         userProfile = userProfileImpl.findUserProfileByPkUser(user);
                         userProfile.setPk(userProfilesId);
@@ -174,9 +175,8 @@ public class FillingProfileHandler implements InputMessageHandler {
                             .user(userRepository.findUserByChatId(inputMsg.getChatId()))
                             .date(formatForDateNow.format(date))
                             .build();
-                    bodyParamRepository.save(bodyParam);
+                    bodyParamService.saveBodyParam(bodyParam);
                     userProfilesId.setUser(user);
-                    userProfilesId.setBodyParam(bodyParam);
                     userProfile = new UserProfile();
                     userProfile.setPk(userProfilesId);
                     userProfileImpl.save(userProfile);

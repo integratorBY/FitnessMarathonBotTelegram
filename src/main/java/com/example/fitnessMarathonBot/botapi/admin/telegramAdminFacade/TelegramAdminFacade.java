@@ -49,36 +49,35 @@ public class TelegramAdminFacade {
         this.messagesService = messagesService;
     }
 
-    public BotApiMethod<?> handleUpdate(Update update) {
+    @SneakyThrows
+    public void handleUpdate(Update update) {
         SendMessage replyMessage = null;
 
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
                     callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
-            return processCallbackQuery(callbackQuery);
+            myBot.execute(processCallbackQuery(callbackQuery));
         }
 
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
             log.info("New message from User:{}, userId: {}, chatId: {},  with text: {}",
                     message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
-            replyMessage = handleInputMessage(message);
+            myBot.execute(handleInputMessage(message));
         } else if (message != null && message.hasPhoto() && userDataCache.getUsersCurrentBotState(
                 message.getFrom().getId()).equals(BotState.ASK_ADMIN_LOAD_MEAL_PLAN1)) {
-            replyMessage = saveMealPlanOne(message);
+            myBot.execute(saveMealPlanOne(message));
         } else if (message != null && message.hasPhoto() && userDataCache.getUsersCurrentBotState(
                 message.getFrom().getId()).equals(BotState.ASK_ADMIN_LOAD_MEAL_PLAN2)) {
-            replyMessage = saveMealPlanTwo(message);
+            myBot.execute(saveMealPlanTwo(message));
         } else if (message != null && message.hasPhoto() && userDataCache.getUsersCurrentBotState(
                 message.getFrom().getId()).equals(BotState.ASK_ADMIN_LOAD_MEAL_PLAN3)) {
-            replyMessage = saveMealPlanThree(message);
+            myBot.execute(saveMealPlanThree(message));
         } else if (message != null && message.hasPhoto() && userDataCache.getUsersCurrentBotState(
                 message.getFrom().getId()).equals(BotState.ASK_ADMIN_LOAD_MEAL_PLAN_BASKET)) {
-            replyMessage = saveMealPlanFoodBasket(message);
+            myBot.execute(saveMealPlanFoodBasket(message));
         }
-
-        return replyMessage;
     }
 
     private SendMessage handleInputMessage(Message message) {

@@ -33,7 +33,7 @@ public class FillingGoalsHandler implements InputMessageHandler {
     @Autowired
     private AdminButtonHandler adminButtonHandler;
 
-    List<ListGoals> listGoalsList = new ArrayList<>();
+    private List<ListGoals> listGoalsList = new ArrayList<>();
 
     private static String date = "";
 

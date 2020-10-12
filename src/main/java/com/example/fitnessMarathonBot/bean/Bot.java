@@ -8,8 +8,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
-import org.telegram.telegrambots.bots.TelegramWebhookBot;
-import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -23,7 +22,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Bot extends TelegramWebhookBot {
+public class Bot extends TelegramLongPollingBot {
     private String webHookPath;
     private String botUserName;
     private String botToken;
@@ -38,9 +37,14 @@ public class Bot extends TelegramWebhookBot {
         this.telegramAdminFacade = telegramAdminFacade;
         this.telegramUserFacade = telegramUserFacade;
     }
+//
+//    @Override
+//    public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
+//
+//    }
 
     @Override
-    public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
+    public void onUpdateReceived(Update update) {
         int userId = 0;
         if (update.getCallbackQuery() == null) {
             userId = update.getMessage().getFrom().getId();
@@ -49,9 +53,10 @@ public class Bot extends TelegramWebhookBot {
         }
 
         if (userId == 1331718111) {
-            return telegramAdminFacade.handleUpdate(update);
+            telegramAdminFacade.handleUpdate(update);
+        } else {
+            telegramUserFacade.handleUpdate(update);
         }
-        return telegramUserFacade.handleUpdate(update);
     }
 
     @Override
@@ -64,10 +69,10 @@ public class Bot extends TelegramWebhookBot {
         return botToken;
     }
 
-    @Override
-    public String getBotPath() {
-        return webHookPath;
-    }
+//    @Override
+//    public String getBotPath() {
+//        return webHookPath;
+//    }
 
     public void setWebHookPath(String webHookPath) {
         this.webHookPath = webHookPath;

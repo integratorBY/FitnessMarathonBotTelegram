@@ -22,7 +22,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 @Configuration
 @ConfigurationProperties(prefix = "telegrambot")
 public class BotConfig {
-    private String webHookPath;
+//    private String webHookPath;
     private String botUserName;
     private String botToken;
 
@@ -40,7 +40,7 @@ public class BotConfig {
         Bot myBot = new Bot(telegramUserFacade, telegramAdminFacade);
         myBot.setBotUserName(botUserName);
         myBot.setBotToken(botToken);
-        myBot.setWebHookPath(webHookPath);
+//        myBot.setWebHookPath(webHookPath);
         new Thread(broadcastService::startBroadcasting).start();
         new Thread(reminderMonday::startReminder).start();
         new Thread(signsOfLife::startReminder).start();

@@ -4,7 +4,9 @@ import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
+import com.example.fitnessMarathonBot.fitnessDB.bean.BodyParam;
 import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
+import com.example.fitnessMarathonBot.fitnessDB.repository.BodyParamRepositoryImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.regex.RegexHandler;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
@@ -21,6 +23,9 @@ import java.util.List;
 public class OpenCustomerInfo implements InputMessageHandler {
     private UserDataCache userDataCache;
     private Bot myBot;
+
+    @Autowired
+    private BodyParamRepositoryImpl bodyParamRepository;
 
     @Autowired
     private ReplyMessagesService messagesService;
@@ -61,14 +66,15 @@ public class OpenCustomerInfo implements InputMessageHandler {
                 List<UserProfile> userList = userProfile.findAll();
                 if (userList.size() >= number) {
                     UserProfile userProfile = userList.get(number - 1);
+                    BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser());
                     profileInfo = messagesService.getReplyText("reply.profileInfoClient");
                     profileInfo = String.format(profileInfo, userProfile.getFullName(), userProfile.getUserAge(),
-                            userProfile.getPk().getBodyParam().getHeight(), userProfile.getPk().getBodyParam().getWeight(),
-                            userProfile.getPk().getBodyParam().getArm(), userProfile.getPk().getBodyParam().getStomach(),
-                            userProfile.getPk().getBodyParam().getNeck(), userProfile.getPk().getBodyParam().getHips(),
-                            userProfile.getPk().getBodyParam().getHip(), userProfile.getPk().getBodyParam().getChest(),
-                            userProfile.getPk().getBodyParam().getWaist(), userProfile.getPk().getBodyParam().getShin(),
-                            userProfile.getPk().getBodyParam().getDate()).replaceAll("null", "0");
+                            bodyParam.getHeight(), bodyParam.getWeight(),
+                            bodyParam.getArm(), bodyParam.getStomach(),
+                            bodyParam.getNeck(), bodyParam.getHips(),
+                            bodyParam.getHip(), bodyParam.getChest(),
+                            bodyParam.getWaist(), bodyParam.getShin(),
+                            bodyParam.getDate()).replaceAll("null", "0");
                     replyToUser = new SendMessage(chatId, profileInfo);
                     sendCustomerPhoto(chatId, userProfile, myBot);
 

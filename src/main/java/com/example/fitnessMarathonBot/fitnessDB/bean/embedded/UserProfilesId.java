@@ -1,6 +1,5 @@
 package com.example.fitnessMarathonBot.fitnessDB.bean.embedded;
 
-import com.example.fitnessMarathonBot.fitnessDB.bean.BodyParam;
 import com.example.fitnessMarathonBot.fitnessDB.bean.User;
 import lombok.*;
 
@@ -18,8 +17,5 @@ public class UserProfilesId implements Serializable {
 
     @ManyToOne
     private User user;
-
-    @ManyToOne
-    private BodyParam bodyParam;
 
 }

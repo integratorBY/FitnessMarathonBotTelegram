@@ -44,6 +44,7 @@ public class ReminderMonday {
                     messageService.remindSendPhotoInMonday();
                     Thread.sleep(86400000);
                 }
+                Thread.sleep(86400000);
             }
         }
 

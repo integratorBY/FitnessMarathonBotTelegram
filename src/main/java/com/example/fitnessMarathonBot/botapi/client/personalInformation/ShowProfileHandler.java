@@ -4,8 +4,10 @@ import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.botapi.admin.menu.openCustomerInfo.OpenCustomerInfo;
+import com.example.fitnessMarathonBot.fitnessDB.bean.BodyParam;
 import com.example.fitnessMarathonBot.fitnessDB.bean.User;
 import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
+import com.example.fitnessMarathonBot.fitnessDB.repository.BodyParamRepositoryImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
 import com.example.fitnessMarathonBot.service.MessageService;
@@ -34,7 +36,7 @@ public class ShowProfileHandler implements InputMessageHandler {
     private Bot myBot;
 
     @Autowired
-    private MessageService service;
+    private BodyParamRepositoryImpl bodyParamRepository;
 
     @Autowired
     private UserProfileImpl userProfileRepo;
@@ -53,20 +55,22 @@ public class ShowProfileHandler implements InputMessageHandler {
         SendMessage sendMessage = null;
         long chatId = message.getChatId();
         User user = userRepository.findUserByChatId(chatId);
+//        BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
         if (userProfileRepo.findUserProfileByPkUser(user) == null) {
             sendMessage = new SendMessage(chatId, "Данные отсутствуют");
         } else {
             UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
+            BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser());
             boolean isPhotoBody = checkUserProfilePhotoBody(userProfile);
             boolean isPhotoWeigher = checkUserProfilePhotoWeigher(userProfile);
             String profileInfo = messagesService.getReplyText("reply.profileInfo");
             profileInfo = String.format(profileInfo, userProfile.getFullName(), userProfile.getUserAge(),
-                    userProfile.getPk().getBodyParam().getHeight(), userProfile.getPk().getBodyParam().getWeight(),
-                    userProfile.getPk().getBodyParam().getArm(), userProfile.getPk().getBodyParam().getStomach(),
-                    userProfile.getPk().getBodyParam().getNeck(), userProfile.getPk().getBodyParam().getHips(),
-                    userProfile.getPk().getBodyParam().getHip(), userProfile.getPk().getBodyParam().getChest(),
-                    userProfile.getPk().getBodyParam().getWaist(), userProfile.getPk().getBodyParam().getShin(),
-                    userProfile.getPk().getBodyParam().getDate());
+                    bodyParam.getHeight(), bodyParam.getWeight(),
+                    bodyParam.getArm(), bodyParam.getStomach(),
+                    bodyParam.getNeck(), bodyParam.getHips(),
+                    bodyParam.getHip(), bodyParam.getChest(),
+                    bodyParam.getWaist(), bodyParam.getShin(),
+                    bodyParam.getDate());
             if (profileInfo.contains("null")) {
                 profileInfo = profileInfo.replaceAll("null", "0");
                 sendMessage = new SendMessage(chatId, profileInfo).setReplyMarkup(getInlineMessageButtons(isPhotoBody, isPhotoWeigher));

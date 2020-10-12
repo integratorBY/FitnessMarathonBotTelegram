@@ -1,13 +1,11 @@
 package com.example.fitnessMarathonBot.fitnessDB.bean;
 
 import com.example.fitnessMarathonBot.fitnessDB.bean.embedded.UserProfilesId;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Data
@@ -15,8 +13,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user_profile")
-@AssociationOverride(name = "pk.bodyParam",
-        joinColumns = @JoinColumn(name = "userBodyParam_id"))
+//@AssociationOverride(name = "pk.bodyParam",
+//        joinColumns = @JoinColumn(name = "userBodyParam_id"))
 @AssociationOverride(name = "pk.user",
         joinColumns = @JoinColumn(name = "user_id"))
 public class UserProfile implements Serializable {
@@ -46,5 +44,6 @@ public class UserProfile implements Serializable {
 
     @Column(name = "photo_5")
     private String photoId_5;
+
 }
 

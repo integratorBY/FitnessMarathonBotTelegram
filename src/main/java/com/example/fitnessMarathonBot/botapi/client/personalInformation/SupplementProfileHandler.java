@@ -5,7 +5,9 @@ import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.fitnessDB.bean.BodyParam;
 import com.example.fitnessMarathonBot.fitnessDB.bean.User;
+import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
 import com.example.fitnessMarathonBot.fitnessDB.repository.BodyParamRepositoryImpl;
+import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
 import com.example.fitnessMarathonBot.fitnessDB.service.UserProfileService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,6 +26,9 @@ public class SupplementProfileHandler implements InputMessageHandler {
 
     @Autowired
     private UserProfileService userProfileService;
+
+    @Autowired
+    private UserProfileImpl userProfileRepo;
 
     @Autowired
     private ReplyMessagesService messagesService;
@@ -57,19 +63,12 @@ public class SupplementProfileHandler implements InputMessageHandler {
         SendMessage replyToUser = null;
         BotState botState = userDataCache.getUsersCurrentBotState(userId);
 
-//        if (botState.equals(BotState.ASK_START_PHOTO)) {
-//            if (inputMsg.hasPhoto()) {
-//                userProfileService.saveUserProfile(inputMsg);
-//                userDataCache.setUsersCurrentBotState(userId, BotState.ASK_START_PHOTO);
-//                replyToUser = new SendMessage(chatId, "Фото принято");
-//            }
-//        }
-
+        User user = userRepository.findUserByChatId(inputMsg.getChatId());
+        UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
 
         if (botState.equals(BotState.ASK_ARM)) {
             if(userAnswerIsCorrect(usersAnswer)) {
-                User user = userRepository.findUserByChatId(inputMsg.getChatId());
-                if (bodyParamRepository.findBodyParamByUser(user) != null) {
+                if (bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser()) != null) {
                     BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
                     bodyParam.setNeck(usersAnswer);
                     bodyParamRepository.save(bodyParam);
@@ -83,8 +82,7 @@ public class SupplementProfileHandler implements InputMessageHandler {
         }
         if (botState.equals(BotState.ASK_CHEST)) {
             if(userAnswerIsCorrect(usersAnswer)) {
-                User user = userRepository.findUserByChatId(inputMsg.getChatId());
-                if (bodyParamRepository.findBodyParamByUser(user) != null) {
+                if (bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser()) != null) {
                     BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
                     bodyParam.setArm(usersAnswer);
                     bodyParamRepository.save(bodyParam);
@@ -98,8 +96,7 @@ public class SupplementProfileHandler implements InputMessageHandler {
         }
         if (botState.equals(BotState.ASK_WAIST)) {
             if(userAnswerIsCorrect(usersAnswer)) {
-                User user = userRepository.findUserByChatId(inputMsg.getChatId());
-                if (bodyParamRepository.findBodyParamByUser(user) != null) {
+                if (bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser()) != null) {
                     BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
                     bodyParam.setChest(usersAnswer);
                     bodyParamRepository.save(bodyParam);
@@ -114,8 +111,7 @@ public class SupplementProfileHandler implements InputMessageHandler {
         }
         if (botState.equals(BotState.ASK_BELLY)) {
             if(userAnswerIsCorrect(usersAnswer)) {
-                User user = userRepository.findUserByChatId(inputMsg.getChatId());
-                if (bodyParamRepository.findBodyParamByUser(user) != null) {
+                if (bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser()) != null) {
                     BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
                     bodyParam.setWaist(usersAnswer);
                     bodyParamRepository.save(bodyParam);
@@ -130,8 +126,7 @@ public class SupplementProfileHandler implements InputMessageHandler {
         }
         if (botState.equals(BotState.ASK_HIPS)) {
             if(userAnswerIsCorrect(usersAnswer)) {
-                User user = userRepository.findUserByChatId(inputMsg.getChatId());
-                if (bodyParamRepository.findBodyParamByUser(user) != null) {
+                if (bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser()) != null) {
                     BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
                     bodyParam.setStomach(usersAnswer);
                     bodyParamRepository.save(bodyParam);
@@ -145,8 +140,7 @@ public class SupplementProfileHandler implements InputMessageHandler {
         }
         if (botState.equals(BotState.ASK_HIP)) {
             if(userAnswerIsCorrect(usersAnswer)) {
-                User user = userRepository.findUserByChatId(inputMsg.getChatId());
-                if (bodyParamRepository.findBodyParamByUser(user) != null) {
+                if (bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser()) != null) {
                     BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
                     bodyParam.setHips(usersAnswer);
                     bodyParamRepository.save(bodyParam);
@@ -160,8 +154,7 @@ public class SupplementProfileHandler implements InputMessageHandler {
         }
         if (botState.equals(BotState.ASK_SHIN)) {
             if(userAnswerIsCorrect(usersAnswer)) {
-                User user = userRepository.findUserByChatId(inputMsg.getChatId());
-                if (bodyParamRepository.findBodyParamByUser(user) != null) {
+                if (bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser()) != null) {
                     BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
                     bodyParam.setHip(usersAnswer);
                     bodyParamRepository.save(bodyParam);
@@ -175,10 +168,9 @@ public class SupplementProfileHandler implements InputMessageHandler {
         }
         if (botState.equals(BotState.PERSONAL_INFO_FILLED)) {
             if(userAnswerIsCorrect(usersAnswer)) {
-                User user = userRepository.findUserByChatId(inputMsg.getChatId());
                 Date date = new Date();
                 SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
-                if (bodyParamRepository.findBodyParamByUser(user) != null) {
+                if (bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser()) != null) {
                     BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
                     bodyParam.setShin(usersAnswer);
                     bodyParam.setDate(formatForDateNow.format(date));

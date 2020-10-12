@@ -12,6 +12,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "body_param")
 public class BodyParam implements Serializable {
     @Id
@@ -37,8 +38,8 @@ public class BodyParam implements Serializable {
     @EqualsAndHashCode.Exclude
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.bodyParam", cascade=CascadeType.ALL)
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Set<UserProfile> userProfiles;
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.bodyParam", cascade=CascadeType.ALL)
+//    @ToString.Exclude
+//    @EqualsAndHashCode.Exclude
+//    private Set<UserProfile> userProfiles;
 }
