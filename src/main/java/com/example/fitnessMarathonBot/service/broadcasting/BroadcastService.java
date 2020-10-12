@@ -35,7 +35,7 @@ public class BroadcastService {
 //                messageService.nexDayMarathon();
             }try {
                 log.info("broadcast is sleeping");
-                Thread.sleep(28800000 / 8);
+                Thread.sleep(28800000 / 4);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -4,8 +4,10 @@ import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
+import com.example.fitnessMarathonBot.fitnessDB.bean.StartImages;
 import com.example.fitnessMarathonBot.fitnessDB.bean.User;
 import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
+import com.example.fitnessMarathonBot.fitnessDB.repository.StartImagesRepo;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
 import com.example.fitnessMarathonBot.service.AdminMainMenuService;
@@ -35,6 +37,9 @@ public class StartProfileHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
     private AdminMainMenuService adminMainMenuService;
     private Bot myBot;
+
+    @Autowired
+    private StartImagesRepo startImagesRepo;
 
     @Autowired
     private UserRepositoryImpl userRepository;
@@ -114,7 +119,7 @@ public class StartProfileHandler implements InputMessageHandler {
             sendMessages.add(new SendMessage(chatId, messageWhatAwaitsUs));
             myBot.sendListMessages(sendMessages);
 
-            myBot.sendPhoto(chatId, "", "whatAwaitsUs");
+            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("whatAwaitsUs").getPath());
 //            Thread.sleep(5000);
             myBot.execute(new SendMessage(chatId,
                     String.format(messagesService.getReplyText("reply.attention"),
@@ -123,11 +128,11 @@ public class StartProfileHandler implements InputMessageHandler {
 //            Thread.sleep(5000);
             String messageRegulations = String.format(messagesService.getReplyText("reply.fundamentalRiles"), Emojis.ARROW_RIGHT, Emojis.ARROW_RIGHT, Emojis.ARROW_RIGHT);
             myBot.execute(new SendMessage(chatId, messageRegulations));
-            myBot.sendPhoto(chatId, "", "regulations");
+            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("regulations").getPath());
 //            Thread.sleep(5000);
             myBot.execute(new SendMessage(chatId, String.format(messagesService.getReplyText("reply.whatNeedMarathon"),
                     Emojis.POINT_DOWN, Emojis.POINT_DOWN, Emojis.POINT_DOWN, Emojis.POINT_DOWN, Emojis.POINT_DOWN)));
-            myBot.sendPhoto(chatId, "", "whatNeedMarathon");
+            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("whatNeedMarathon").getPath());
 //            Thread.sleep(5000);
             myBot.execute(new SendMessage(chatId,
                     String.format(messagesService.getReplyText("reply.taskWeek"), Emojis.WARNING, Emojis.ARROW_RIGHT,
@@ -135,23 +140,23 @@ public class StartProfileHandler implements InputMessageHandler {
                             Emojis.SUNNY, Emojis.BLUSH, Emojis.BLUSH, Emojis.BLUSH, Emojis.ARROW_RIGHT,
                             Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,
                             Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN)));
-            myBot.sendPhoto(chatId, "", "howMuchWater");
+            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("howMuchWater").getPath());
 //            Thread.sleep(5000);
 
             myBot.execute(new SendMessage(chatId, messageControl));
             myBot.execute(new SendMessage(chatId, messageTrackingHabits));
-            myBot.sendPhoto(chatId, "","habitsTrackerAndSentReports");
+            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("habitsTrackerAndSentReports").getPath());
 //            Thread.sleep(5000);
 
             myBot.execute(new SendMessage(chatId, messageDayOne));
-            myBot.sendPhoto(chatId, "", "reportHint");
+            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("reportHint").getPath());
             myBot.execute(new SendMessage(chatId, messageToday));
-            myBot.sendPhoto(chatId, "", "everyMonday");
+            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("everyMonday").getPath());
 //            Thread.sleep(5000);
 
             myBot.execute(new SendMessage(chatId, messageIndividualPlanCaution));
             myBot.execute(new SendMessage(chatId, messageDietPlanInstruction));
-            myBot.sendPhoto(chatId, "", "howWeightProducts");
+            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("howWeightProducts").getPath());
             myBot.execute(new SendMessage(chatId, "" + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN +
                     Emojis.ARROW_DOWN + Emojis.ARROW_DOWN));
 
