@@ -90,10 +90,10 @@ public class Bot extends TelegramLongPollingBot {
     public void sendPhoto(long chatId, String imageCaption, String imagePath) {
 //        Resource resource = resourceLoader.getResource("classpath:static/images/" + imagePath + ".JPG");
 //        InputStream dbAsStream = resource.getInputStream();
-        URL url = this.getClass().getResource("classpath:static/images/" + imagePath + ".JPG");
-        File image = ResourceUtils.getFile(url);
+//        URL url = this.getClass().getResource(imagePath);
+//        File image = ResourceUtils.getFile(url);
         SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setPhoto(String.valueOf(image));
+        sendPhoto.setPhoto(imagePath);
         sendPhoto.setChatId(chatId);
         sendPhoto.setCaption(imageCaption);
         execute(sendPhoto);
