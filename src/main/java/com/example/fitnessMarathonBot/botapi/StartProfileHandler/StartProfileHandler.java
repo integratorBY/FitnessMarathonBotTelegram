@@ -160,11 +160,13 @@ public class StartProfileHandler implements InputMessageHandler {
             myBot.execute(new SendMessage(chatId, "" + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN +
                     Emojis.ARROW_DOWN + Emojis.ARROW_DOWN));
 
-            userDataCache.setUsersCurrentBotState(inputMsg.getFrom().getId(), BotState.ASK_PERSONAL_INFO);
             replyToUser = new SendMessage(chatId,
                     String.format(messagesService.getReplyText("reply.requestEnterYourData"), Emojis.MEMO, Emojis.POINT_DOWN));
 
             replyToUser.setReplyMarkup(getInlineMessageButtons());
+            myBot.execute(replyToUser);
+            userDataCache.setUsersCurrentBotState(inputMsg.getFrom().getId(), BotState.ASK_PERSONAL_INFO);
+            replyToUser = new SendMessage(chatId, " ");
         }
 
         return replyToUser;
