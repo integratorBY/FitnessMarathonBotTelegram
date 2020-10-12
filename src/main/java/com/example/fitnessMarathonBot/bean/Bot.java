@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -15,6 +17,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,6 +29,8 @@ public class Bot extends TelegramLongPollingBot {
     private String webHookPath;
     private String botUserName;
     private String botToken;
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     @Autowired
     BroadcastService broadcastService;
@@ -83,9 +88,12 @@ public class Bot extends TelegramLongPollingBot {
 
     @SneakyThrows
     public void sendPhoto(long chatId, String imageCaption, String imagePath) {
-        URL url = ResourceUtils.getURL("classpath:static/images/" + imagePath + ".JPG");
+//        Resource resource = resourceLoader.getResource("classpath:static/images/" + imagePath + ".JPG");
+//        InputStream dbAsStream = resource.getInputStream();
+        URL url = ResourceUtils.getURL("root/fitnessBot/target/classes/static/images/" + imagePath + ".JPG");
         File image = ResourceUtils.getFile(url);
-        SendPhoto sendPhoto = new SendPhoto().setPhoto(image);
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setPhoto(String.valueOf(image));
         sendPhoto.setChatId(chatId);
         sendPhoto.setCaption(imageCaption);
         execute(sendPhoto);
