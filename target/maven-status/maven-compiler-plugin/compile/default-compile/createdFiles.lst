@@ -4,7 +4,6 @@ com\example\fitnessMarathonBot\botapi\admin\menu\WeeklyReportHandler.class
 com\example\fitnessMarathonBot\cache\UserDataCache.class
 com\example\fitnessMarathonBot\fitnessDB\repository\BodyParamRepositoryImpl.class
 com\example\fitnessMarathonBot\cache\DataCache.class
-com\example\fitnessMarathonBot\controller\WebHookController.class
 com\example\fitnessMarathonBot\fitnessDB\bean\ListGoals.class
 com\example\fitnessMarathonBot\service\MessageService.class
 com\example\fitnessMarathonBot\fitnessDB\bean\User.class
@@ -70,6 +69,7 @@ com\example\fitnessMarathonBot\fitnessDB\repository\MealPlanRepository.class
 com\example\fitnessMarathonBot\service\broadcasting\BroadcastService.class
 com\example\fitnessMarathonBot\botapi\admin\menu\ParticipantsAndResultHandler.class
 com\example\fitnessMarathonBot\botapi\InputMessageHandler.class
+com\example\fitnessMarathonBot\fitnessDB\service\BodyParamService.class
 com\example\fitnessMarathonBot\fitnessDB\repository\UserPhotoRepository.class
 com\example\fitnessMarathonBot\botapi\client\menu\ClientMealPanHandler.class
 com\example\fitnessMarathonBot\fitnessDB\service\MealPlanService.class

@@ -20,6 +20,7 @@ D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMar
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\utils\Emojis.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\client\teleframUserFacade\TelegramUserFacade.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\client\menu\TaskHandler.java
+D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\fitnessDB\service\BodyParamService.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\cache\UserDataCache.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\client\menu\ClientMealPanHandler.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\admin\menu\WeeklyReportHandler.java
@@ -36,7 +37,6 @@ D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMar
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\admin\adminButtonHandler\AdminButtonHandler.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\fitnessDB\bean\MarathonPeriod.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\fitnessDB\service\UserProfileService.java
-D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\controller\WebHookController.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\fitnessDB\bean\ListUserGoals.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\admin\menu\openCustomerInfo\OpenCustomerInfo.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\BotStateContext.java

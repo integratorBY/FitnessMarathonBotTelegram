@@ -8,8 +8,6 @@ import org.telegram.telegrambots.ApiContextInitializer;
 @SpringBootApplication
 public class FitnessMarathonBotApplication {
 
-
-
     public static void main(String[] args) {
 		ApiContextInitializer.init();
 		SpringApplication.run(FitnessMarathonBotApplication.class, args);

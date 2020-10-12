@@ -69,11 +69,6 @@ public class Bot extends TelegramLongPollingBot {
         return botToken;
     }
 
-//    @Override
-//    public String getBotPath() {
-//        return webHookPath;
-//    }
-
     public void setWebHookPath(String webHookPath) {
         this.webHookPath = webHookPath;
     }
