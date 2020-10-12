@@ -1,5 +1,6 @@
 package com.example.fitnessMarathonBot.botapi.client.personalInformation;
 
+import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
@@ -11,7 +12,9 @@ import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
 import com.example.fitnessMarathonBot.fitnessDB.service.UserProfileService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -23,7 +26,7 @@ import java.util.Date;
 @Component
 public class SupplementProfileHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
-
+    private Bot myBot;
     @Autowired
     private UserProfileService userProfileService;
 
@@ -39,8 +42,9 @@ public class SupplementProfileHandler implements InputMessageHandler {
     @Autowired
     private UserRepositoryImpl userRepository;
 
-    public SupplementProfileHandler(UserDataCache userDataCache) {
+    public SupplementProfileHandler(UserDataCache userDataCache, @Lazy Bot myBot) {
         this.userDataCache = userDataCache;
+        this.myBot = myBot;
     }
 
     @Override
@@ -56,11 +60,12 @@ public class SupplementProfileHandler implements InputMessageHandler {
         return BotState.ASK_SUPPLEMENT_PERSONAL_INFO;
     }
 
+    @SneakyThrows
     private SendMessage processUsersInput(Message inputMsg) {
         String usersAnswer = inputMsg.getText();
         int userId = inputMsg.getFrom().getId();
         long chatId = inputMsg.getChatId();
-        SendMessage replyToUser = null;
+        SendMessage replyToUser = new SendMessage(chatId, " ");
         BotState botState = userDataCache.getUsersCurrentBotState(userId);
 
         User user = userRepository.findUserByChatId(inputMsg.getChatId());
@@ -73,10 +78,10 @@ public class SupplementProfileHandler implements InputMessageHandler {
                     bodyParam.setNeck(usersAnswer);
                     bodyParamRepository.save(bodyParam);
                 }
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askArm");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askArm"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CHEST);
             } else {
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askNeck");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askNeck"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ARM);
             }
         }
@@ -87,10 +92,10 @@ public class SupplementProfileHandler implements InputMessageHandler {
                     bodyParam.setArm(usersAnswer);
                     bodyParamRepository.save(bodyParam);
                 }
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askChest");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askChest"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_WAIST);
             } else {
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askArm");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askArm"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_CHEST);
             }
         }
@@ -101,10 +106,10 @@ public class SupplementProfileHandler implements InputMessageHandler {
                     bodyParam.setChest(usersAnswer);
                     bodyParamRepository.save(bodyParam);
                 }
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askWaist");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askWaist"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_BELLY);
             } else {
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askChest");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askChest"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_WAIST);
             }
 
@@ -116,10 +121,10 @@ public class SupplementProfileHandler implements InputMessageHandler {
                     bodyParam.setWaist(usersAnswer);
                     bodyParamRepository.save(bodyParam);
                 }
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askBelly");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askBelly"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_HIPS);
             } else {
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askWaist");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askWaist"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_BELLY);
             }
 
@@ -131,10 +136,10 @@ public class SupplementProfileHandler implements InputMessageHandler {
                     bodyParam.setStomach(usersAnswer);
                     bodyParamRepository.save(bodyParam);
                 }
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askThighs");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askThighs"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_HIP);
             } else {
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askBelly");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askBelly"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_HIPS);
             }
         }
@@ -145,10 +150,10 @@ public class SupplementProfileHandler implements InputMessageHandler {
                     bodyParam.setHips(usersAnswer);
                     bodyParamRepository.save(bodyParam);
                 }
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askThigh");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askThigh"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_SHIN);
             } else {
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askThighs");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askThighs"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_HIP);
             }
         }
@@ -159,10 +164,10 @@ public class SupplementProfileHandler implements InputMessageHandler {
                     bodyParam.setHip(usersAnswer);
                     bodyParamRepository.save(bodyParam);
                 }
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askShin");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askShin"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.PERSONAL_INFO_FILLED);
             } else {
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askThigh");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askThigh"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_SHIN);
             }
         }
@@ -176,10 +181,10 @@ public class SupplementProfileHandler implements InputMessageHandler {
                     bodyParam.setDate(formatForDateNow.format(date));
                     bodyParamRepository.save(bodyParam);
                 }
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.personalInfoFilled");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.personalInfoFilled"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.MAIN_MENU);
             } else {
-                replyToUser = messagesService.getReplyMessage(chatId, "reply.askShin");
+                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askShin"));
                 userDataCache.setUsersCurrentBotState(userId, BotState.PERSONAL_INFO_FILLED);
             }
         }
