@@ -5,6 +5,7 @@ com\example\fitnessMarathonBot\cache\UserDataCache.class
 com\example\fitnessMarathonBot\fitnessDB\repository\BodyParamRepositoryImpl.class
 com\example\fitnessMarathonBot\cache\DataCache.class
 com\example\fitnessMarathonBot\fitnessDB\bean\ListGoals.class
+com\example\fitnessMarathonBot\fitnessDB\repository\StartImagesRepo.class
 com\example\fitnessMarathonBot\service\MessageService.class
 com\example\fitnessMarathonBot\fitnessDB\bean\User.class
 com\example\fitnessMarathonBot\service\ReplyMessagesService.class
@@ -22,6 +23,7 @@ com\example\fitnessMarathonBot\botapi\admin\menu\MealPlanHandler.class
 com\example\fitnessMarathonBot\fitnessDB\bean\ListGoals$ListGoalsBuilder.class
 com\example\fitnessMarathonBot\fitnessDB\service\ListUserGoalsService.class
 com\example\fitnessMarathonBot\botapi\client\personalInformation\SupplementProfileHandler.class
+com\example\fitnessMarathonBot\fitnessDB\bean\StartImages.class
 com\example\fitnessMarathonBot\appconfig\BotConfig.class
 com\example\fitnessMarathonBot\botapi\admin\menu\RefreshGoalsHandler.class
 com\example\fitnessMarathonBot\service\broadcasting\ReminderMonday.class
