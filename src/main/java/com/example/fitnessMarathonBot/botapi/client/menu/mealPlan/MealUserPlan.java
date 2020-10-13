@@ -47,7 +47,7 @@ public class MealUserPlan implements InputMessageHandler {
     @Override
     public SendMessage handle(Message message) {
         final int userId = message.getFrom().getId();
-        SendMessage sendMessage = null;
+        SendMessage sendMessage = new SendMessage(message.getChatId(), " ");
         User user = userRepository.findUserByChatId(userId);
         BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
         UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
@@ -59,7 +59,6 @@ public class MealUserPlan implements InputMessageHandler {
         } else {
             try {
                 myBot.execute(new SendMessage(message.getChatId(), "Чтобы получить план питания, необходимо заполнить параметры тела!"));
-                return new SendMessage(message.getChatId(), " ");
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }

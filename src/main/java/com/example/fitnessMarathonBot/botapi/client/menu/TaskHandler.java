@@ -52,7 +52,7 @@ public class TaskHandler implements InputMessageHandler {
     @SneakyThrows
     private SendMessage getMessageAndGoalsButton(long chatId) {
         Date date = new Date();
-        SendMessage replyToUser = null;
+        SendMessage replyToUser = new SendMessage(chatId, " ");
         SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
         String message = "";
         int quantityTasks = listGoalsService.countGoalsToday();
