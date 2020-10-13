@@ -200,7 +200,7 @@ public class TelegramAdminFacade {
             callBackAnswer = new SendMessage(chatId, "Введите норме дня: ");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_FOR_PLAN1);
 
-        }else if (buttonQuery.getData().equals("buttonTwoCategory")) {
+        } else if (buttonQuery.getData().equals("buttonTwoCategory")) {
             callBackAnswer = new SendMessage(chatId, "Введите норме дня: ");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_FOR_PLAN2);
 

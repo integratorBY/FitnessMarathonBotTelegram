@@ -46,10 +46,12 @@ com\example\fitnessMarathonBot\botapi\admin\menu\NewMarathonHandler.class
 com\example\fitnessMarathonBot\fitnessDB\bean\embedded\UserProfilesId.class
 com\example\fitnessMarathonBot\botapi\BotState.class
 com\example\fitnessMarathonBot\botapi\client\userButtonHandlers\UserButtonHandler.class
+com\example\fitnessMarathonBot\botapi\client\auth\AuthorizationHandler.class
 com\example\fitnessMarathonBot\botapi\BotStateContext$1.class
 com\example\fitnessMarathonBot\botapi\StartProfileHandler\StartProfileHandler.class
 com\example\fitnessMarathonBot\fitnessDB\bean\embedded\UserProfilesId$UserProfilesIdBuilder.class
 com\example\fitnessMarathonBot\fitnessDB\service\UserProfileService.class
+com\example\fitnessMarathonBot\fitnessDB\service\UserService.class
 com\example\fitnessMarathonBot\regex\RegexHandler.class
 com\example\fitnessMarathonBot\fitnessDB\bean\ListUserGoals$ListUserGoalsBuilder.class
 com\example\fitnessMarathonBot\botapi\client\menu\TaskHandler.class

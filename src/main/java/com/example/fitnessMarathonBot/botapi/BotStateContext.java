@@ -29,6 +29,8 @@ public class BotStateContext {
             return messageHandlers.get(BotState.ASK_PERSONAL_INFO);
         } else if (isSupplementProfileState(currentState)) {
             return messageHandlers.get(BotState.ASK_SUPPLEMENT_PERSONAL_INFO);
+        } else if (isAuthorizationState(currentState)) {
+            return messageHandlers.get(BotState.USER_AUTHORIZATION);
 
         } else if (isFillingReport(currentState)) {
             return messageHandlers.get(BotState.ASK_REPORT);
@@ -44,6 +46,17 @@ public class BotStateContext {
             return messageHandlers.get(BotState.ASK_ADMIN_MEAL_PLAN);
         }
         return messageHandlers.get(currentState);
+    }
+
+    private boolean isAuthorizationState(BotState currentState) {
+        switch (currentState) {
+            case USER_AUTHORIZATION:
+            case ASK_PASSWORD:
+                return true;
+            default:
+                return false;
+
+        }
     }
 
     private boolean isFillingMealPlanState(BotState currentState) {

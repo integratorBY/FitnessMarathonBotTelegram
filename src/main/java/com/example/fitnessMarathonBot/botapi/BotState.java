@@ -6,6 +6,8 @@ package com.example.fitnessMarathonBot.botapi;
 
 public enum BotState {
     ASK_START,
+    ASK_PASSWORD,
+    USER_AUTHORIZATION,
     SHOW_MAIN_MENU,
     ASK_PERSONAL_INFO,
     ASK_SUPPLEMENT_PERSONAL_INFO,

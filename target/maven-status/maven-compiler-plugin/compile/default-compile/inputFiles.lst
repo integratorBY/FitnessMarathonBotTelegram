@@ -1,4 +1,5 @@
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\fitnessDB\service\ListUserGoalsService.java
+D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\fitnessDB\service\UserService.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\admin\telegramAdminFacade\TelegramAdminFacade.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\bean\UserProfileData.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\client\menu\mealPlan\MealUserPlan.java
@@ -50,6 +51,7 @@ D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMar
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\fitnessDB\service\ListGoalsService.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\admin\menu\fillingHandlers\mealPlan\FillingMealPlan.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\service\AdminMainMenuService.java
+D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\client\auth\AuthorizationHandler.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\fitnessDB\repository\MealPlanRepository.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\fitnessDB\bean\BodyParam.java
 D:\java projects\FitnessMarathonBotTelegram\src\main\java\com\example\fitnessMarathonBot\botapi\client\userButtonHandlers\UserButtonHandler.java

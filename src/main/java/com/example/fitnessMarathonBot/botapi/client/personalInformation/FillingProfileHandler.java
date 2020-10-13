@@ -109,6 +109,7 @@ public class FillingProfileHandler implements InputMessageHandler {
             }
             replyToUser = messagesService.getReplyMessage(chatId, "reply.askAge");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_HEIGHT);
+            myBot.execute(replyToUser);
         }
         if (botState.equals(BotState.ASK_HEIGHT)) {
             if (userAnswerIsCorrect(usersAnswer)) {
@@ -129,6 +130,7 @@ public class FillingProfileHandler implements InputMessageHandler {
                 replyToUser = messagesService.getReplyMessage(chatId, "reply.askAge");
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_HEIGHT);
             }
+            myBot.execute(replyToUser);
         }
         if (botState.equals(BotState.ASK_WEIGHT)) {
             if (userAnswerIsCorrect(usersAnswer)) {
@@ -149,6 +151,7 @@ public class FillingProfileHandler implements InputMessageHandler {
                 replyToUser = messagesService.getReplyMessage(chatId, "reply.askHeight");
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_WEIGHT);
             }
+            myBot.execute(replyToUser);
         }
 
         if (botState.equals(BotState.PROFILE_FILLED)) {
@@ -191,7 +194,6 @@ public class FillingProfileHandler implements InputMessageHandler {
                 } catch (TelegramApiException | InterruptedException e) {
                     e.printStackTrace();
                 }
-//                myBot.sendClientMealPlan(inputMsg.getChatId());
                 userDataCache.setUsersCurrentBotState(userId, BotState.MAIN_MENU);
             } else {
                 replyToUser = messagesService.getReplyMessage(chatId, "reply.askWeight");
@@ -199,7 +201,6 @@ public class FillingProfileHandler implements InputMessageHandler {
             }
         }
         userDataCache.saveUserProfileData(userId, profileData);
-        myBot.execute(replyToUser);
         return replyToUser;
     }
 
