@@ -19,6 +19,9 @@ import java.util.List;
 public class Sender implements InputMessageHandler {
     private UserDataCache userDataCache;
     private Bot myBot;
+
+    public static long privateChatId = 0;
+
     @Autowired
     private UserRepositoryImpl userRepository;
 
@@ -32,7 +35,7 @@ public class Sender implements InputMessageHandler {
     public SendMessage handle(Message message) {
         final int userId = message.getFrom().getId();
         if (userDataCache.getUsersCurrentBotState(userId).equals(BotState.ASK_MESSAGE_FOR_USER)) {
-            userDataCache.setUsersCurrentBotState(userId, BotState.INPUT_MESSAGE_OT_ALL);
+            userDataCache.setUsersCurrentBotState(userId, BotState.INPUT_MESSAGE_TO_ALL);
         }
 
         return processUsersInput(message);
@@ -46,17 +49,25 @@ public class Sender implements InputMessageHandler {
 
     @SneakyThrows
     private SendMessage processUsersInput(Message inputMsg) {
+        int userId = inputMsg.getFrom().getId();
         String usersAnswer = inputMsg.getText();
         long chatId = inputMsg.getChatId();
-        SendMessage replyToUser = null;
+        SendMessage replyToUser = new SendMessage(chatId, " ");
         List<User> userList = userRepository.findAll();
-        if (userList.size() != 0) {
-            for (User user : userList) {
-                myBot.execute(new SendMessage(user.getChatId(), usersAnswer));
+        BotState botState = userDataCache.getUsersCurrentBotState(userId);
+        if (botState.equals(BotState.INPUT_MESSAGE_TO_ALL)) {
+            if (userList.size() != 0) {
+                for (User user : userList) {
+                    if (user.getChatId() != chatId)
+                        myBot.execute(new SendMessage(user.getChatId(), usersAnswer));
+                }
             }
+            replyToUser = new SendMessage(chatId, "Сообщение отправленно!");
         }
-        replyToUser = new SendMessage(chatId, "Сообщение отправленно!");
-
+        if (botState.equals(BotState.ADMIN_SEND_PRIVATE_MESSAGE)) {
+                myBot.execute(new SendMessage(privateChatId, usersAnswer));
+            replyToUser = new SendMessage(chatId, "Сообщение отправленно!");
+        }
         return replyToUser;
     }
 }

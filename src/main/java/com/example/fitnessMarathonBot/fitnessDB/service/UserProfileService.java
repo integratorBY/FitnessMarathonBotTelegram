@@ -61,4 +61,41 @@ public class UserProfileService {
             return;
         }
     }
+
+    public int counterUserPhotoBody(long chatId) {
+        int quantity = 0;
+        User user = userRepository.findUserByChatId(chatId);
+        if (user != null) {
+            UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
+            if (userProfile != null) {
+                if (userProfile.getPhotoId_1() != null){
+                    quantity++;
+                }
+                if (userProfile.getPhotoId_2() != null){
+                    quantity++;
+                }
+                if (userProfile.getPhotoId_3() != null){
+                    quantity++;
+                }
+            }
+        }
+        return quantity;
+    }
+
+    public int counterUserPhotoWeigher(long chatId) {
+        int quantity = 0;
+        User user = userRepository.findUserByChatId(chatId);
+        if (user != null) {
+            UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
+            if (userProfile != null) {
+                if (userProfile.getPhotoId_4() != null){
+                    quantity++;
+                }
+                if (userProfile.getPhotoId_5() != null){
+                    quantity++;
+                }
+            }
+        }
+        return quantity;
+    }
 }

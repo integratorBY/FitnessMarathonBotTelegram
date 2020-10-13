@@ -53,8 +53,8 @@ public class AdminButtonHandler {
     }
 
     public SendMessage getButtonsOperationsWithMealPlanAndMessage(long chatId) {
-
-        return new SendMessage(chatId, "Выберите категорию добавляемого плана").setReplyMarkup(getCategoryMealPlanButtons());
+        return new SendMessage(chatId, "Выберите категорию добавляемого плана")
+                .setReplyMarkup(getCategoryMealPlanButtons());
     }
 
     private InlineKeyboardMarkup getCategoryMealPlanButtons() {

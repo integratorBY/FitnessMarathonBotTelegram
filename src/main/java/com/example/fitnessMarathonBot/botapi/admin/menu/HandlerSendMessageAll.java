@@ -21,7 +21,7 @@ public class HandlerSendMessageAll implements InputMessageHandler {
     public SendMessage handle(Message message) {
         final int userId = message.getFrom().getId();
         SendMessage replMessage = new SendMessage(message.getChatId(), "Введите сообщение ");
-        userDataCache.setUsersCurrentBotState(userId,BotState.INPUT_MESSAGE_OT_ALL);
+        userDataCache.setUsersCurrentBotState(userId,BotState.INPUT_MESSAGE_TO_ALL);
         return replMessage;
     }
 

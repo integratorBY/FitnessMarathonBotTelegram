@@ -147,6 +147,7 @@ public class BotStateContext {
             case ASK_ADMIN_EDIT_TASK_ONE:
             case ASK_ADMIN_EDIT_TIMESTAMP:
             case ASK_ADMIN_NUMBER_GOAL:
+            case ASK_ADMIN_NUMBER_DEL_GOAL:
             case GOALS_FILLED:
                 return true;
             default:
@@ -156,7 +157,8 @@ public class BotStateContext {
 
     private boolean isSendMessageAllState(BotState currentState) {
         switch (currentState) {
-            case INPUT_MESSAGE_OT_ALL:
+            case INPUT_MESSAGE_TO_ALL:
+            case ADMIN_SEND_PRIVATE_MESSAGE:
             case MESSAGE_SENT:
                 return true;
             default:

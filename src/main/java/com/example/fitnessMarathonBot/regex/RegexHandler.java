@@ -7,11 +7,11 @@ public class RegexHandler {
     }
 
     public static boolean checkUserAnswerOnDigit(String userAnswer) {
-        return userAnswer.matches("[0-99]");
+        return userAnswer.matches("[0-9]+");
     }
 
     public static boolean checkUserAnswerOnPeriod(String userAnswer) {
-        return userAnswer.matches("[0-99]-[0-99]");
+        return userAnswer.matches("[0-9]+-[0-9]+");
     }
 
 

@@ -109,6 +109,9 @@ public class TelegramAdminFacade {
             case "Отправить сообщение всем":
                 botState = BotState.SEND_MESSAGE_ALL;
                 break;
+            case "Отмена":
+                botState = BotState.GOALS_FILLED;
+                break;
             default:
                 botState = userDataCache.getUsersCurrentBotState(userId);
                 break;
@@ -165,7 +168,7 @@ public class TelegramAdminFacade {
 
         } else if (buttonQuery.getData().equals("buttonDelGoal")) {
             callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminDeleteTask"));
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_AGE);
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_DEL_GOAL);
 
         } else if (buttonQuery.getData().equals("buttonEditTimeStamp")) {
             callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTimeStampForTask"));
@@ -208,6 +211,10 @@ public class TelegramAdminFacade {
         } else if (buttonQuery.getData().equals("buttonFoodBasket")) {
             callBackAnswer = new SendMessage(chatId, "Введите дни через тире (Пример 1-3)");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_DAYS_FOR_FOOD_BASKET);
+
+        } else if (buttonQuery.getData().equals("buttonSendPrivateMessage")) {
+            callBackAnswer = new SendMessage(chatId, "Введите сообщение");
+            userDataCache.setUsersCurrentBotState(userId, BotState.ADMIN_SEND_PRIVATE_MESSAGE);
         }
 
         return callBackAnswer;

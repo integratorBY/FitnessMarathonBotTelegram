@@ -1,19 +1,28 @@
 package com.example.fitnessMarathonBot.botapi.admin.menu.fillingHandlers.goals;
 
+import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
 import com.example.fitnessMarathonBot.botapi.admin.adminButtonHandler.AdminButtonHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.fitnessDB.bean.ListGoals;
 import com.example.fitnessMarathonBot.fitnessDB.repository.ListGoalsRepository;
+import com.example.fitnessMarathonBot.fitnessDB.service.ListGoalsService;
 import com.example.fitnessMarathonBot.regex.RegexHandler;
+import com.example.fitnessMarathonBot.service.AdminMainMenuService;
+import com.example.fitnessMarathonBot.service.CurrentDate;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +32,10 @@ import java.util.List;
 @Component
 public class FillingGoalsHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
+    private Bot myBot;
+
+    @Autowired
+    private AdminMainMenuService adminMainMenuService;
 
     @Autowired
     private ListGoalsRepository listGoalsRepository;
@@ -31,15 +44,19 @@ public class FillingGoalsHandler implements InputMessageHandler {
     private ReplyMessagesService messagesService;
 
     @Autowired
+    private ListGoalsService listGoalsService;
+
+    @Autowired
     private AdminButtonHandler adminButtonHandler;
 
     private List<ListGoals> listGoalsList = new ArrayList<>();
 
     private static String date = "";
 
-    public FillingGoalsHandler(UserDataCache userDataCache, ReplyMessagesService messagesService) {
+    public FillingGoalsHandler(UserDataCache userDataCache, ReplyMessagesService messagesService, @Lazy Bot myBot) {
         this.userDataCache = userDataCache;
         this.messagesService = messagesService;
+        this.myBot = myBot;
     }
 
     @Override
@@ -55,6 +72,7 @@ public class FillingGoalsHandler implements InputMessageHandler {
         return BotState.ASK_ADMIN_GOALS;
     }
 
+    @SneakyThrows
     private SendMessage processUsersInput(Message inputMsg) {
         String usersAnswer = inputMsg.getText();
         int userId = inputMsg.getFrom().getId();
@@ -91,42 +109,47 @@ public class FillingGoalsHandler implements InputMessageHandler {
             ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(date);
             listGoals.setTaskOne(usersAnswer);
             listGoalsRepository.save(listGoals);
-            replyToUser = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskTwo"));
+            replyToUser = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskTwo"))
+                    .setReplyMarkup(getAdminCloseKeyboard());
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_TASK_THREE);
         }
         if (botState.equals(BotState.ASK_ADMIN_TASK_THREE)) {
             ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(date);
             listGoals.setTaskTwo(usersAnswer);
             listGoalsRepository.save(listGoals);
-            replyToUser = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskThree"));
+            replyToUser = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskThree"))
+                    .setReplyMarkup(getAdminCloseKeyboard());
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_TASK_FOUR);
         }
         if (botState.equals(BotState.ASK_ADMIN_TASK_FOUR)) {
             ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(date);
             listGoals.setTaskThree(usersAnswer);
             listGoalsRepository.save(listGoals);
-            replyToUser = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskFour"));
+            replyToUser = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskFour"))
+                    .setReplyMarkup(getAdminCloseKeyboard());
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_TASK_FIVE);
         }
         if (botState.equals(BotState.ASK_ADMIN_TASK_FIVE)) {
             ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(date);
             listGoals.setTaskFour(usersAnswer);
             listGoalsRepository.save(listGoals);
-            replyToUser = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskFive"));
+            replyToUser = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskFive"))
+                    .setReplyMarkup(getAdminCloseKeyboard());
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_TASK_SIX);
         }
         if (botState.equals(BotState.ASK_ADMIN_TASK_SIX)) {
             ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(date);
             listGoals.setTaskFive(usersAnswer);
             listGoalsRepository.save(listGoals);
-            replyToUser = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskSix"));
+            replyToUser = new SendMessage(chatId, messagesService.getReplyText("reply.askAdminTaskSix"))
+                    .setReplyMarkup(getAdminCloseKeyboard());
             userDataCache.setUsersCurrentBotState(userId, BotState.GOALS_FILLED);
         }
         if (botState.equals(BotState.GOALS_FILLED)) {
             ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(date);
             listGoals.setTaskSix(usersAnswer);
             listGoalsRepository.save(listGoals);
-            replyToUser = new SendMessage(chatId, "Задания на дату: " + date + " успешно записаны!");
+            replyToUser = adminMainMenuService.getAdminMainMenuMessage(chatId, "Задания на дату: " + date + " успешно записаны!");
             userDataCache.setUsersCurrentBotState(userId, BotState.ADMIN_MAIN_MENU);
         }
         /** Edit tasks */
@@ -197,9 +220,49 @@ public class FillingGoalsHandler implements InputMessageHandler {
             replyToUser = adminButtonHandler.getMessageAndEditGoalButtons(chatId);
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
         }
+        /**---------DELETE TASKS--------*/
+        if (botState.equals(BotState.ASK_ADMIN_NUMBER_DEL_GOAL)) {
+            if (RegexHandler.checkUserAnswerOnDigit(usersAnswer)) {
+                int quantityTasks = listGoalsService.countGoalsToday();
+                if (quantityTasks >= Integer.parseInt(usersAnswer)) {
+                    ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(CurrentDate.getCurrentDate());
+                    if (listGoals != null) {
+                        listGoalsService.deleteTask(Integer.parseInt(usersAnswer));
+                        replyToUser = new SendMessage(chatId, "Задание удалено!");
+                        String selectedGoal = String.format(messagesService.getReplyText("reply.selectedListGoals"),
+                                listGoals.getTimeStamp(), listGoals.getTaskOne(), listGoals.getTaskTwo(), listGoals.getTaskThree(), listGoals.getTaskFour(),
+                                listGoals.getTaskFive(), listGoals.getTaskSix());
+                        myBot.execute(new SendMessage(chatId, selectedGoal));
+                    }
+                } else{
+                    replyToUser = new SendMessage(chatId, "Не верный ввод, введите номер задания!");
+                }
 
-        /**-----------------*/
+            } else {
+                replyToUser = new SendMessage(chatId, "Не верный формат, введите норме задания!");
+            }
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_ADMIN_NUMBER_GOAL);
+        }
         return replyToUser;
+    }
+
+    private ReplyKeyboardMarkup getAdminCloseKeyboard() {
+
+        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+
+        row1.add(new KeyboardButton("Отмена"));
+
+        keyboard.add(row1);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
     }
 
     private InlineKeyboardMarkup getEditGoalsButton() {

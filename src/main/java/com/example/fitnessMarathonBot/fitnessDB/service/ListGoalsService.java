@@ -11,6 +11,9 @@ public class ListGoalsService {
     @Autowired
     private ListGoalsRepository listUserGoals;
 
+    @Autowired
+    private ListGoalsRepository listGoalsRepository;
+
     public int countGoalsToday() {
         int count = 0;
         ListGoals listGoals = listUserGoals.findListGoalsByTimeStamp(CurrentDate.getCurrentDate());
@@ -35,5 +38,28 @@ public class ListGoalsService {
             }
         }
         return count;
+    }
+
+    public void deleteTask(int numberTask) {
+        ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(CurrentDate.getCurrentDate());
+        if (numberTask == 1) {
+            listGoals.setTaskOne("");
+        }
+        if (numberTask == 2) {
+            listGoals.setTaskTwo("");
+        }
+        if (numberTask == 3) {
+            listGoals.setTaskThree("");
+        }
+        if (numberTask == 4) {
+            listGoals.setTaskFour("");
+        }
+        if (numberTask == 5) {
+            listGoals.setTaskFive("");
+        }
+        if (numberTask == 6) {
+            listGoals.setTaskSix("");
+        }
+        listGoalsRepository.save(listGoals);
     }
 }

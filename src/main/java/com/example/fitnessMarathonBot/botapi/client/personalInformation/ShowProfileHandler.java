@@ -52,7 +52,7 @@ public class ShowProfileHandler implements InputMessageHandler {
     @Override
     public SendMessage handle(Message message) {
 //        service.updateDateInDB();
-        SendMessage sendMessage = null;
+        SendMessage sendMessage = new SendMessage(message.getChatId(), " ");
         long chatId = message.getChatId();
         User user = userRepository.findUserByChatId(chatId);
 //        BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);

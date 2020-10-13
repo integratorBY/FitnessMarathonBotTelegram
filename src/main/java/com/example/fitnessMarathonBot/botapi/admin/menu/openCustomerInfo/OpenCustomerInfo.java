@@ -3,6 +3,7 @@ package com.example.fitnessMarathonBot.botapi.admin.menu.openCustomerInfo;
 import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.InputMessageHandler;
+import com.example.fitnessMarathonBot.botapi.admin.menu.Sender;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.fitnessDB.bean.BodyParam;
 import com.example.fitnessMarathonBot.fitnessDB.bean.UserProfile;
@@ -16,7 +17,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -64,7 +68,7 @@ public class OpenCustomerInfo implements InputMessageHandler {
             int number = Integer.parseInt(usersAnswer);
             if (userProfile.findAll().size() != 0) {
                 List<UserProfile> userList = userProfile.findAll();
-                if (userList.size() >= number) {
+                if (userList.size() >= number && number != 0) {
                     UserProfile userProfile = userList.get(number - 1);
                     BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(userProfile.getPk().getUser());
                     profileInfo = messagesService.getReplyText("reply.profileInfoClient");
@@ -75,9 +79,9 @@ public class OpenCustomerInfo implements InputMessageHandler {
                             bodyParam.getHip(), bodyParam.getChest(),
                             bodyParam.getWaist(), bodyParam.getShin(),
                             bodyParam.getDate()).replaceAll("null", "0");
-                    replyToUser = new SendMessage(chatId, profileInfo);
+                    replyToUser = new SendMessage(chatId, profileInfo).setReplyMarkup(getButtonSendPrivateMessage());
                     sendCustomerPhoto(chatId, userProfile, myBot);
-
+                    Sender.privateChatId = userProfile.getPk().getUser().getChatId();
                 } else {
                     replyToUser = new SendMessage(chatId, "Клиента нет под таким номером: ");
                 }
@@ -86,6 +90,25 @@ public class OpenCustomerInfo implements InputMessageHandler {
             replyToUser = new SendMessage(chatId, "Введите порядковый номер клиента в списке(только цифра): ");
         }
         return replyToUser;
+    }
+
+    private InlineKeyboardMarkup getButtonSendPrivateMessage() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonSendPrivateMessage = new InlineKeyboardButton().setText("Отправить личное сообщение");
+
+        //Every button must have callBackData, or else not work !
+        buttonSendPrivateMessage.setCallbackData("buttonSendPrivateMessage");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        keyboardButtonsRow1.add(buttonSendPrivateMessage);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        return inlineKeyboardMarkup;
     }
 
     public static void sendCustomerPhoto(long chatId, UserProfile userProfile, Bot myBot) {
