@@ -78,6 +78,7 @@ public class ShowProfileHandler implements InputMessageHandler {
                 sendMessage = new SendMessage(chatId, profileInfo).setReplyMarkup(getButtonEditPersonalInfo(isPhotoBody, isPhotoWeigher));
             }
         }
+        myBot.execute(sendMessage);
         return sendMessage;
     }
 

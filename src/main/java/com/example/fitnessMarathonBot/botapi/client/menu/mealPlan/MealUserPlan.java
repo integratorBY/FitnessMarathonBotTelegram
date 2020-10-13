@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 public class MealUserPlan implements InputMessageHandler {
@@ -52,8 +53,17 @@ public class MealUserPlan implements InputMessageHandler {
         UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
         String category = "";
         String day = userProfile.getDaysOfTheMarathon()+"";
-        double weight = Double.parseDouble((bodyParam.getWeight()).replace(",", "."));
-        category = getCategoryMealPlan(weight);
+        if(bodyParam.getWeight() != null) {
+            double weight = Double.parseDouble((bodyParam.getWeight()).replace(",", "."));
+            category = getCategoryMealPlan(weight);
+        } else {
+            try {
+                myBot.execute(new SendMessage(message.getChatId(), "Чтобы получить план питания, необходимо заполнить параметры тела!"));
+                return new SendMessage(message.getChatId(), " ");
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
         String day_number = getFoodBasketByDay(Integer.parseInt(day));
         MealPlan mealPlan = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day_number);
         MealPlan foodBasket = mealPlanRepository.findMealPlanByCategoryAndDayNumber("foodBasket", day_number);

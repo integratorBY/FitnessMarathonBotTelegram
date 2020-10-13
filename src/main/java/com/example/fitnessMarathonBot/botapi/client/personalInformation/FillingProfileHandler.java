@@ -107,7 +107,7 @@ public class FillingProfileHandler implements InputMessageHandler {
                 userProfile.setPk(userProfilesId);
                 userProfileImpl.save(userProfile);
             }
-            myBot.execute(messagesService.getReplyMessage(chatId, "reply.askAge"));
+            replyToUser = messagesService.getReplyMessage(chatId, "reply.askAge");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_HEIGHT);
         }
         if (botState.equals(BotState.ASK_HEIGHT)) {
@@ -123,10 +123,10 @@ public class FillingProfileHandler implements InputMessageHandler {
                     userProfile.setUserAge(usersAnswer);
                     userProfileImpl.save(userProfile);
                 }
-                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askHeight"));
+                replyToUser = messagesService.getReplyMessage(chatId, "reply.askHeight");
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_WEIGHT);
             } else {
-                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askAge"));
+                replyToUser = messagesService.getReplyMessage(chatId, "reply.askAge");
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_HEIGHT);
             }
         }
@@ -143,10 +143,10 @@ public class FillingProfileHandler implements InputMessageHandler {
                     bodyParam.setHeight(usersAnswer);
                     bodyParamService.saveBodyParam(bodyParam);
                 }
-                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askWeight"));
+                replyToUser = messagesService.getReplyMessage(chatId, "reply.askWeight");
                 userDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FILLED);
             } else {
-                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askHeight"));
+                replyToUser = messagesService.getReplyMessage(chatId, "reply.askHeight");
                 userDataCache.setUsersCurrentBotState(userId, BotState.ASK_WEIGHT);
             }
         }
@@ -194,12 +194,12 @@ public class FillingProfileHandler implements InputMessageHandler {
 //                myBot.sendClientMealPlan(inputMsg.getChatId());
                 userDataCache.setUsersCurrentBotState(userId, BotState.MAIN_MENU);
             } else {
-                myBot.execute(messagesService.getReplyMessage(chatId, "reply.askWeight"));
+                replyToUser = messagesService.getReplyMessage(chatId, "reply.askWeight");
                 userDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FILLED);
             }
-
         }
         userDataCache.saveUserProfileData(userId, profileData);
+        myBot.execute(replyToUser);
         return replyToUser;
     }
 

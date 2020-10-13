@@ -3,6 +3,8 @@ package com.example.fitnessMarathonBot.botapi.client.userButtonHandlers;
 import com.example.fitnessMarathonBot.fitnessDB.bean.ListGoals;
 import com.example.fitnessMarathonBot.fitnessDB.repository.ListGoalsRepository;
 import com.example.fitnessMarathonBot.fitnessDB.repository.ListUserGoalsRepository;
+import com.example.fitnessMarathonBot.fitnessDB.service.ListGoalsService;
+import com.example.fitnessMarathonBot.service.CurrentDate;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,19 +24,42 @@ public class UserButtonHandler {
     private ListGoalsRepository listGoalsRepository;
 
     @Autowired
+    private ListGoalsService listGoalsService;
+
+    @Autowired
     private ReplyMessagesService replyMessagesService;
 
     @Autowired
     private ListUserGoalsRepository listUserGoalsRepository;
 
     public SendMessage getMessageAndGoalsButton(long chatId) {
-        Date date = new Date();
-        SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
-        if (listGoalsRepository.findListGoalsByTimeStamp(formatForDateNow.format(date)) != null) {
-            ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(formatForDateNow.format(date));
-            String message = String.format(replyMessagesService.getReplyText("reply.goalsForTodayReport"),
-                    listGoals.getTaskOne(), listGoals.getTaskTwo(), listGoals.getTaskThree(),
-                    listGoals.getTaskFour(), listGoals.getTaskFive(), listGoals.getTaskSix());
+        String currentDate = CurrentDate.getCurrentDate();
+        int quantityTasks = listGoalsService.countGoalsToday();
+        String message = "";
+        if (listGoalsRepository.findListGoalsByTimeStamp(currentDate) != null) {
+            ListGoals listGoals = listGoalsRepository.findListGoalsByTimeStamp(currentDate);
+            if (quantityTasks == 1) {
+                message = String.format(replyMessagesService.getReplyText("reply.goalsForTodayReportOne"),
+                        listGoals.getTaskOne());
+            } else if (quantityTasks == 2) {
+                message = String.format(replyMessagesService.getReplyText("reply.goalsForTodayReportTwo"),
+                        listGoals.getTaskOne(), listGoals.getTaskTwo());
+            } else if (quantityTasks == 3) {
+                message = String.format(replyMessagesService.getReplyText("reply.goalsForTodayReportThree"),
+                        listGoals.getTaskOne(), listGoals.getTaskTwo(), listGoals.getTaskThree());
+            } else if (quantityTasks == 4) {
+                message = String.format(replyMessagesService.getReplyText("reply.goalsForTodayReportFour"),
+                        listGoals.getTaskOne(), listGoals.getTaskTwo(), listGoals.getTaskThree(),
+                        listGoals.getTaskFour());
+            } else if (quantityTasks == 5) {
+                message = String.format(replyMessagesService.getReplyText("reply.goalsForTodayReportFive"),
+                        listGoals.getTaskOne(), listGoals.getTaskTwo(), listGoals.getTaskThree(),
+                        listGoals.getTaskFour(), listGoals.getTaskFive());
+            } else if (quantityTasks == 6) {
+                message = String.format(replyMessagesService.getReplyText("reply.goalsForTodayReport"),
+                        listGoals.getTaskOne(), listGoals.getTaskTwo(), listGoals.getTaskThree(),
+                        listGoals.getTaskFour(), listGoals.getTaskFive(), listGoals.getTaskSix());
+            }
             return new SendMessage(chatId, message).setReplyMarkup(getGoalsButton());
         }
         return new SendMessage(chatId, "Список целей пуст, сегодня выходной!");
@@ -42,9 +67,7 @@ public class UserButtonHandler {
 
     private InlineKeyboardMarkup getGoalsButton() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        Date date = new Date();
-        SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
-        String currentDate = formatForDateNow.format(date);
+        int quantityTasks = listGoalsService.countGoalsToday();
 
         InlineKeyboardButton buttonTaskOne = new InlineKeyboardButton().setText("1");
         InlineKeyboardButton buttonTaskTwo = new InlineKeyboardButton().setText("2");
@@ -63,16 +86,39 @@ public class UserButtonHandler {
         buttonTaskSix.setCallbackData("buttonTaskSix");
 
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(buttonTaskOne);
-        keyboardButtonsRow1.add(buttonTaskTwo);
-        keyboardButtonsRow1.add(buttonTaskThree);
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-        keyboardButtonsRow2.add(buttonTaskFour);
-        keyboardButtonsRow2.add(buttonTaskFive);
-        keyboardButtonsRow2.add(buttonTaskSix);
-
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+
+        if (quantityTasks == 1) {
+            keyboardButtonsRow1.add(buttonTaskOne);
+        } else if (quantityTasks == 2) {
+            keyboardButtonsRow1.add(buttonTaskOne);
+            keyboardButtonsRow1.add(buttonTaskTwo);
+        } else if (quantityTasks == 3) {
+            keyboardButtonsRow1.add(buttonTaskOne);
+            keyboardButtonsRow1.add(buttonTaskTwo);
+            keyboardButtonsRow1.add(buttonTaskThree);
+        } else if (quantityTasks == 4) {
+            keyboardButtonsRow1.add(buttonTaskOne);
+            keyboardButtonsRow1.add(buttonTaskTwo);
+            keyboardButtonsRow1.add(buttonTaskThree);
+            keyboardButtonsRow2.add(buttonTaskFour);
+        } else if (quantityTasks == 5) {
+            keyboardButtonsRow1.add(buttonTaskOne);
+            keyboardButtonsRow1.add(buttonTaskTwo);
+            keyboardButtonsRow1.add(buttonTaskThree);
+            keyboardButtonsRow2.add(buttonTaskFour);
+            keyboardButtonsRow2.add(buttonTaskFive);
+        } else if (quantityTasks == 6) {
+            keyboardButtonsRow1.add(buttonTaskOne);
+            keyboardButtonsRow1.add(buttonTaskTwo);
+            keyboardButtonsRow1.add(buttonTaskThree);
+            keyboardButtonsRow2.add(buttonTaskFour);
+            keyboardButtonsRow2.add(buttonTaskFive);
+            keyboardButtonsRow2.add(buttonTaskSix);
+        }
+
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
 

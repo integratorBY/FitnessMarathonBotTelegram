@@ -69,9 +69,7 @@ public class MessageService {
 
     public void newDayNewListUserGoals() {
         List<User> userList = userRepository.findAll();
-        Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        String currentDate = dateFormat.format(date);
+        String currentDate = CurrentDate.getCurrentDate();
         ListUserGoals listUserGoals = null;
         for (User user : userList) {
             if (userGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentDate) == null) {
@@ -86,9 +84,8 @@ public class MessageService {
 
     public void newDayNewPhotoUserReport() {
         List<User> userList = userRepository.findAll();
-        Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        String currentDate = dateFormat.format(date);
+
+        String currentDate = CurrentDate.getCurrentDate();
         UserPhoto userPhoto = null;
         for (User user : userList) {
             if (userPhotoRepository.findUserPhotoByTimeStampAndUser(currentDate, user) ==null){

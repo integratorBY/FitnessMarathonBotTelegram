@@ -83,7 +83,7 @@ public class StartProfileHandler implements InputMessageHandler {
             }
         }
 
-        if (userId == 1331718111) {
+        if (userId == 683992434) {
             final LocalDateTime localNow = LocalDateTime.now(Clock.systemUTC());
             System.out.println(localNow);
             replyToUser = adminMainMenuService.getAdminMainMenuMessage(chatId, "Тут какое то приветствие админа");
@@ -117,48 +117,48 @@ public class StartProfileHandler implements InputMessageHandler {
             sendMessages.add(new SendMessage(chatId, messageStart));
             sendMessages.add(new SendMessage(chatId, messageLinkInstagram));
             sendMessages.add(new SendMessage(chatId, messageWhatAwaitsUs));
-            myBot.sendListMessages(sendMessages);
+//            myBot.sendListMessages(sendMessages);
 
-            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("whatAwaitsUs").getPath());
-//            Thread.sleep(5000);
-            myBot.execute(new SendMessage(chatId,
-                    String.format(messagesService.getReplyText("reply.attention"),
-                            Emojis.WARNING, Emojis.NO_ENTRY_SIGN, Emojis.HEAVY_CHECK_MARK, Emojis.HEAVY_CHECK_MARK,
-                            Emojis.WARNING, Emojis.WARNING, Emojis.WARNING, Emojis.WARNING, Emojis.WARNING, Emojis.WARNING)));
-//            Thread.sleep(5000);
-            String messageRegulations = String.format(messagesService.getReplyText("reply.fundamentalRiles"), Emojis.ARROW_RIGHT, Emojis.ARROW_RIGHT, Emojis.ARROW_RIGHT);
-            myBot.execute(new SendMessage(chatId, messageRegulations));
-            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("regulations").getPath());
-//            Thread.sleep(5000);
-            myBot.execute(new SendMessage(chatId, String.format(messagesService.getReplyText("reply.whatNeedMarathon"),
-                    Emojis.POINT_DOWN, Emojis.POINT_DOWN, Emojis.POINT_DOWN, Emojis.POINT_DOWN, Emojis.POINT_DOWN)));
-            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("whatNeedMarathon").getPath());
-//            Thread.sleep(5000);
-            myBot.execute(new SendMessage(chatId,
-                    String.format(messagesService.getReplyText("reply.taskWeek"), Emojis.WARNING, Emojis.ARROW_RIGHT,
-                            Emojis.POINT_RIGHT, Emojis.ARROW_RIGHT, Emojis.POINT_RIGHT, Emojis.WARNING, Emojis.ARROW_RIGHT, Emojis.ARROW_RIGHT,
-                            Emojis.SUNNY, Emojis.BLUSH, Emojis.BLUSH, Emojis.BLUSH, Emojis.ARROW_RIGHT,
-                            Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,
-                            Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN)));
-            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("howMuchWater").getPath());
-//            Thread.sleep(5000);
-
-            myBot.execute(new SendMessage(chatId, messageControl));
-            myBot.execute(new SendMessage(chatId, messageTrackingHabits));
-            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("habitsTrackerAndSentReports").getPath());
-//            Thread.sleep(5000);
-
-            myBot.execute(new SendMessage(chatId, messageDayOne));
-            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("reportHint").getPath());
-            myBot.execute(new SendMessage(chatId, messageToday));
-            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("everyMonday").getPath());
-//            Thread.sleep(5000);
-
-            myBot.execute(new SendMessage(chatId, messageIndividualPlanCaution));
-            myBot.execute(new SendMessage(chatId, messageDietPlanInstruction));
-            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("howWeightProducts").getPath());
-            myBot.execute(new SendMessage(chatId, "" + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN +
-                    Emojis.ARROW_DOWN + Emojis.ARROW_DOWN));
+//            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("whatAwaitsUs").getPath());
+////            Thread.sleep(5000);
+//            myBot.execute(new SendMessage(chatId,
+//                    String.format(messagesService.getReplyText("reply.attention"),
+//                            Emojis.WARNING, Emojis.NO_ENTRY_SIGN, Emojis.HEAVY_CHECK_MARK, Emojis.HEAVY_CHECK_MARK,
+//                            Emojis.WARNING, Emojis.WARNING, Emojis.WARNING, Emojis.WARNING, Emojis.WARNING, Emojis.WARNING)));
+////            Thread.sleep(5000);
+//            String messageRegulations = String.format(messagesService.getReplyText("reply.fundamentalRiles"), Emojis.ARROW_RIGHT, Emojis.ARROW_RIGHT, Emojis.ARROW_RIGHT);
+//            myBot.execute(new SendMessage(chatId, messageRegulations));
+//            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("regulations").getPath());
+////            Thread.sleep(5000);
+//            myBot.execute(new SendMessage(chatId, String.format(messagesService.getReplyText("reply.whatNeedMarathon"),
+//                    Emojis.POINT_DOWN, Emojis.POINT_DOWN, Emojis.POINT_DOWN, Emojis.POINT_DOWN, Emojis.POINT_DOWN)));
+//            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("whatNeedMarathon").getPath());
+////            Thread.sleep(5000);
+//            myBot.execute(new SendMessage(chatId,
+//                    String.format(messagesService.getReplyText("reply.taskWeek"), Emojis.WARNING, Emojis.ARROW_RIGHT,
+//                            Emojis.POINT_RIGHT, Emojis.ARROW_RIGHT, Emojis.POINT_RIGHT, Emojis.WARNING, Emojis.ARROW_RIGHT, Emojis.ARROW_RIGHT,
+//                            Emojis.SUNNY, Emojis.BLUSH, Emojis.BLUSH, Emojis.BLUSH, Emojis.ARROW_RIGHT,
+//                            Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,
+//                            Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN,Emojis.POINT_DOWN)));
+//            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("howMuchWater").getPath());
+////            Thread.sleep(5000);
+//
+//            myBot.execute(new SendMessage(chatId, messageControl));
+//            myBot.execute(new SendMessage(chatId, messageTrackingHabits));
+//            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("habitsTrackerAndSentReports").getPath());
+////            Thread.sleep(5000);
+//
+//            myBot.execute(new SendMessage(chatId, messageDayOne));
+//            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("reportHint").getPath());
+//            myBot.execute(new SendMessage(chatId, messageToday));
+//            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("everyMonday").getPath());
+////            Thread.sleep(5000);
+//
+//            myBot.execute(new SendMessage(chatId, messageIndividualPlanCaution));
+//            myBot.execute(new SendMessage(chatId, messageDietPlanInstruction));
+//            myBot.sendPhoto(chatId, "", startImagesRepo.findStartImagesByImageName("howWeightProducts").getPath());
+//            myBot.execute(new SendMessage(chatId, "" + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN + Emojis.ARROW_DOWN +
+//                    Emojis.ARROW_DOWN + Emojis.ARROW_DOWN));
 
             replyToUser = new SendMessage(chatId,
                     String.format(messagesService.getReplyText("reply.requestEnterYourData"), Emojis.MEMO, Emojis.POINT_DOWN));

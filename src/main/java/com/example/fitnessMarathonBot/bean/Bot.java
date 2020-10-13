@@ -57,7 +57,7 @@ public class Bot extends TelegramLongPollingBot {
             userId = update.getCallbackQuery().getFrom().getId();
         }
 
-        if (userId == 1331718111) {
+        if (userId == 683992434) {
             telegramAdminFacade.handleUpdate(update);
         } else {
             telegramUserFacade.handleUpdate(update);
