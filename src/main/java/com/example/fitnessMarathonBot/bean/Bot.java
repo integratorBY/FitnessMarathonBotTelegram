@@ -7,9 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.ResourceUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -17,8 +15,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -57,7 +53,7 @@ public class Bot extends TelegramLongPollingBot {
             userId = update.getCallbackQuery().getFrom().getId();
         }
 
-        if (userId == 683992434) {
+        if (userId == 1331718111) {
             telegramAdminFacade.handleUpdate(update);
         } else {
             telegramUserFacade.handleUpdate(update);
@@ -74,10 +70,6 @@ public class Bot extends TelegramLongPollingBot {
         return botToken;
     }
 
-    public void setWebHookPath(String webHookPath) {
-        this.webHookPath = webHookPath;
-    }
-
     public void setBotUserName(String botUserName) {
         this.botUserName = botUserName;
     }
@@ -88,20 +80,11 @@ public class Bot extends TelegramLongPollingBot {
 
     @SneakyThrows
     public void sendPhoto(long chatId, String imageCaption, String imagePath) {
-//        Resource resource = resourceLoader.getResource("classpath:static/images/" + imagePath + ".JPG");
-//        InputStream dbAsStream = resource.getInputStream();
-//        URL url = this.getClass().getResource(imagePath);
-//        File image = ResourceUtils.getFile(url);
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setPhoto(imagePath);
         sendPhoto.setChatId(chatId);
         sendPhoto.setCaption(imageCaption);
         execute(sendPhoto);
-    }
-
-    @SneakyThrows
-    public void sendAllStartingPhoto(long chatId, LinkedHashMap<String, String> photoInfo) {
-
     }
 
     @SneakyThrows
@@ -123,31 +106,10 @@ public class Bot extends TelegramLongPollingBot {
 
     @SneakyThrows
     public void sendListMessages(List<SendMessage> sendMessageList) {
-        SendPhoto sendPhoto = new SendPhoto();
-        URL url = null;
-        File image = null;
         for (SendMessage message : sendMessageList) {
             execute(message);
-            Thread.sleep( 1000);
+            Thread.sleep( 5000);
         }
     }
 
-
-    @SneakyThrows
-    public void sendClientMealPlan(long chatId) {
-        SendMessage clientMealPlan = new SendMessage();
-        clientMealPlan.setChatId(chatId);
-        clientMealPlan.setText("План питания для вас на три дня: \n\n" +
-                "Кушай кашу на обед укрепляй иммунитет!");
-        Thread.sleep(3000);
-        execute(clientMealPlan);
-    }
-
-    @SneakyThrows
-    public void sendMessageAllParticipantMarathon(List<SendMessage> sendMessageList) {
-        for (SendMessage message : sendMessageList) {
-            execute(message);
-            Thread.sleep(10000);
-        }
-    }
 }

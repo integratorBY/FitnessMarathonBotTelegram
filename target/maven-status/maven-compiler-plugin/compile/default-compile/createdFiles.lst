@@ -38,6 +38,7 @@ com\example\fitnessMarathonBot\fitnessDB\bean\UserProfile$UserProfileBuilder.cla
 com\example\fitnessMarathonBot\fitnessDB\bean\UserProfile.class
 com\example\fitnessMarathonBot\service\LocaleMessageService.class
 com\example\fitnessMarathonBot\botapi\admin\menu\openCustomerInfo\OpenCustomerInfo.class
+com\example\fitnessMarathonBot\service\CurrentDate.class
 com\example\fitnessMarathonBot\service\broadcasting\SignsOfLife.class
 com\example\fitnessMarathonBot\botapi\admin\menu\HandlerSendMessageAll.class
 com\example\fitnessMarathonBot\botapi\client\personalInformation\FillingProfileHandler.class
@@ -60,6 +61,7 @@ com\example\fitnessMarathonBot\botapi\client\menu\mealPlan\MealUserPlan.class
 com\example\fitnessMarathonBot\fitnessDB\bean\UserPhoto$UserPhotoBuilder.class
 com\example\fitnessMarathonBot\fitnessDB\bean\MarathonPeriod.class
 com\example\fitnessMarathonBot\fitnessDB\bean\BodyParam.class
+com\example\fitnessMarathonBot\fitnessDB\service\ListGoalsService.class
 com\example\fitnessMarathonBot\botapi\client\menu\reportHandler\DailyReportHandler.class
 com\example\fitnessMarathonBot\service\UserMainMenuService.class
 com\example\fitnessMarathonBot\fitnessDB\bean\User$UserBuilder.class
