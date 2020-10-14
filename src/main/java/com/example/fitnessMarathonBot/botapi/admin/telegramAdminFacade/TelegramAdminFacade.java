@@ -6,6 +6,7 @@ import com.example.fitnessMarathonBot.botapi.BotStateContext;
 import com.example.fitnessMarathonBot.botapi.admin.adminButtonHandler.AdminButtonHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
 import com.example.fitnessMarathonBot.fitnessDB.service.MealPlanService;
+import com.example.fitnessMarathonBot.fitnessDB.service.ReportService;
 import com.example.fitnessMarathonBot.service.AdminMainMenuService;
 import com.example.fitnessMarathonBot.service.LocaleMessageService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
@@ -33,6 +34,9 @@ public class TelegramAdminFacade {
     private AdminMainMenuService adminMainMenuService;
     private Bot myBot;
     private ReplyMessagesService messagesService;
+
+    @Autowired
+    private ReportService reportService;
 
     @Autowired
     private MealPlanService mealPlanService;
@@ -215,6 +219,11 @@ public class TelegramAdminFacade {
         } else if (buttonQuery.getData().equals("buttonSendPrivateMessage")) {
             callBackAnswer = new SendMessage(chatId, "Введите сообщение");
             userDataCache.setUsersCurrentBotState(userId, BotState.ADMIN_SEND_PRIVATE_MESSAGE);
+
+        } else if (buttonQuery.getData().equals("buttonDetailedReport")) {
+            reportService.getDetailedReport();
+            callBackAnswer = new SendMessage(chatId, "Подробный отчет");
+            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
         }
 
         return callBackAnswer;

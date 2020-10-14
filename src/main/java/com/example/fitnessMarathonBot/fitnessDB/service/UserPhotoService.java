@@ -38,6 +38,7 @@ public class UserPhotoService {
 
                 if (userPhotos.getPhotoOne() == null) {
                     userPhotos.setPhotoOne(photo_id);
+                    userPhotos.setImageCategory("eat");
                     userPhotos.setTimeStamp(currentDate);
                     userPhotoRepository.save(userPhotos);
                     return 0;
@@ -88,6 +89,23 @@ public class UserPhotoService {
                 } else {
                     return 3;
                 }
+            }
+        }
+        return 0;
+    }
+
+    public int getCountPhotos(UserPhoto userPhotos) {
+        if (userPhotos != null) {
+            if (userPhotos.getPhotoOne() == null) {
+                return 0;
+            }
+            if (userPhotos.getPhotoTwo() == null) {
+                return 1;
+            }
+            if (userPhotos.getPhotoThree() == null) {
+                return 2;
+            } else {
+                return 3;
             }
         }
         return 0;

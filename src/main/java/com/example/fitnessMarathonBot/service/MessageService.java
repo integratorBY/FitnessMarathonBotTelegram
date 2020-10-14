@@ -89,9 +89,10 @@ public class MessageService {
         String currentDate = CurrentDate.getCurrentDate();
         UserPhoto userPhoto = null;
         for (User user : userList) {
-            if (userPhotoRepository.findUserPhotoByTimeStampAndUser(currentDate, user) ==null){
+            if (userPhotoRepository.findUserPhotoByTimeStampAndUser(currentDate, user) == null) {
                 userPhoto = UserPhoto.builder()
                         .user(user)
+                        .imageCategory("eat")
                         .timeStamp(currentDate)
                         .build();
                 userPhotoRepository.save(userPhoto);
@@ -103,7 +104,7 @@ public class MessageService {
         LocalTime now = LocalTime.now();
         List<UserProfile> userProfiles = userProfileRepo.findAll();
         int day = 0;
-        if (now.getHour() == 0) {
+        if (now.getHour() == 0 && now.getMinute() < 5) {
             for (UserProfile userProfile : userProfiles) {
                 day = userProfile.getDaysOfTheMarathon();
                 userProfile.setDaysOfTheMarathon(++day);
@@ -113,7 +114,7 @@ public class MessageService {
     }
 
     @SneakyThrows
-    public void remindSendPhotoInMonday(){
+    public void remindSendPhotoInMonday() {
         List<User> users = userRepository.findAll();
         for (User user : users) {
             if (user.getChatId() != 748582406) {

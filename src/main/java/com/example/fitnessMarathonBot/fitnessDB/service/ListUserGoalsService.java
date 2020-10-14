@@ -180,4 +180,27 @@ public class ListUserGoalsService {
         }
         return false;
     }
+
+    public int countDoneTasks(ListUserGoals listUserGoals) {
+        int quantity = 0;
+        if (listUserGoals.isTaskOne()) {
+            quantity++;
+        }
+        if (listUserGoals.isTaskTwo()) {
+            quantity++;
+        }
+        if (listUserGoals.isTaskThree()) {
+            quantity++;
+        }
+        if (listUserGoals.isTaskFour()) {
+            quantity++;
+        }
+        if (listUserGoals.isTaskFive()) {
+            quantity++;
+        }
+        if (listUserGoals.isTaskSix()) {
+            quantity++;
+        }
+        return quantity;
+    }
 }
