@@ -57,34 +57,6 @@ public class AdminButtonHandler {
                 .setReplyMarkup(getCategoryMealPlanButtons());
     }
 
-    public SendMessage getButtonsCloseOrAuthAndMessage(long chatId, String fio) {
-        return new SendMessage(chatId, "Новое подключение: " + fio)
-                .setReplyMarkup(getButtonsCloseOrAuth());
-    }
-
-    private InlineKeyboardMarkup getButtonsCloseOrAuth() {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton buttonAuthorize = new InlineKeyboardButton().setText("Впустить");
-        InlineKeyboardButton buttonReject = new InlineKeyboardButton().setText("Отклонить");
-
-        //Every button must have callBackData, or else not work !
-        buttonAuthorize.setCallbackData("buttonAuthorize");
-        buttonReject.setCallbackData("buttonReject");
-
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(buttonAuthorize);
-        keyboardButtonsRow1.add(buttonReject);
-
-
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-
-        inlineKeyboardMarkup.setKeyboard(rowList);
-
-        return inlineKeyboardMarkup;
-    }
-
     private InlineKeyboardMarkup getCategoryMealPlanButtons() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 

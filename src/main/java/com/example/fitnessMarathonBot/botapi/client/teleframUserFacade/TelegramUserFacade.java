@@ -4,14 +4,17 @@ import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.bean.UserProfileData;
 import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.BotStateContext;
+import com.example.fitnessMarathonBot.botapi.client.menu.mealPlan.MealUserPlan;
 import com.example.fitnessMarathonBot.botapi.client.userButtonHandlers.UserButtonHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
+import com.example.fitnessMarathonBot.fitnessDB.bean.MealPlan;
 import com.example.fitnessMarathonBot.fitnessDB.service.ListUserGoalsService;
 import com.example.fitnessMarathonBot.fitnessDB.service.UserPhotoService;
 import com.example.fitnessMarathonBot.fitnessDB.service.UserProfileService;
 import com.example.fitnessMarathonBot.service.LocaleMessageService;
 import com.example.fitnessMarathonBot.service.ReplyMessagesService;
 import com.example.fitnessMarathonBot.service.UserMainMenuService;
+import com.example.fitnessMarathonBot.utils.Emojis;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -46,6 +49,9 @@ public class TelegramUserFacade {
     private UserMainMenuService userMainMenuService;
     private Bot myBot;
     private ReplyMessagesService messagesService;
+
+    @Autowired
+    private MealUserPlan mealUserPlan;
 
     @Autowired
     private UserButtonHandler userButtonHandler;
@@ -207,6 +213,14 @@ public class TelegramUserFacade {
         } else if (buttonQuery.getData().equals("buttonLoadWeigher")) {
             callBackAnswer = new SendMessage(chatId, messagesService.getReplyText("reply.askStartPhotoWeigher"));
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_START_PHOTO_WEIGHER);
+
+
+        } else if (buttonQuery.getData().equals("buttonNextPlan")) {
+            mealUserPlan.getPlanOnNextThreeDays(buttonQuery.getFrom().getId());
+            callBackAnswer = new SendMessage(chatId,
+                    Emojis.POINT_UP + "" + Emojis.POINT_UP + Emojis.POINT_UP + " План питания на ближайшие 3 дня ");
+            userDataCache.setUsersCurrentBotState(userId, BotState.MEAL_USER_PLAN);
+
 
         } else if (buttonQuery.getData().equals("buttonTaskOne")) {
             if (listUserGoalsService.markTargetOne(chatId)) {

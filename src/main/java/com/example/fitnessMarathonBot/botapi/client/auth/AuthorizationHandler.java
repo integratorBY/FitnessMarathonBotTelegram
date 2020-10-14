@@ -74,13 +74,6 @@ public class AuthorizationHandler implements InputMessageHandler {
             userDataCache.setUsersCurrentBotState(inputMsg.getFrom().getId(), BotState.ASK_PASSWORD);
             myBot.execute(new SendMessage(chatId, "Не верный пароль!"));
         } else {
-            User user = User.builder()
-                    .firstName(inputMsg.getFrom().getFirstName())
-                    .lastName(inputMsg.getFrom().getLastName())
-                    .chatId(inputMsg.getFrom().getId()).build();
-            if (userRepository.findUserByChatId(inputMsg.getChatId()) == null) {
-                userRepository.save(user);
-            }
 
             String messageStart = messagesService.getReplyText("reply.askStart");
             String messageLinkInstagram = String.format(messagesService.getReplyText("reply.linkInstagram"),
@@ -151,6 +144,13 @@ public class AuthorizationHandler implements InputMessageHandler {
                     String.format(messagesService.getReplyText("reply.requestEnterYourData"), Emojis.MEMO, Emojis.POINT_DOWN));
 
             replyToUser.setReplyMarkup(getInlineMessageButtons());
+            User user = User.builder()
+                    .firstName(inputMsg.getFrom().getFirstName())
+                    .lastName(inputMsg.getFrom().getLastName())
+                    .chatId(inputMsg.getFrom().getId()).build();
+            if (userRepository.findUserByChatId(inputMsg.getChatId()) == null) {
+                userRepository.save(user);
+            }
             myBot.execute(replyToUser);
             userDataCache.setUsersCurrentBotState(inputMsg.getFrom().getId(), BotState.ASK_PERSONAL_INFO);
             replyToUser = new SendMessage(chatId, " ");

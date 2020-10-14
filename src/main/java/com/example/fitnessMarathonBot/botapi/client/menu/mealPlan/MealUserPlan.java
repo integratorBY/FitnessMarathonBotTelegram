@@ -13,14 +13,18 @@ import com.example.fitnessMarathonBot.fitnessDB.repository.BodyParamRepositoryIm
 import com.example.fitnessMarathonBot.fitnessDB.repository.MealPlanRepository;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserProfileImpl;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
-import com.example.fitnessMarathonBot.service.ReplyMessagesService;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class MealUserPlan implements InputMessageHandler {
@@ -39,11 +43,14 @@ public class MealUserPlan implements InputMessageHandler {
     @Autowired
     private UserProfileImpl userProfileRepo;
 
+    public static boolean isNextPlan = false;
+
     public MealUserPlan(UserDataCache userDataCache, @Lazy Bot myBot) {
         this.userDataCache = userDataCache;
         this.myBot = myBot;
     }
 
+    @SneakyThrows
     @Override
     public SendMessage handle(Message message) {
         final int userId = message.getFrom().getId();
@@ -51,9 +58,13 @@ public class MealUserPlan implements InputMessageHandler {
         User user = userRepository.findUserByChatId(userId);
         BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
         UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
+
         String category = "";
-        String day = userProfile.getDaysOfTheMarathon()+"";
-        if(bodyParam.getWeight() != null) {
+        String day = ""; // проверку сделать
+        if (userProfile != null) {
+            day = userProfile.getDaysOfTheMarathon() + "";
+        }
+        if (bodyParam.getWeight() != null) {
             double weight = Double.parseDouble((bodyParam.getWeight()).replace(",", "."));
             category = getCategoryMealPlan(weight);
         } else {
@@ -63,18 +74,22 @@ public class MealUserPlan implements InputMessageHandler {
                 e.printStackTrace();
             }
         }
-        String day_number = getFoodBasketByDay(Integer.parseInt(day));
-        MealPlan mealPlan = mealPlanRepository.findMealPlanByCategoryAndDayNumber(category, day_number);
-        MealPlan foodBasket = mealPlanRepository.findMealPlanByCategoryAndDayNumber("foodBasket", day_number);
-        if (foodBasket != null) {
-            myBot.sendPhoto(message.getChatId(), foodBasket.getPlanOne());
-        }
+        MealPlan mealPlan = mealPlanRepository
+                .findMealPlanByCategoryAndDayNumber(category, getFoodBasketByDay(Integer.parseInt(day)));
+        MealPlan foodBasket = mealPlanRepository
+                .findMealPlanByCategoryAndDayNumber("foodBasket", getFoodBasketByDay(Integer.parseInt(day)));
+
+        getSendFoodBasket(message.getChatId(), foodBasket);
         if (mealPlan != null) {
             sendMealPlanToUser(message.getChatId(), myBot, mealPlan);
-            sendMessage = new SendMessage(message.getChatId(), " ");
+            if (isCurrentDay(Integer.parseInt(day))) {
+                myBot.execute(new SendMessage(message.getChatId(), "Доступен план на следующие 3 дня").setReplyMarkup(getButtonsNextPlan()));
+
+            }
         } else {
             sendMessage = new SendMessage(message.getChatId(), "План питания отсутствует!");
         }
+        isNextPlan = false;
         userDataCache.setUsersCurrentBotState(userId, BotState.MEAL_USER_PLAN);
         return sendMessage;
     }
@@ -89,6 +104,24 @@ public class MealUserPlan implements InputMessageHandler {
         if (mealPlan.getPlanThree() != null) {
             myBot.sendPhoto(chatId, mealPlan.getPlanThree());
         }
+    }
+
+    @SneakyThrows
+    private void getSendFoodBasket(long chatId, MealPlan foodBasket) {
+        if (foodBasket != null) {
+            myBot.sendPhoto(chatId, foodBasket.getPlanOne());
+        } else {
+            myBot.execute(new SendMessage(chatId, "Продуктовая корзина отсутсвует"));
+        }
+    }
+
+    private boolean isCurrentDay(int day) {
+        return day == NumberConstants.FOOD_BASKET_ONE || day == NumberConstants.FOOD_BASKET_TWO ||
+                day == NumberConstants.FOOD_BASKET_THREE || day == NumberConstants.FOOD_BASKET_FOUR ||
+                day == NumberConstants.FOOD_BASKET_FIVE || day == NumberConstants.FOOD_BASKET_SIX ||
+                day == NumberConstants.FOOD_BASKET_SEVEN || day == NumberConstants.FOOD_BASKET_EIGHT ||
+                day == NumberConstants.FOOD_BASKET_NINE || day == NumberConstants.FOOD_BASKET_TEN ||
+                day == NumberConstants.FOOD_BASKET_ELEVEN;
     }
 
     private String getFoodBasketByDay(int day) {
@@ -118,11 +151,30 @@ public class MealUserPlan implements InputMessageHandler {
         return null;
     }
 
+    private InlineKeyboardMarkup getButtonsNextPlan() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonNextPlan = new InlineKeyboardButton().setText("План на следующие 3 дня");
+
+        //Every button must have callBackData, or else not work !
+        buttonNextPlan.setCallbackData("buttonNextPlan");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        keyboardButtonsRow1.add(buttonNextPlan);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        return inlineKeyboardMarkup;
+    }
+
     private String getCategoryMealPlan(double weight) {
         if (weight < 63) {
             return "small";
         } else if (weight > 63 && weight < 73) {
-            return  "middle";
+            return "middle";
         } else {
             return "big";
         }
@@ -131,6 +183,41 @@ public class MealUserPlan implements InputMessageHandler {
     @Override
     public BotState getHandlerName() {
         return BotState.MEAL_USER_PLAN;
+    }
+
+    @SneakyThrows
+    public void getPlanOnNextThreeDays(long chatId) {
+        User user = userRepository.findUserByChatId(chatId);
+        BodyParam bodyParam = bodyParamRepository.findBodyParamByUser(user);
+        UserProfile userProfile = userProfileRepo.findUserProfileByPkUser(user);
+
+        String category = "";
+        String day = "";
+        if (userProfile != null) {
+            day = userProfile.getDaysOfTheMarathon() + "";
+        }
+        if (bodyParam.getWeight() != null) {
+            double weight = Double.parseDouble((bodyParam.getWeight()).replace(",", "."));
+            category = getCategoryMealPlan(weight);
+        } else {
+            try {
+                myBot.execute(new SendMessage(chatId, "Чтобы получить план питания, необходимо заполнить параметры тела!"));
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
+        MealPlan mealPlan = mealPlanRepository
+                .findMealPlanByCategoryAndDayNumber(category, getFoodBasketByDay(Integer.parseInt(day) + 1));
+        MealPlan foodBasket = mealPlanRepository
+                .findMealPlanByCategoryAndDayNumber("foodBasket", getFoodBasketByDay(Integer.parseInt(day) + 1));
+        getSendFoodBasket(chatId, foodBasket);
+        if (mealPlan != null) {
+            sendMealPlanToUser(chatId, myBot, mealPlan);
+        } else {
+            myBot.execute(new SendMessage(chatId, "План питания отсутствует!"));
+        }
+        isNextPlan = false;
+        userDataCache.setUsersCurrentBotState((int) chatId, BotState.MEAL_USER_PLAN);
     }
 
 }

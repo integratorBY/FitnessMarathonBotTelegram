@@ -24,7 +24,6 @@ public class ReminderMonday {
         while (true) {
             log.info("reminder while true cycling");
             LocalTime now = LocalTime.now();
-            System.out.println(now.getHour() + ":" + now.getMinute());
             Calendar calendar = Calendar.getInstance();
             Date date = new Date();
             calendar.setTime(date);

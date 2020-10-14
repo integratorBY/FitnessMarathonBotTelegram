@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -99,12 +100,15 @@ public class MessageService {
     }
 
     public void nexDayMarathon() {
+        LocalTime now = LocalTime.now();
         List<UserProfile> userProfiles = userProfileRepo.findAll();
         int day = 0;
-        for (UserProfile userProfile : userProfiles) {
-            day = userProfile.getDaysOfTheMarathon();
-            userProfile.setDaysOfTheMarathon(++day);
-            userProfileRepo.save(userProfile);
+        if (now.getHour() == 0) {
+            for (UserProfile userProfile : userProfiles) {
+                day = userProfile.getDaysOfTheMarathon();
+                userProfile.setDaysOfTheMarathon(++day);
+                userProfileRepo.save(userProfile);
+            }
         }
     }
 

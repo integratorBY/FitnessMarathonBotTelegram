@@ -1,6 +1,7 @@
 package com.example.fitnessMarathonBot.service.broadcasting;
 
 import com.example.fitnessMarathonBot.service.MessageService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class BroadcastService {
 
     private boolean isBroadcasting = false;
 
+    @SneakyThrows
     private void broadcast() {
         while (true) {
             log.info("while true cycling");
@@ -25,22 +27,30 @@ public class BroadcastService {
             Calendar calendar = Calendar.getInstance();
             Date date = new Date();
             calendar.setTime(date);
+            long nowHour = (23 - now.getHour()) * 3600000;
+            long nowMinute = (59 - now.getMinute()) * 60000;
+            int nowSecond = (60 - now.getSecond()) * 1000;
+            long timeToUpdate = nowHour + nowMinute + nowSecond;
             int nowDayWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            if (now.isAfter(LocalTime.of(00, 00)) && now.isBefore(LocalTime.of(04, 00))) {
-                if (nowDayWeek != 6 && nowDayWeek != 1) {
-                    messageService.updateDateInDB();
-                    messageService.newDayNewListUserGoals();
-                    messageService.newDayNewPhotoUserReport();
-                }
-//                messageService.nexDayMarathon();
-            }try {
-                log.info("broadcast is sleeping");
-                Thread.sleep(28800000 / 4);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (nowDayWeek != 6 && nowDayWeek != 1) {
+                System.out.println(timeToUpdate);
+                Thread.sleep(timeToUpdate);
+                messageService.updateDateInDB();
+                log.info("updateDateInDB() - WORKED");
+                messageService.newDayNewListUserGoals();
+                log.info(" newDayNewListUserGoals()  - WORKED");
+                messageService.newDayNewPhotoUserReport();
+                log.info(" newDayNewPhotoUserReport() - WORKED");
+                messageService.nexDayMarathon();
+                log.info(" nexDayMarathon() - WORKED");
+            } else {
+                System.out.println(timeToUpdate);
+                Thread.sleep(timeToUpdate);
+                messageService.nexDayMarathon();
+                log.info("messageService.nexDayMarathon() - WORKED");
+                Thread.sleep(28800000 / 2);
             }
         }
-
     }
 
     public void startBroadcasting() {

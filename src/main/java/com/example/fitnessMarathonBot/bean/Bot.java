@@ -9,9 +9,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.File;
@@ -44,6 +42,7 @@ public class Bot extends TelegramLongPollingBot {
 //
 //    }
 
+    @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
         int userId = 0;
