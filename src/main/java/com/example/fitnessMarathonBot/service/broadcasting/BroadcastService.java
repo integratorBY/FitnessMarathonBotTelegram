@@ -43,6 +43,10 @@ public class BroadcastService {
                 log.info(" newDayNewPhotoUserReport() - WORKED");
                 messageService.nexDayMarathon();
                 log.info(" nexDayMarathon() - WORKED");
+                if (nowDayWeek == 5) {
+                    messageService.newMondayNewPhotoUserReportWeigher();
+                    log.info(" newMondayNewPhotoUserReportWeigher() - WORKED");
+                }
             } else {
                 System.out.println(timeToUpdate);
                 Thread.sleep(timeToUpdate);

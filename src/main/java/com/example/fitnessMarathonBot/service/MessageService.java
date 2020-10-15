@@ -32,6 +32,9 @@ public class MessageService {
     private UserPhotoRepository userPhotoRepository;
 
     @Autowired
+    private UserPhotoWeigherRepo userPhotoWeigherRepo;
+
+    @Autowired
     private ListGoalsRepository listGoalsRepo;
 
     private Bot myBot;
@@ -96,6 +99,22 @@ public class MessageService {
                         .timeStamp(currentDate)
                         .build();
                 userPhotoRepository.save(userPhoto);
+            }
+        }
+    }
+
+    public void newMondayNewPhotoUserReportWeigher() {
+        List<User> userList = userRepository.findAll();
+
+        String currentDate = CurrentDate.getCurrentDate();
+        UserPhotoWeigher userPhotoWeigher = null;
+        for (User user : userList) {
+            if (userPhotoWeigherRepo.findUserPhotoWeigherByTimeStampAndUser(currentDate, user) == null) {
+                userPhotoWeigher = UserPhotoWeigher.builder()
+                        .user(user)
+                        .timeStamp(currentDate)
+                        .build();
+                userPhotoWeigherRepo.save(userPhotoWeigher);
             }
         }
     }

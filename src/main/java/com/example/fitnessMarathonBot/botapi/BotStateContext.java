@@ -109,6 +109,7 @@ public class BotStateContext {
             case ASK_REPORT:
             case ASK_GOALS:
             case ASK_PHOTO:
+            case ASK_PHOTO_WEIGHER:
             case ASK_TASK_ONE:
             case ASK_TASK_TWO:
             case ASK_TASK_THREE:

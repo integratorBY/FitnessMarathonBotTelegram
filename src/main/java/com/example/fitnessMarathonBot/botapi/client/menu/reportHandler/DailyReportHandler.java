@@ -20,12 +20,14 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 @Component
-public class DailyReportHandler  implements InputMessageHandler {
+public class DailyReportHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
     private Bot myBot;
     @Autowired
@@ -38,7 +40,7 @@ public class DailyReportHandler  implements InputMessageHandler {
     private UserPhotoService photoService;
 
     @Autowired
-    private UserPhotoRepository userPhotoRepo;
+    private UserPhotoWeigherRepo userPhotoWeigherRepo;
 
     @Autowired
     private ListUserGoalsRepository listUserGoalsRepository;
@@ -55,7 +57,6 @@ public class DailyReportHandler  implements InputMessageHandler {
         String userListGoal = "Активность сегодня \n\n";
         SendMessage replyToUser = new SendMessage(chatId, " ");
         User user = userRepository.findUserByChatId(message.getChatId());
-
         String currentTime = CurrentDate.getCurrentDate();
         int quantityTasks = listGoalsService.countGoalsToday();
         ListUserGoals listUserGoals = listUserGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, currentTime);
@@ -96,9 +97,9 @@ public class DailyReportHandler  implements InputMessageHandler {
             }
             userListGoal = userListGoal.replaceAll("false", "Не выполнено " + Emojis.NEGATIVE_MARK);
             userListGoal = userListGoal.replaceAll("true", "Выполнено" + Emojis.WHITE_CHECK_MARK);
-            replyToUser = new SendMessage(chatId, userListGoal).setReplyMarkup(getInlineMessageButtonsReport());
+            replyToUser = new SendMessage(chatId, userListGoal).setReplyMarkup(getInlineMessageButtonsReport(isExistsPhotoWeigher(user)));
         } else {
-            replyToUser = new SendMessage(message.getChatId(), "Выберите действие").setReplyMarkup(getInlineMessageButtonsReport());
+            replyToUser = new SendMessage(message.getChatId(), "Выберите действие").setReplyMarkup(getInlineMessageButtonsReport(isExistsPhotoWeigher(user)));
         }
         myBot.execute(replyToUser);
         userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.REPORT_OF_THE_DAY);
@@ -110,26 +111,48 @@ public class DailyReportHandler  implements InputMessageHandler {
         return BotState.REPORT_OF_THE_DAY;
     }
 
-    private InlineKeyboardMarkup getInlineMessageButtonsReport() {
+    private InlineKeyboardMarkup getInlineMessageButtonsReport(boolean isExists) {
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date();
+        calendar.setTime(date);
+        int nowDayWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton buttonReportPhoto = new InlineKeyboardButton().setText("Отправить фото");
         InlineKeyboardButton buttonReportGoals = new InlineKeyboardButton().setText("Отметить задание");
+        InlineKeyboardButton buttonReportPhotoWeigher = new InlineKeyboardButton().setText("Отправить фото(весы)");
 
         //Every button must have callBackData, or else not work !
         buttonReportPhoto.setCallbackData("buttonReportPhoto");
         buttonReportGoals.setCallbackData("buttonReportGoals");
+        buttonReportPhotoWeigher.setCallbackData("buttonReportPhotoWeigher");
 
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(buttonReportPhoto);
         keyboardButtonsRow1.add(buttonReportGoals);
 
+        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
+        keyboardButtonsRow2.add(buttonReportPhotoWeigher);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
 
+        if (nowDayWeek == 5 && !isExists) {
+            rowList.add(keyboardButtonsRow2);
+        }
+
         inlineKeyboardMarkup.setKeyboard(rowList);
 
         return inlineKeyboardMarkup;
+    }
+
+    private boolean isExistsPhotoWeigher(User user) {
+        if (userPhotoWeigherRepo.findUserPhotoWeigherByTimeStampAndUser(CurrentDate.getCurrentDate(), user) != null) {
+            UserPhotoWeigher userPhotoWeigher = userPhotoWeigherRepo.findUserPhotoWeigherByTimeStampAndUser(CurrentDate.getCurrentDate(), user);
+            return userPhotoWeigher.getPhoto() != null;
+        } else {
+            return false;
+        }
     }
 }

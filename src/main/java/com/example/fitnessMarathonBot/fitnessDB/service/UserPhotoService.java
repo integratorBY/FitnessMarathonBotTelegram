@@ -4,6 +4,7 @@ import com.example.fitnessMarathonBot.fitnessDB.bean.User;
 import com.example.fitnessMarathonBot.fitnessDB.bean.UserPhoto;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserPhotoRepository;
 import com.example.fitnessMarathonBot.fitnessDB.repository.UserRepositoryImpl;
+import com.example.fitnessMarathonBot.service.CurrentDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -26,9 +27,7 @@ public class UserPhotoService {
     public int saveUserPhoto(Message message) {
         if (userRepository.findUserByChatId(message.getFrom().getId()) != null) {
             User user = userRepository.findUserByChatId(message.getFrom().getId());
-            Date date = new Date();
-            SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
-            String currentDate = formatForDateNow.format(date);
+            String currentDate = CurrentDate.getCurrentDate();
             UserPhoto userPhotos = userPhotoRepository.findUserPhotoByTimeStampAndUser(
                     currentDate, user);
             List<PhotoSize> photos = message.getPhoto();
