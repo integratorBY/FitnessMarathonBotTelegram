@@ -31,24 +31,22 @@ public class BroadcastService {
             long nowMinute = (59 - now.getMinute()) * 60000;
             int nowSecond = (60 - now.getSecond()) * 1000;
             long timeToUpdate = nowHour + nowMinute + nowSecond;
+            Thread.sleep(timeToUpdate);
             int nowDayWeek = calendar.get(Calendar.DAY_OF_WEEK);
             if (nowDayWeek != 6 && nowDayWeek != 1) {
-                System.out.println(timeToUpdate);
-                Thread.sleep(timeToUpdate);
                 messageService.updateDateInDB();
                 log.info("updateDateInDB() - WORKED");
                 messageService.newDayNewListUserGoals();
-                log.info(" newDayNewListUserGoals()  - WORKED");
+                log.info("newDayNewListUserGoals()  - WORKED");
                 messageService.newDayNewPhotoUserReport();
-                log.info(" newDayNewPhotoUserReport() - WORKED");
+                log.info("newDayNewPhotoUserReport() - WORKED");
                 messageService.nexDayMarathon();
-                log.info(" nexDayMarathon() - WORKED");
-                if (nowDayWeek == 5) {
+                log.info("nexDayMarathon() - WORKED");
+                if (nowDayWeek == 2) {
                     messageService.newMondayNewPhotoUserReportWeigher();
-                    log.info(" newMondayNewPhotoUserReportWeigher() - WORKED");
+                    log.info("newMondayNewPhotoUserReportWeigher() - WORKED");
                 }
             } else {
-                System.out.println(timeToUpdate);
                 Thread.sleep(timeToUpdate);
                 messageService.nexDayMarathon();
                 log.info("messageService.nexDayMarathon() - WORKED");

@@ -40,10 +40,8 @@ public class ReminderEveryDay {
                     messageService.remindToCompleteTasks();
                     Thread.sleep(3600000 * 2);
                 }
-            } else {
-                messageService.remindDrinkWater();
-                Thread.sleep(3600000 * 2);
             }
+            Thread.sleep(28880000);
         }
 
     }

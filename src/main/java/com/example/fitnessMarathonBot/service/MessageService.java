@@ -150,15 +150,15 @@ public class MessageService {
         }
     }
 
-    @SneakyThrows
-    public void remindDrinkWater() {
-        List<User> users = userRepository.findAll();
-        for (User user : users) {
-            if (user.getChatId() != 748582406) {
-                myBot.execute(new SendMessage(user.getChatId(), "Не забываем пить водичку!"));
-            }
-        }
-    }
+//    @SneakyThrows
+//    public void remindDrinkWater() {
+//        List<User> users = userRepository.findAll();
+//        for (User user : users) {
+//            if (user.getChatId() != 748582406) {
+//                myBot.execute(new SendMessage(user.getChatId(), "Не забываем пить водичку!"));
+//            }
+//        }
+//    }
 
     @SneakyThrows
     public void remindToCompleteTasks() {
@@ -167,7 +167,7 @@ public class MessageService {
         ListUserGoals listUserGoals;
         String textRemind = "Внимание!!!\n\nВы сегодня: \n\n";
         for (User user : users) {
-            if (user.getChatId() == 683992434) {
+            if (user.getChatId() != 748582406) {
                 userPhoto = userPhotoRepository.findUserPhotoByTimeStampAndUser(CurrentDate.getCurrentDate(), user);
                 listUserGoals = userGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, CurrentDate.getCurrentDate());
                 int quantityPhoto = 0;
