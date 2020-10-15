@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Service
 @Slf4j
-public class ReminderMonday {
+public class ReminderEveryDay {
 
     @Autowired
     private MessageService messageService;
@@ -22,28 +22,27 @@ public class ReminderMonday {
     @SneakyThrows
     private void broadcast() {
         while (true) {
-            log.info("reminder while true cycling");
+            log.info("reminder every day start");
             LocalTime now = LocalTime.now();
             Calendar calendar = Calendar.getInstance();
             Date date = new Date();
             calendar.setTime(date);
             long timeUntilReminder = 0;
             int nowDayWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            if (nowDayWeek != 2) {
-                log.info("reminder is sleeping");
-                Thread.sleep(43200000);
-            } else {
-                if (now.getHour() < 6) {
-                    long nowHour = (5 - now.getHour()) * 3600000;
+            if (nowDayWeek != 6 && nowDayWeek != 1) {
+                if (now.getHour() < 22) {
+                    long nowHour = (21 - now.getHour()) * 3600000;
                     long nowMinute = (59 - now.getMinute()) * 60000;
-                    int nowSecond = (59 - now.getSecond()) * 1000;
+                    int nowSecond = (60 - now.getSecond()) * 1000;
                     timeUntilReminder = nowHour + nowMinute + nowSecond;
-//                    System.out.println(timeUntilReminder);
+                    log.info("reminder every day is sleeping");
                     Thread.sleep(timeUntilReminder);
-                    messageService.remindSendPhotoInMonday();
-                    Thread.sleep(86400000);
+                    messageService.remindToCompleteTasks();
+                    Thread.sleep(3600000 * 2);
                 }
-                Thread.sleep(86400000);
+            } else {
+                messageService.remindDrinkWater();
+                Thread.sleep(3600000 * 2);
             }
         }
 
@@ -52,7 +51,7 @@ public class ReminderMonday {
     public void startReminder() {
         if (!isReminder) {
             isReminder = true;
-            log.info("START REMINDER MONDAY");
+            log.info("START REMINDER EVERY DAY");
             broadcast();
         }
     }

@@ -4,6 +4,7 @@ import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.botapi.admin.telegramAdminFacade.TelegramAdminFacade;
 import com.example.fitnessMarathonBot.botapi.client.teleframUserFacade.TelegramUserFacade;
 import com.example.fitnessMarathonBot.service.broadcasting.BroadcastService;
+import com.example.fitnessMarathonBot.service.broadcasting.ReminderEveryDay;
 import com.example.fitnessMarathonBot.service.broadcasting.ReminderMonday;
 import com.example.fitnessMarathonBot.service.broadcasting.SignsOfLife;
 import lombok.Getter;
@@ -32,6 +33,9 @@ public class BotConfig {
     private ReminderMonday reminderMonday;
 
     @Autowired
+    private ReminderEveryDay reminderEveryDay;
+
+    @Autowired
     private SignsOfLife signsOfLife;
 
     @Bean
@@ -42,6 +46,7 @@ public class BotConfig {
         new Thread(broadcastService::startBroadcasting).start();
         new Thread(reminderMonday::startReminder).start();
         new Thread(signsOfLife::startReminder).start();
+        new Thread(reminderEveryDay::startReminder).start();
         return myBot;
     }
 

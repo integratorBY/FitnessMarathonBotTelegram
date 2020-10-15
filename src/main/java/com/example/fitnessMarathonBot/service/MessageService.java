@@ -3,6 +3,8 @@ package com.example.fitnessMarathonBot.service;
 import com.example.fitnessMarathonBot.bean.Bot;
 import com.example.fitnessMarathonBot.fitnessDB.bean.*;
 import com.example.fitnessMarathonBot.fitnessDB.repository.*;
+import com.example.fitnessMarathonBot.fitnessDB.service.ListUserGoalsService;
+import com.example.fitnessMarathonBot.fitnessDB.service.UserPhotoService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -23,6 +25,9 @@ public class MessageService {
     private ListUserGoalsRepository userGoalsRepository;
 
     @Autowired
+    private ListUserGoalsService listUserGoalsService;
+
+    @Autowired
     private UserProfileImpl userProfileRepo;
 
     @Autowired
@@ -33,6 +38,9 @@ public class MessageService {
 
     @Autowired
     private UserPhotoWeigherRepo userPhotoWeigherRepo;
+
+    @Autowired
+    private UserPhotoService userPhotoService;
 
     @Autowired
     private ListGoalsRepository listGoalsRepo;
@@ -138,6 +146,47 @@ public class MessageService {
         for (User user : users) {
             if (user.getChatId() != 748582406) {
                 myBot.execute(new SendMessage(user.getChatId(), "НАПОМИНАНИЕ!!! \n\nВ понедельник(тоесть сейчас) отправить фото весов на тощак!!!"));
+            }
+        }
+    }
+
+    @SneakyThrows
+    public void remindDrinkWater() {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            if (user.getChatId() != 748582406) {
+                myBot.execute(new SendMessage(user.getChatId(), "Не забываем пить водичку!"));
+            }
+        }
+    }
+
+    @SneakyThrows
+    public void remindToCompleteTasks() {
+        List<User> users = userRepository.findAll();
+        UserPhoto userPhoto;
+        ListUserGoals listUserGoals;
+        String textRemind = "Внимание!!!\n\nВы сегодня: \n\n";
+        for (User user : users) {
+            if (user.getChatId() == 683992434) {
+                userPhoto = userPhotoRepository.findUserPhotoByTimeStampAndUser(CurrentDate.getCurrentDate(), user);
+                listUserGoals = userGoalsRepository.findListUserGoalsByUserAndTimeStamp(user, CurrentDate.getCurrentDate());
+                int quantityPhoto = 0;
+                int quantityGoals = 0;
+                if (userPhoto != null) {
+                    quantityPhoto = userPhotoService.getCountPhotos(userPhoto);
+                    if (quantityPhoto < 3) {
+                        textRemind = textRemind.concat("Отправили фото " + userPhotoService.getCountPhotos(userPhoto) + " из 3");
+                    }
+                }
+                if (listUserGoals != null) {
+                    quantityGoals = listUserGoalsService.countDoneTasks(listUserGoals);
+                    if (quantityGoals < 6) {
+                        textRemind = textRemind.concat("\nВыполнили заданий " + listUserGoalsService.countDoneTasks(listUserGoals) + " из 6");
+                    }
+                }
+                if (quantityGoals < 6 || quantityPhoto < 3) {
+                    myBot.execute(new SendMessage(user.getChatId(), textRemind));
+                }
             }
         }
     }

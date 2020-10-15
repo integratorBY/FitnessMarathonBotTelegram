@@ -5,6 +5,7 @@ import com.example.fitnessMarathonBot.botapi.BotState;
 import com.example.fitnessMarathonBot.botapi.BotStateContext;
 import com.example.fitnessMarathonBot.botapi.admin.adminButtonHandler.AdminButtonHandler;
 import com.example.fitnessMarathonBot.cache.UserDataCache;
+import com.example.fitnessMarathonBot.fitnessDB.service.MarathonService;
 import com.example.fitnessMarathonBot.fitnessDB.service.MealPlanService;
 import com.example.fitnessMarathonBot.fitnessDB.service.ReportService;
 import com.example.fitnessMarathonBot.service.AdminMainMenuService;
@@ -34,6 +35,9 @@ public class TelegramAdminFacade {
     private AdminMainMenuService adminMainMenuService;
     private Bot myBot;
     private ReplyMessagesService messagesService;
+
+    @Autowired
+    private MarathonService marathonService;
 
     @Autowired
     private ReportService reportService;
@@ -130,29 +134,29 @@ public class TelegramAdminFacade {
     @SneakyThrows
     private SendMessage saveMealPlanOne(Message message) {
         mealPlanService.saveMealPlanOneCategory(message);
-        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
-        return adminButtonHandler.getButtonsOperationsWithMealPlanAndMessage(message.getChatId());
+//        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
+        return new SendMessage(message.getChatId(), "План добавлен!");
     }
 
     @SneakyThrows
     private SendMessage saveMealPlanTwo(Message message) {
         mealPlanService.saveMealPlanTwoCategory(message);
-        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
-        return adminButtonHandler.getButtonsOperationsWithMealPlanAndMessage(message.getChatId());
+//        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
+        return new SendMessage(message.getChatId(), "План добавлен!");
     }
 
     @SneakyThrows
     private SendMessage saveMealPlanThree(Message message) {
         mealPlanService.saveMealPlanThreeCategory(message);
-        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
-        return adminButtonHandler.getButtonsOperationsWithMealPlanAndMessage(message.getChatId());
+//        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
+        return new SendMessage(message.getChatId(), "План добавлен!");
     }
 
     @SneakyThrows
     private SendMessage saveMealPlanFoodBasket(Message message) {
         mealPlanService.saveMealPlanFoodBasket(message);
-        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
-        return adminButtonHandler.getButtonsOperationsWithMealPlanAndMessage(message.getChatId());
+//        myBot.execute(new SendMessage(message.getChatId(), "План добавлен!"));
+        return new SendMessage(message.getChatId(), "План добавлен!");
     }
 
     private BotApiMethod<?> processCallbackQuery(CallbackQuery buttonQuery) {
@@ -223,7 +227,18 @@ public class TelegramAdminFacade {
         } else if (buttonQuery.getData().equals("buttonDetailedReport")) {
             reportService.getDetailedReport();
             callBackAnswer = new SendMessage(chatId, "Подробный отчет");
-            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+//            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+
+        } else if (buttonQuery.getData().equals("buttonMarathonOneMonth")) {
+            String finish = marathonService.saveMarathon(1);
+            callBackAnswer = new SendMessage(chatId, "Вы начали новый марафон. Окончание марафона " + finish);
+        } else if (buttonQuery.getData().equals("buttonMarathonTwoMonth")) {
+            String finish = marathonService.saveMarathon(2);
+            callBackAnswer = new SendMessage(chatId, "Вы начали новый марафон. Окончание марафона " + finish);
+        } else if (buttonQuery.getData().equals("buttonMarathonThreeMonth")) {
+            String finish = marathonService.saveMarathon(3);
+            callBackAnswer = new SendMessage(chatId, "Вы начали новый марафон. Окончание марафона " + finish);
+
         }
 
         return callBackAnswer;
